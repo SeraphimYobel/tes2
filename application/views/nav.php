@@ -4,6 +4,7 @@
       transition: all 0.3s;
       padding: 0.7em;
       border: none;
+      font-size: 0.9em;
    }
    .headmenu{
       display: flex;
@@ -29,7 +30,7 @@
          <nav className="navigation">
             <div>
                <div>
-                  <a href="/blog" className="headmenu">
+                  <a href="<?= base_url() ?>" className="headmenu">
                      <img src="<?=$url?>" alt="logo kampus" width="40" height="40"/>
                      <div>
                         <h3>UNSIA Menu</h3>
@@ -37,11 +38,11 @@
                      </div>
                   </a>
                   <div className="menus">
-                     <a href="/"><i className="fas fa-users"></i> Dosen & Mahasiswa</a>
-                     <a href="/"><i className="fas fa-file-signature"></i> Ijazah & Transkrip</a>
+                     <a href="<?= base_url() ?>index.php/dosenmahasiswa"><i className="fas fa-users"></i> Dosen & Mahasiswa </a>
+                     <a href="<?= base_url() ?>index.php/ijazahtranskrip"><i className="fas fa-file-signature"></i> Ijazah & Transkrip</a>
                      <a href="/"><i className="fas fa-award"></i> Penilaian</a>
                      <a href="/"><i className="fas fa-book"></i> Mata Kuliah</a>
-                     <a href="/"><i className="fas fa-graduation-cap"></i> Program Studi</a>
+                     <a href="<?= base_url() ?>index.php/programstudi"><i className="fas fa-graduation-cap"></i> Program Studi</a>
                      <a href="/"><i className="fas fa-building"></i> Kota</a>
                   </div>
                </div>
