@@ -40,23 +40,24 @@ html {
    flex-direction: column;
    justify-content: space-between;
    outline: 1px solid rgb(240, 240, 240);
-   box-shadow: 2px 2px 2px 0 rgb(250, 250, 250);
 }
 
 .navigation>div>div {
    background: white;
    padding: 0.5em;
+   flex: 1;
 }
 
 .menus {
    display: flex;
    flex-direction: column;
    gap: 0.3em;
-
+   flex: 1;
 }
 
 .menus>a {
    color: #777;
+   font-size: 0.9em;
    transition: all 0.3s;
    display: inline-block;
    padding: 0.8em;
@@ -65,4 +66,18 @@ html {
 
 .menus>a:hover {
    background: rgb(245, 245, 245);
+}
+
+#container {
+   padding: 1em 1em 1em 16em;
+   background: rgb(250, 250, 250);
+   height: 100%;
+   width: 100%;
+}
+
+#container>div {
+   outline: 1px solid rgb(230, 230, 230);
+   padding: 1.5em 2em;
+   background: white;
+   border-radius: 0.7em;
 }

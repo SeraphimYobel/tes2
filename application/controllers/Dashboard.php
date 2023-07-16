@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Welcome extends CI_Controller {
+class Dashboard extends CI_Controller {
 
 	/**
 	 * Index Page for this controller.
@@ -9,7 +9,7 @@ class Welcome extends CI_Controller {
 	 * Maps to the following URL
 	 * 		http://example.com/index.php/welcome
 	 *	- or -
-	 * 		http://example.com/index.php/welcome/index
+	* 		http://example.com/index.php/welcome/index
 	 *	- or -
 	 * Since this controller is set as the default controller in
 	 * config/routes.php, it's displayed at http://example.com/
@@ -20,8 +20,8 @@ class Welcome extends CI_Controller {
 	 */
 	public function index()
 	{
-		$data['url'] = '../assets/unsia.png';
-		$this->load->view('resource2', $data);
+		$data['url'] = './assets/unsia.png';
+		$this->load->view('resource', $data);
 		$this->load->view('nav');
 		$this->load->view('welcome_message');
 	}

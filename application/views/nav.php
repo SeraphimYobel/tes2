@@ -15,7 +15,7 @@
    }
    .headmenu>div>p{
       font-size: 0.8em;
-      margin-top: 0.2em;
+      margin-top: 0.3em;
       opacity: 0.6;
    }
    .btnlogout:hover {
@@ -29,13 +29,13 @@
          <nav className="navigation">
             <div>
                <div>
-                  <div className="headmenu">
-                     <img src="./assets/unsia.png" alt="logo kampus" width="40" height="40"/>
+                  <a href="/blog" className="headmenu">
+                     <img src="<?=$url?>" alt="logo kampus" width="40" height="40"/>
                      <div>
                         <h3>UNSIA Menu</h3>
                         <p>Universitas Siber Asia</p>
                      </div>
-                  </div>
+                  </a>
                   <div className="menus">
                      <a href="/"><i className="fas fa-users"></i> Dosen & Mahasiswa</a>
                      <a href="/"><i className="fas fa-file-signature"></i> Ijazah & Transkrip</a>
