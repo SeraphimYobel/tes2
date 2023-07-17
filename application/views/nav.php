@@ -26,6 +26,12 @@
 <div id="apps"></div>
 <script type="text/babel">
    const App = () => {
+      const handleLogOut = () => {
+         let confirm = window.confirm('Anda yakin ingin Log Out?')
+         if(confirm){
+            window.location.href="<?=base_url()?>"
+         }
+      }
       return (
          <nav className="navigation">
             <div>
@@ -46,7 +52,11 @@
                      <a href="/"><i className="fas fa-building"></i> Kota</a>
                   </div>
                </div>
-               <button title="Keluar dari Akun" className="bgred btnlogout">Log Out</button>
+               <button 
+                  title="Keluar dari Akun" 
+                  className="bgred btnlogout"
+                  onClick={handleLogOut}
+               >Log Out</button>
             </div>
          </nav>
       )
