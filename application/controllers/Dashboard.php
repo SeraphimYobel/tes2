@@ -20,9 +20,14 @@ class Dashboard extends CI_Controller {
 	 */
 	public function index()
 	{
-		$data['url'] = './assets/unsia.png';
-		$this->load->view('resource', $data);
+		$data['url'] = '../assets/unsia.png';
+		$this->load->view('resource2', $data);
 		$this->load->view('nav');
 		$this->load->view('welcome_message');
+	}
+	public function login(){
+		$data['url'] = './assets/unsia.png';
+		$this->load->view('resource', $data);
+		$this->load->view('login');
 	}
 }
