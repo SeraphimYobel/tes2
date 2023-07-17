@@ -1,27 +1,34 @@
-<?php
-	defined('BASEPATH') OR exit('No direct script access allowed');
-?><!DOCTYPE html>
-<html lang="en">
-<body>
-	<div id="container">
-		<div>
-			<h1>Welcome to CodeIgniter!</h1>
-	
-			<div id="body">
-				<p>The page you are looking at is being generated dynamically by CodeIgniter.</p>
-	
-				<p>If you would like to edit this page you'll find it located at:</p>
-				<code>application/views/welcome_message.php</code>
-	
-				<p>The corresponding controller for this page is found at:</p>
-				<code>application/controllers/Welcome.php</code>
-	
-				<p>If you are exploring CodeIgniter for the very first time, you should start by reading the <a href="userguide3/">User Guide</a>.</p>
-			</div>
-	
-			<p class="footer">Page rendered in <strong>{elapsed_time}</strong> seconds. <?php echo  (ENVIRONMENT === 'development') ?  'CodeIgniter Version <strong>' . CI_VERSION . '</strong>' : '' ?></p>
+<style>
+	.boximage{
+		margin-top: 2em;
+	}
+	.boximage>img{
+		width: 40em;
+		margin-bottom: 2em;
+	}
+	h1{
+		font-size: 2em;
+		margin-top: 0.5em;
+	}
+	h1>strong{
+		color: #1B9C85;
+		font-size: inherit;
+	}
+	#container>div>p{
+		margin-top: 0.5em;
+		opacity: 0.6;
+	}
+	.boximage{
+		display: flex;
+		justify-content: center;
+	}
+</style>
+<div id="container">
+	<div>
+		<h1>Selamat Datang, <strong>Administrator</strong></h1>
+		<p>Silahkan pilih pada <strong>Sidebar</strong> untuk mengakses berbagai menu.</p>
+		<div class="boximage">
+			<img src="../assets/dashboard.png" alt="illustration" />
 		</div>
 	</div>
-
-</body>
-</html>
+</div>

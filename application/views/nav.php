@@ -22,6 +22,9 @@
    .btnlogout:hover {
       background: #cb014f
    }
+   a>i{
+      width: 1.3em;
+   }
 </style>
 <div id="apps"></div>
 <script type="text/babel">
