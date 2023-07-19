@@ -25,4 +25,25 @@ class ProgramStudi extends CI_Controller {
 		$this->load->view('nav');
 		$this->load->view('dash_program_studi');
 	}
+
+	public function create_programstudi() {
+    // Tampilkan halaman form tambah data program studi
+}
+
+public function store_programstudi() {
+    // Proses tambah data program studi ke database
+}
+
+public function edit_programstudi($id) {
+    // Tampilkan halaman form edit data program studi berdasarkan ID
+}
+
+public function update_programstudi($id) {
+    // Proses update data program studi ke database berdasarkan ID
+}
+
+public function delete_programstudi($id) {
+    // Proses hapus data program studi dari database berdasarkan ID
+}
+
 }
