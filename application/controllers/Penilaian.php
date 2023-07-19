@@ -25,4 +25,25 @@ class Penilaian extends CI_Controller {
 		$this->load->view('nav');
 		$this->load->view('dash_penilaian');
 	}
+
+	public function create_penilaian() {
+    // Tampilkan halaman form tambah data penilaian
+}
+
+public function store_penilaian() {
+    // Proses tambah data penilaian ke database
+}
+
+public function edit_penilaian($id) {
+    // Tampilkan halaman form edit data penilaian berdasarkan ID
+}
+
+public function update_penilaian($id) {
+    // Proses update data penilaian ke database berdasarkan ID
+}
+
+public function delete_penilaian($id) {
+    // Proses hapus data penilaian dari database berdasarkan ID
+}
+
 }
