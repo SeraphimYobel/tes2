@@ -59,21 +59,11 @@
 	const { useState, useEffect } = React
 	const App = () => {
 		const [showForm, setShowForm] = useState(null)
-		const [listData, setListData] = useState([])
-		// get data from database
-		const getAllDataProgramStudi = () => {
-			$.ajax({
-				url: "<?=base_url()?>index.php/ProgramStudi/get_all_programstudi",
-				method: 'GET',
-				success: data => {
-					setListData(JSON.parse(data))
-				},
-				error: () => {
-					alert('Gagal mendapatkan data dari database')
-				}
-			})
-		}
-		// menampilkan data ke dalam database ketika ada perubahan state
+		const [listData, setListData] = useState([
+			{ id: 1, nama: 'TI', program_pendidikan: 'Teknik Informatika', akreditasi: 'A', sk_akreditasi: '001/TI/AKRED/UNSIA' },
+			{ id: 2, nama: 'MI', program_pendidikan: 'Managemen Informatika', akreditasi: 'B', sk_akreditasi: '001/TI/AKRED/UNSIA' },
+			{ id: 3, nama: 'AK', program_pendidikan: 'Akuntansi', akreditasi: 'A', sk_akreditasi: '001/TI/AKRED/UNSIA' },
+		])
 		useEffect(() => {
 			$(`#listdata`).DataTable({
 				destroy: true,
@@ -87,18 +77,14 @@
 				]
 			})
 		}, [listData])
-		// mendapatkan data dari database saat pertama kali page loaded
-		useEffect(() => {
-			getAllDataProgramStudi()
-		}, [])
 		return (
 			<div id="container">
 				<div>
 					<div className="title">
 						<i className="fas fa-graduation-cap"></i>
 						<div>
-							<h1> Program Studi</h1>
-							<p>Klik <strong>Tambah</strong> untuk menambahkan Program Studi. </p>
+							<h1> Kota</h1>
+							<p>Klik <strong>Tambah</strong> untuk menambahkan kota. </p>
 						</div>
 					</div>
 					<div className="btnarea btnarea-nopad">
@@ -114,7 +100,7 @@
 					</div>
 					{
 						showForm == 'add' ? (
-							<FormInput setShowForm={setShowForm} setListData={setListData} refreshData={getAllDataProgramStudi}/>
+							<FormInput setShowForm={setShowForm} setListData={setListData} />
 						) : false
 					}
 					<div className="tablebox">
@@ -129,29 +115,19 @@
 	el.render(<App />)
 	// form input program studi
 	const FormInput = props => {
-		const { setShowForm, setListData, refreshData } = props
+		const { setShowForm, setListData } = props
 		const [successMessage, setSuccessMessage] = useState(null)
 		// on submit form add new program studi
 		const handleSubmit = (e) => {
 			e.preventDefault()
 			const data = Object.fromEntries(new FormData(document.querySelector('#formprogramstudi')).entries())
-			$.ajax({
-				url: "<?=base_url()?>index.php/ProgramStudi/create_programstudi",
-				data,
-				method: 'POST',
-				success: data => {
-					// on success
-					if(data == "true"){
-						$('#formprogramstudi')[0].reset()
-						setSuccessMessage('Program Studi berhasil ditambahkan, Terima kasih.')
-						refreshData()
-						setTimeout(() => setSuccessMessage(null),5000)
-					}
-				},
-				error: () => {
-					alert('Gagal menyimpan data Program Studi')
-				}
-			})
+			// set number
+			data.id = parseInt(Math.random() * 100)
+			setListData(prev => [...prev, data])
+			// on success
+			$('#formprogramstudi')[0].reset()
+			setSuccessMessage('Program Studi berhasil ditambahkan, Terima kasih.')
+			setTimeout(() => setSuccessMessage(null),5000)
 		}
 		return (
 			<div className="forms">
@@ -166,24 +142,19 @@
 					<div className="wrap">
 						<div className="formel">
 							<label htmlFor="nama">Nama</label>
-							<input name="nama" type="text" placeholder="e.g. Manajemen Informatika" required />
+							<input name="nama" type="text" placeholder="e.g. MI" required />
 						</div>
 						<div className="formel">
 							<label htmlFor="programpendidikan">Program Pendidikan</label>
-							<select required name="program_pendidikan">
-								<option value="">--- Pilih Program ---</option>
-								<option value="Diploma III">Diploma III</option>
-								<option value="Diploma IV">Diploma IV</option>
-								<option value="Sarjana">Sarjana</option>
-							</select>
+							<input name="program_pendidikan" type="text" placeholder="e.g. Managemen Informatika" required />
 						</div>
 						<div className="formel">
 							<label htmlFor="akreditasi">Akreditasi</label>
 							<select required name="akreditasi">
-								<option value="">--- Pilih Akreditasi ---</option>
-								<option value="Baik Sekali">Baik Sekali</option>
-								<option value="Baik">Baik</option>
-								<option value="Cukup">Cukup</option>
+								<option value="">Pilih Akreditasi</option>
+								<option value="A">A</option>
+								<option value="B">B</option>
+								<option value="C">C</option>
 							</select>
 						</div>
 						<div className="formel fulls">

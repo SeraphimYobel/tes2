@@ -1,14 +1,21 @@
 <?php
 // ProgramStudi_model.php
-class Program_studi_model extends CI_Model {
+class ProgramStudi_model extends CI_Model {
     public function __construct() {
         parent::__construct();
         $this->load->database();
     }
 
     public function create($data) {
-        $this->db->insert('Program_Studi', $data);
-        return $this->db->insert_id();
+        // $this->db->insert('Program_Studi', $data);
+        // return $this->db->insert_id();
+        $data = array(
+            'nama' => $data["nama"],
+            'program_pendidikan' => $data["program_pendidikan"],
+            'akreditasi' => $data["akreditasi"],
+            'sk_akreditasi' => $data["sk_akreditasi"]
+        );
+        return $this->db->insert('program_studi', $data);
     }
 
     public function read($id = null) {
@@ -18,7 +25,11 @@ class Program_studi_model extends CI_Model {
             return $this->db->get('Program_Studi')->result_array();
         }
     }
-
+    // get all data program studi
+    public function get_all_programstudi(){
+        return $this->db->get('program_studi')->result_array();
+    }
+    // handle update program studi
     public function update($id, $data) {
         $this->db->where('ID', $id);
         $this->db->update('Program_Studi', $data);

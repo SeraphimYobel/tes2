@@ -32,11 +32,11 @@ class Kota_model extends CI_Model {
         return $this->db->affected_rows();
     }
 
-	class Kota_model extends CI_Model {
-    public function create_kota($data) {
-        $this->db->insert('Kota', $data);
-        return $this->db->insert_id();
-    }
+	// class Kota_model extends CI_Model {
+    // public function create_kota($data) {
+    //     $this->db->insert('Kota', $data);
+    //     return $this->db->insert_id();
+    // }
 
     public function read_kota($id = null) {
         if ($id) {
@@ -59,4 +59,4 @@ class Kota_model extends CI_Model {
     }
 }
 
-}
+// }

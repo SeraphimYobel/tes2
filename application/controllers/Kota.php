@@ -6,10 +6,7 @@ class Kota extends CI_Controller {
         $this->load->model('Kota_model');
     }
 
-    public function index() {
-        $data['kota'] = $this->Kota_model->read();
-        $this->load->view('kota/index', $data);
-    }
+    
 
     public function create() {
         $this->load->view('kota/create');
@@ -33,8 +30,8 @@ class Kota extends CI_Controller {
     }
 
     public function edit($id) {
-        $data['kota'] = $this->Kota_model->read($id);
-        $this->load->view('kota/edit', $data);
+        // $data['kota'] = $this->Kota_model->read($id);
+        // $this->load->view('kota/edit', $data);
     }
 
     public function update($id) {
@@ -68,6 +65,14 @@ class Kota extends CI_Controller {
 
 	public function create_kota() {
     // Tampilkan halaman form tambah data kota
+}
+
+public function index() {
+    $data['kota'] = $this->Kota_model->read();
+    $data['url'] = '../assets/unsia.png';
+    $this->load->view('resource2', $data);
+    $this->load->view('nav');
+    $this->load->view('dash_kota');
 }
 
 public function store_kota() {
