@@ -118,12 +118,12 @@
 		// on submit form add new Penilaian
 		const handleSubmit = (e) => {
 			e.preventDefault()
-			const data = Object.fromEntries(new FormData(document.querySelector('#formprogramstudi')).entries())
+			const data = Object.fromEntries(new FormData(document.querySelector('#formpenilaian')).entries())
 			// set number
 			data.id = parseInt(Math.random() * 100)
 			setListData(prev => [...prev, data])
 			// on success
-			$('#formprogramstudi')[0].reset()
+			$('#formpenilaian')[0].reset()
 			setSuccessMessage('Penilaian berhasil ditambahkan, Terima kasih.')
 			setTimeout(() => setSuccessMessage(null),5000)
 		}
@@ -136,14 +136,14 @@
 						<span className="successmessage"><i className="fas fa-check-circle"></i> {successMessage}</span>
 					) : false
 				}
-				<form id="formprogramstudi" onSubmit={handleSubmit}>
+				<form id="formpenilaian" onSubmit={handleSubmit}>
 					<div className="wrap">
 						<div className="formel">
 							<label htmlFor="Taruna">Taruna</label>
 							<input name="Taruna" type="text" placeholder="e.g. 210401010055" required />
 						</div>
 						<div className="formel">
-							<label htmlFor="programpendidikan">Nilai Angka</label>
+							<label htmlFor="penilaian">Nilai Angka</label>
 							<input name="Nilai_Angka" type="num" placeholder="e.g. 40" required />
 						</div>
 						<div className="formel">
