@@ -65,4 +65,25 @@ class Kota extends CI_Controller {
 
         redirect('kota');
     }
+
+	public function create_kota() {
+    // Tampilkan halaman form tambah data kota
+}
+
+public function store_kota() {
+    // Proses tambah data kota ke database
+}
+
+public function edit_kota($id) {
+    // Tampilkan halaman form edit data kota berdasarkan ID
+}
+
+public function update_kota($id) {
+    // Proses update data kota ke database berdasarkan ID
+}
+
+public function delete_kota($id) {
+    // Proses hapus data kota dari database berdasarkan ID
+}
+
 }
