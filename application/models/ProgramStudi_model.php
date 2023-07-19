@@ -30,4 +30,26 @@ class Program_studi_model extends CI_Model {
         $this->db->delete('Program_Studi');
         return $this->db->affected_rows();
     }
+
+
+	public function create_programstudi() {
+    // Tampilkan halaman form tambah data program studi
+}
+
+public function store_programstudi() {
+    // Proses tambah data program studi ke database
+}
+
+public function edit_programstudi($id) {
+    // Tampilkan halaman form edit data program studi berdasarkan ID
+}
+
+public function update_programstudi($id) {
+    // Proses update data program studi ke database berdasarkan ID
+}
+
+public function delete_programstudi($id) {
+    // Proses hapus data program studi dari database berdasarkan ID
+}
+
 }
