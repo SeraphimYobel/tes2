@@ -25,4 +25,25 @@ class MataKuliah extends CI_Controller {
 		$this->load->view('nav');
 		$this->load->view('dash_mata_kuliah');
 	}
+
+	public function create_matakuliah() {
+    // Tampilkan halaman form tambah data mata kuliah
+}
+
+public function store_matakuliah() {
+    // Proses tambah data mata kuliah ke database
+}
+
+public function edit_matakuliah($id) {
+    // Tampilkan halaman form edit data mata kuliah berdasarkan ID
+}
+
+public function update_matakuliah($id) {
+    // Proses update data mata kuliah ke database berdasarkan ID
+}
+
+public function delete_matakuliah($id) {
+    // Proses hapus data mata kuliah dari database berdasarkan ID
+}
+
 }
