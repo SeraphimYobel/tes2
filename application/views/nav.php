@@ -50,7 +50,7 @@
                      <a href="<?= base_url() ?>index.php/DosenMahasiswa"><i className="fas fa-users"></i> Dosen & Mahasiswa </a>
                      <a href="<?= base_url() ?>index.php/IjazahTranskrip"><i className="fas fa-file-signature"></i> Ijazah & Transkrip</a>
                      <a href="<?= base_url() ?>index.php/Penilaian"><i className="fas fa-award"></i> Penilaian</a>
-                     <a href="/"><i className="fas fa-book"></i> Mata Kuliah</a>
+                     <a href="<?= base_url() ?>index.php/MataKuliah"><i className="fas fa-graduation-cap"></i> Mata Kuliah</a>
                      <a href="<?= base_url() ?>index.php/ProgramStudi"><i className="fas fa-graduation-cap"></i> Program Studi</a>
                      <a href="/"><i className="fas fa-building"></i> Kota</a>
                   </div>
