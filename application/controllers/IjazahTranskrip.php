@@ -25,4 +25,55 @@ class IjazahTranskrip extends CI_Controller {
 		$this->load->view('nav');
 		$this->load->view('dash_ijazah_transkrip');
 	}
+
+	// Ijazah
+public function create_ijazah() {
+    // Tampilkan halaman form tambah data ijazah
+}
+
+public function store_ijazah() {
+    // Proses tambah data ijazah ke database
+}
+
+public function edit_ijazah($id) {
+    // Tampilkan halaman form edit data ijazah berdasarkan ID
+}
+
+public function update_ijazah($id) {
+    // Proses update data ijazah ke database berdasarkan ID
+}
+
+public function delete_ijazah($id) {
+    // Proses hapus data ijazah dari database berdasarkan ID
+}
+
+public function print_ijazah($id) {
+    // Proses cetak ijazah dalam bentuk PDF berdasarkan ID
+}
+
+// Transkrip Nilai
+public function create_transkrip() {
+    // Tampilkan halaman form tambah data transkrip nilai
+}
+
+public function store_transkrip() {
+    // Proses tambah data transkrip nilai ke database
+}
+
+public function edit_transkrip($id) {
+    // Tampilkan halaman form edit data transkrip nilai berdasarkan ID
+}
+
+public function update_transkrip($id) {
+    // Proses update data transkrip nilai ke database berdasarkan ID
+}
+
+public function delete_transkrip($id) {
+    // Proses hapus data transkrip nilai dari database berdasarkan ID
+}
+
+public function print_transkrip($id) {
+    // Proses cetak transkrip nilai dalam bentuk PDF berdasarkan ID
+}
+
 }
