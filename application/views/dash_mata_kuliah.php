@@ -60,11 +60,7 @@
 	const App = () => {
 		const [showForm, setShowForm] = useState(null)
 		const [listData, setListData] = useState([
-			{ id: 1, Kode: '1543', Mata_Kuliah: 'Pemrograman Web II', SKS: '19', Nilai_Angka: '85', Nilai_Huruf: 'A', Semester: '4' },
-			{ id: 2, Kode: '1544', Mata_Kuliah: 'Data Science', SKS: '19', Nilai_Angka: '85', Nilai_Huruf: 'B', Semester: '4' },
-			{ id: 3, Kode: '1555', Mata_Kuliah: 'Bahasa Indonesia', SKS: '19', Nilai_Angka: '85', Nilai_Huruf: 'A', Semester: '4' },
-			{ id: 3, Kode: '1556', Mata_Kuliah: 'Sistem Jaringan I', SKS: '19', Nilai_Angka: '85', Nilai_Huruf: 'A', Semester: '4' },
-			{ id: 3, Kode: '1557', Mata_Kuliah: 'Komunikasi Data', SKS: '19', Nilai_Angka: '85', Nilai_Huruf: 'A', Semester: '4' },
+			
 		])
 		useEffect(() => {
 			$(`#listdata`).DataTable({
@@ -167,8 +163,12 @@
 							<select required name="Nilai_Huruf">
 								<option value="">Pilih Nilai_Huruf</option>
 								<option value="A">A</option>
-								<option value="B">B</option>
-								<option value="C">C</option>
+								<option value="B">AB</option>
+								<option value="C">B</option>
+								<option value="D">BC</option>
+								<option value="E">C</option>
+								<option value="F">D</option>
+								<option value="G">E</option>
 							</select>
 						</div>
 						<div className="formel fulls">
