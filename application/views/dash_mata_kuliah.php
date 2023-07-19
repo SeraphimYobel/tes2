@@ -74,8 +74,8 @@
 					{ data: 'Kode', title: 'Kode' },
 					{ data: 'Mata_Kuliah', title: 'Mata Kuliah' },
 					{ data: 'SKS', title: 'SKS' },
-					{ data: 'Nilai_Angka', title: 'Nilai_Angka' },
-					{ data: 'Nilai_Huruf', title: 'Nilai_Huruf' },
+					{ data: 'Nilai_Angka', title: 'Nilai Angka' },
+					{ data: 'Nilai_Huruf', title: 'Nilai Huruf' },
 					{ data: 'Semester', title: 'Semester' },
 					{ data: 'id', title: 'Action' },
 				]
@@ -85,7 +85,7 @@
 			<div id="container">
 				<div>
 					<div className="title">
-						<i className="fas fa-graduation-cap"></i>
+						<i className="fas fa-book"></i>
 						<div>
 							<h1> Mata Kuliah</h1>
 							<p>Klik <strong>Tambah</strong> untuk menambahkan Mata Kuliah. </p>
@@ -152,6 +152,8 @@
 							<label htmlFor="matakuliah">Mata Kuliah</label>
 							<input name="Mata_Kuliah" type="text" placeholder="e.g. Pemrograman Web II" required />
 						</div>
+					</div>
+					<div className="wrap nowrap">
 						<div className="formel">
 							<label htmlFor="SKS">SKS</label>
 							<input name="SKS" type="num" placeholder="e.g. 19" required />

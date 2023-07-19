@@ -180,6 +180,14 @@ table>thead>tr>th {
    opacity: 0.6;
 }
 
+.formel {
+   flex: 1;
+}
+
+.nowrap {
+   padding-top: 0.5em !important;
+}
+
 .formel>input,
 .formel>select {
    width: 100%;
