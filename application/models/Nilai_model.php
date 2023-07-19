@@ -30,4 +30,26 @@ class Program_studi_model extends CI_Model {
         $this->db->delete('Nilai');
         return $this->db->affected_rows();
     }
+
+
+	public function create_penilaian() {
+    // Tampilkan halaman form tambah data penilaian
+}
+
+public function store_penilaian() {
+    // Proses tambah data penilaian ke database
+}
+
+public function edit_penilaian($id) {
+    // Tampilkan halaman form edit data penilaian berdasarkan ID
+}
+
+public function update_penilaian($id) {
+    // Proses update data penilaian ke database berdasarkan ID
+}
+
+public function delete_penilaian($id) {
+    // Proses hapus data penilaian dari database berdasarkan ID
+}
+
 }
