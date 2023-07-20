@@ -106,7 +106,7 @@ CREATE TABLE `pejabat` (
 CREATE TABLE `program_studi` (
   `id` int(11) NOT NULL,
   `nama` varchar(255) NOT NULL,
-  `program_pendidikan` enum('Diploma III', 'Diploma IV') NOT NULL,
+  `program_pendidikan` enum('Diploma III', 'Diploma IV', 'Sarjana') NOT NULL,
   `akreditasi` enum('Baik', 'Baik Sekali', 'Unggul') NOT NULL,
   `sk_akreditasi` varchar(255) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;

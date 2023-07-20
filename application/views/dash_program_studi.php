@@ -83,7 +83,15 @@
 					{ data: 'program_pendidikan', title: 'Program Pendidikan' },
 					{ data: 'akreditasi', title: 'Akreditasi' },
 					{ data: 'sk_akreditasi', title: 'SK Akreditasi' },
-					{ data: 'id', title: 'Action' },
+					{ data: null,
+    					render: function (data, type, row) {
+        					return `
+           					<button class="btn-edit" data-id="${data.id}">Edit</button>
+            				<button class="btn-delete" data-id="${data.id}">Delete</button>
+        					`;
+    					},
+    				title: 'Action' 
+					},
 				]
 			})
 		}, [listData])
@@ -199,4 +207,31 @@
 			</div>
 		)
 	}
+
+	// Fungsi untuk menangani klik tombol edit
+    $(document).on('click', '.btn-edit', function() {
+        const id = $(this).data('id');
+        // Redirect ke halaman edit berdasarkan ID program studi
+        window.location.href = `<?= base_url() ?>index.php/ProgramStudi/edit_programstudi/${id}`;
+    });
+
+    // Fungsi untuk menangani klik tombol delete
+    $(document).on('click', '.btn-delete', function() {
+        const id = $(this).data('id');
+        // Konfirmasi sebelum menghapus data program studi
+        if (confirm('Apakah Anda yakin ingin menghapus data program studi ini?')) {
+            // Kirim request AJAX untuk menghapus data program studi berdasarkan ID
+            $.ajax({
+                url: `<?= base_url() ?>index.php/ProgramStudi/delete_programstudi/${id}`,
+                method: 'POST',
+                success: function(data) {
+                    // Refresh halaman setelah menghapus data
+                    window.location.reload();
+                },
+                error: function() {
+                    alert('Gagal menghapus data program studi.');
+                }
+            });
+        }
+    });
 </script>

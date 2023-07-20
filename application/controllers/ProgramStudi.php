@@ -50,15 +50,26 @@ class ProgramStudi extends CI_Controller {
 	}
 
 	public function edit_programstudi($id) {
-		// Tampilkan halaman form edit data program studi berdasarkan ID
+		$data['programstudi'] = $this->ProgramStudi_model->get_programstudi_by_id($id); // Ambil data program studi berdasarkan ID
+		$data['all_programstudi'] = $this->ProgramStudi_model->read(); // Ambil semua data program studi
+		$this->load->view('edit_program_studi', $data);
 	}
+	
 
 	public function update_programstudi($id) {
-		// Proses update data program studi ke database berdasarkan ID
+        $data['nama'] = $this->input->post('nama');
+        $data['program_pendidikan'] = $this->input->post('program_pendidikan');
+        $data['akreditasi'] = $this->input->post('akreditasi');
+        $data['sk_akreditasi'] = $this->input->post('sk_akreditasi');
+		
+		$this->ProgramStudi_model->update($id, $data);
+		redirect('programstudi'); // Redirect ke halaman daftar program studi setelah update
 	}
-
+		
 	public function delete_programstudi($id) {
-		// Proses hapus data program studi dari database berdasarkan ID
+		$this->ProgramStudi_model->delete($id);
+		redirect('programstudi'); // Redirect ke halaman daftar program studi setelah delete
 	}
+	
 
 }
