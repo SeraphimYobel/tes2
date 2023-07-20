@@ -59,24 +59,40 @@
 	const { useState, useEffect } = React
 	const App = () => {
 		const [showForm, setShowForm] = useState(null)
-		const [listData, setListData] = useState([
-			
-		])
+		const [listData, setListData] = useState([])
+				// get data from database
+		const getAllDataMataKuliah = () => {
+			$.ajax({
+				url: "<?=base_url()?>index.php/MataKuliah/get_all_matakuliah",
+				method: 'GET',
+				success: data => {
+					setListData(JSON.parse(data))
+				},
+				error: () => {
+					alert('Gagal mendapatkan data dari database')
+				}
+			})
+		}
+		// menampilkan data ke dalam database ketika ada perubahan state
 		useEffect(() => {
 			$(`#listdata`).DataTable({
 				destroy: true,
 				data: listData,
 				columns: [
-					{ data: 'Kode', title: 'Kode' },
-					{ data: 'Mata_Kuliah', title: 'Mata Kuliah' },
-					{ data: 'SKS', title: 'SKS' },
-					{ data: 'Nilai_Angka', title: 'Nilai Angka' },
-					{ data: 'Nilai_Huruf', title: 'Nilai Huruf' },
-					{ data: 'Semester', title: 'Semester' },
+					{ data: 'kode', title: 'Kode' },
+					{ data: 'matakuliah', title: 'Mata Kuliah' },
+					{ data: 'sks', title: 'SKS' },
+					{ data: 'nilai_angka', title: 'Nilai Angka' },
+					{ data: 'nilai_huruf', title: 'Nilai Huruf' },
+					{ data: 'semester', title: 'Semester' },
 					{ data: 'id', title: 'Action' },
 				]
 			})
 		}, [listData])
+		// mendapatkan data dari database saat pertama kali page loaded
+		useEffect(() => {
+			getAllDataMataKuliah()
+		}, [])
 		return (
 			<div id="container">
 				<div>
@@ -100,7 +116,7 @@
 					</div>
 					{
 						showForm == 'add' ? (
-							<FormInput setShowForm={setShowForm} setListData={setListData} />
+							<FormInput setShowForm={setShowForm} setListData={setListData} refreshData={getAllDataMataKuliah}/>
 						) : false
 					}
 					<div className="tablebox">
@@ -115,19 +131,29 @@
 	el.render(<App />)
 	// form input mata kuliah
 	const FormInput = props => {
-		const { setShowForm, setListData } = props
+		const { setShowForm, setListData, refreshData } = props
 		const [successMessage, setSuccessMessage] = useState(null)
 		// on submit form add new mata kuliah
 		const handleSubmit = (e) => {
 			e.preventDefault()
 			const data = Object.fromEntries(new FormData(document.querySelector('#formmatakuliah')).entries())
-			// set number
-			data.id = parseInt(Math.random() * 100)
-			setListData(prev => [...prev, data])
-			// on success
-			$('#formmatakuliah')[0].reset()
-			setSuccessMessage('Mata Kuliah berhasil ditambahkan, Terima kasih.')
-			setTimeout(() => setSuccessMessage(null),5000)
+			$.ajax({
+				url: "<?=base_url()?>index.php/MataKuliah/create_matakuliah",
+				data,
+				method: 'POST',
+				success: data => {
+					// on success
+					if(data == "true"){
+						$('#formmatakuliah')[0].reset()
+						setSuccessMessage('Mata Kuliah berhasil ditambahkan, Terima kasih.')
+						refreshData()
+						setTimeout(() => setSuccessMessage(null),5000)
+					}
+				},
+				error: () => {
+					alert('Gagal menyimpan data Mata Kuliah')
+				}
+			})
 		}
 		return (
 			<div className="forms">
@@ -141,26 +167,26 @@
 				<form id="formmatakuliah" onSubmit={handleSubmit}>
 					<div className="wrap">
 						<div className="formel">
-							<label htmlFor="Kode">Kode</label>
-							<input name="Kode" type="num" placeholder="e.g. 4523" required />
+							<label htmlFor="kode">Kode</label>
+							<input name="kode" type="num" placeholder="e.g. 4523" required />
 						</div>
 						<div className="formel">
 							<label htmlFor="matakuliah">Mata Kuliah</label>
-							<input name="Mata_Kuliah" type="text" placeholder="e.g. Pemrograman Web II" required />
+							<input name="matakuliah" type="text" placeholder="e.g. Pemrograman Web II" required />
 						</div>
 					</div>
 					<div className="wrap nowrap">
 						<div className="formel">
-							<label htmlFor="SKS">SKS</label>
-							<input name="SKS" type="num" placeholder="e.g. 19" required />
+							<label htmlFor="sks">SKS</label>
+							<input name="sks" type="num" placeholder="e.g. 19" required />
 						</div>
 						<div className="formel">
-							<label htmlFor="Nilai_Angka">Nilai_Angka</label>
-							<input name="Nilai_Angka" type="num" placeholder="e.g. 85" required />
+							<label htmlFor="nilai_angka">Nilai_Angka</label>
+							<input name="nilai_angka" type="num" placeholder="e.g. 85" required />
 						</div>
 						<div className="formel">
-							<label htmlFor="Nilai_Huruf">Nilai_Huruf</label>
-							<select required name="Nilai_Huruf">
+							<label htmlFor="nilai_huruf">Nilai_Huruf</label>
+							<select required name="nilai_huruf">
 								<option value="">Pilih Nilai_Huruf</option>
 								<option value="A">A</option>
 								<option value="B">AB</option>
@@ -172,8 +198,8 @@
 							</select>
 						</div>
 						<div className="formel fulls">
-							<label htmlFor="Semester">Semester</label>
-							<input name="Semester" type="text" placeholder="e.g. 4" required />
+							<label htmlFor="semester">Semester</label>
+							<input name="semester" type="text" placeholder="e.g. 4" required />
 						</div>
 					</div>
 					<div className="btnarea">

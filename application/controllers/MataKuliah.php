@@ -2,7 +2,11 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class MataKuliah extends CI_Controller {
+public function __construct(){
+		parent::__construct();
 
+		$this->load->model('MataKuliah_model');
+	}
 	/**
 	 * Index Page for this controller.
 	 *
@@ -25,10 +29,24 @@ class MataKuliah extends CI_Controller {
 		$this->load->view('nav');
 		$this->load->view('dash_mata_kuliah');
 	}
+		// get data all program studi
+	public function get_all_matakuliah(){
+		$data = $this->MataKuliah_model->get_all_matakuliah();
+		echo json_encode($data);
+	}
 
-	public function create_matakuliah() {
     // Tampilkan halaman form tambah data mata kuliah
-}
+	public function create_matakuliah() {
+		$data['kode'] = $this->input->post('kode');
+		$data['matakuiah'] = $this->input->post('matakuliah');
+		$data['sks'] = $this->input->post('sks');
+		$data['nilai_angka'] = $this->input->post('nilaiangka');
+		$data['nilai_huruf'] = $this->input->post('nilaihuruf');
+		$data['semester'] = $this->input->post('semester');
+		$processadd = $this->MataKuliah_model->create($data);
+		echo json_encode($processadd);
+	}
+
 
 public function store_matakuliah() {
     // Proses tambah data mata kuliah ke database
