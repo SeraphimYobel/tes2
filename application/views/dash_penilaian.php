@@ -223,7 +223,7 @@
 					if(data == "true" || data > 0){
 						// on success
 						$('#formpenilaian')[0].reset()
-						setSuccessMessage('Penilaian berhasil ditambahkan, Terima kasih.')
+						setSuccessMessage(`Penilaian berhasil di${type == 'add' ? 'tambahkan' : 'update'}, Terima kasih.`)
 						getAllPenilaian()
 						setTimeout(() => setSuccessMessage(null),5000)
 					}
@@ -235,7 +235,7 @@
 		}
 		return (
 			<div className="forms">
-				<h1>Tambah Penilaian</h1>
+				<h1>{type == 'add' ? 'Tambah' : 'Update'} Penilaian</h1>
 				<p>Silahkan lengkapi form dibawah ini.</p>
 				{
 					successMessage != null ? (

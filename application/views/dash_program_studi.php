@@ -215,7 +215,7 @@
 		}, [type, editedData])
 		return (
 			<div className="forms">
-				<h1>Tambah Program Studi</h1>
+				<h1>{type == 'add' ? 'Tambah' : 'Update'} Program Studi</h1>
 				<p>Silahkan lengkapi form dibawah ini.</p>
 				{
 					successMessage != null ? (

@@ -8,10 +8,15 @@ class Kota_model extends CI_Model {
     }
 
     public function create($data) {
-        $this->db->insert('Kota', $data);
-        return $this->db->insert_id();
+        $data = array(
+            'kode_kota' => $data["kode_kota"],
+            'nama' => $data["nama"],
+        );
+        return $this->db->insert('kota', $data);
     }
-
+    public function get_all_kota(){
+        return $this->db->get('Kota')->result_array();
+    }
     public function read($id = null) {
         if ($id) {
             return $this->db->get_where('Kota', ['ID' => $id])->row_array();
@@ -31,13 +36,6 @@ class Kota_model extends CI_Model {
         $this->db->delete('Kota');
         return $this->db->affected_rows();
     }
-
-	// class Kota_model extends CI_Model {
-    // public function create_kota($data) {
-    //     $this->db->insert('Kota', $data);
-    //     return $this->db->insert_id();
-    // }
-
     public function read_kota($id = null) {
         if ($id) {
             return $this->db->get_where('Kota', ['ID' => $id])->row_array();
@@ -58,5 +56,3 @@ class Kota_model extends CI_Model {
         return $this->db->affected_rows();
     }
 }
-
-// }

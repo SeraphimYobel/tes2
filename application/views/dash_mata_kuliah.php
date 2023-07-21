@@ -207,7 +207,7 @@
 					// on success
 					if(data == "true" || data > 0){
 						$('#formmatakuliah')[0].reset()
-						setSuccessMessage('Mata Kuliah berhasil ditambahkan, Terima kasih.')
+						setSuccessMessage(`Mata Kuliah berhasil di${type == 'add' ? 'tambahkan' : 'update'}, Terima kasih.`)
 						refreshData()
 						setTimeout(() => setSuccessMessage(null),5000)
 					}
@@ -227,7 +227,7 @@
 		}, [type, editedData])
 		return (
 			<div className="forms">
-				<h1>Tambah Mata Kuliah</h1>
+				<h1>{type == 'add' ? 'Tambah' : 'Update'} Mata Kuliah</h1>
 				<p>Silahkan lengkapi form dibawah ini.</p>
 				{
 					successMessage != null ? (

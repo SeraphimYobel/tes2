@@ -59,34 +59,91 @@
 	const { useState, useEffect } = React
 	const App = () => {
 		const [showForm, setShowForm] = useState(null)
-		const [listData, setListData] = useState([
-			{ id: 1, nama: 'TI', program_pendidikan: 'Teknik Informatika', akreditasi: 'A', sk_akreditasi: '001/TI/AKRED/UNSIA' },
-			{ id: 2, nama: 'MI', program_pendidikan: 'Managemen Informatika', akreditasi: 'B', sk_akreditasi: '001/TI/AKRED/UNSIA' },
-			{ id: 3, nama: 'AK', program_pendidikan: 'Akuntansi', akreditasi: 'A', sk_akreditasi: '001/TI/AKRED/UNSIA' },
-		])
+		const [listData, setListData] = useState([])
+		const [showMessageSuccess, setShowMessageSuccess] = useState(false)
+		const [editedData, setEditedData] = useState(null)
+		// get all data kota
+		const getAllKota = () => {
+			$.ajax({
+				url: `<?=base_url()?>index.php/Kota/get_all_kota`,
+				method: 'GET',
+				success: data => {
+					setListData(JSON.parse(data))
+				},
+				error: () => {
+					alert('Gagal mendapatkan daftar kota')
+				}
+			})
+		}
+		// Fungsi untuk menangani klik tombol edit
+		const handleEditData = (id, listData) => {
+			setEditedData(listData.filter(it => it.id == id)[0])
+			setShowForm('edit')
+		}
+		// Fungsi untuk menangani klik tombol delete
+		const handleDeleteData = id => {
+			if (confirm('Apakah Anda yakin ingin menghapus data Kota?')){
+				$.ajax({
+					url: `<?= base_url() ?>index.php/Kota/delete_kota/${id}`,
+					method: 'POST',
+					success: function(data) {
+						setShowMessageSuccess(true)
+						setTimeout(() => setShowMessageSuccess(false),5000)
+						// Refresh halaman setelah menghapus data
+						getAllKota()
+					},
+					error: function() {
+						alert('Gagal menghapus data program studi.');
+					}
+				});
+			}
+		}
 		useEffect(() => {
 			$(`#listdata`).DataTable({
 				destroy: true,
 				data: listData,
 				columns: [
-					{ data: 'nama', title: 'Nama' },
-					{ data: 'program_pendidikan', title: 'Program Pendidikan' },
-					{ data: 'akreditasi', title: 'Akreditasi' },
-					{ data: 'sk_akreditasi', title: 'SK Akreditasi' },
-					{ data: 'id', title: 'Action' },
-				]
+					{ data: 'kode_kota', title: 'Kode' },
+					{ data: 'nama', title: 'Nama Kota' },
+					{ data: 'id', title: 'Action', render: function(data){
+						return `
+							<i title="Edit Program Studi" class="fa-solid fa-pen-to-square btn-edit" data-id="${data}"></i>
+							<i title="Hapus Program Studi" class="fa-solid fa-trash" data-id="${data}"></i>
+        				`;
+					}},
+				],
+				initComplete: function(){
+					$('#listdata').off().on('click', 'tr td i', function(){
+						const buttonType = $(this).attr('class')
+						// jika tombol edi ditekan
+						if(buttonType.includes('btn-edit')){
+							handleEditData($(this).attr('data-id'), listData)
+						} else {
+							handleDeleteData($(this).attr('data-id'))
+						}
+					})
+				}
 			})
 		}, [listData])
+		// get all kota on render
+		useEffect(() => {
+			getAllKota()
+		}, [])
 		return (
 			<div id="container">
 				<div>
 					<div className="title">
-						<i className="fas fa-graduation-cap"></i>
+						<i className="fas fa-building"></i>
 						<div>
 							<h1> Kota</h1>
 							<p>Klik <strong>Tambah</strong> untuk menambahkan kota. </p>
 						</div>
 					</div>
+					{
+						showMessageSuccess ? (
+							<p className="successmessage"><i className="fa-solid fa-circle-info"></i> Kota berhasil dihapus.</p>
+						) : false
+					}
 					<div className="btnarea btnarea-nopad">
 						{ /* hide show button add */
 							showForm == null ? (
@@ -99,8 +156,14 @@
 						}
 					</div>
 					{
-						showForm == 'add' ? (
-							<FormInput setShowForm={setShowForm} setListData={setListData} />
+						showForm != null ? (
+							<FormInput 
+								setShowForm={setShowForm} 
+								setListData={setListData}
+								type={showForm}
+								editedData={editedData} 
+								refreshData={getAllKota}
+							/>
 						) : false
 					}
 					<div className="tablebox">
@@ -115,51 +178,62 @@
 	el.render(<App />)
 	// form input program studi
 	const FormInput = props => {
-		const { setShowForm, setListData } = props
+		const { setShowForm, setListData, type, editedData, refreshData } = props
 		const [successMessage, setSuccessMessage] = useState(null)
 		// on submit form add new program studi
-		const handleSubmit = (e) => {
+		const handleSubmit = (e, type, editedData) => {
 			e.preventDefault()
 			const data = Object.fromEntries(new FormData(document.querySelector('#formprogramstudi')).entries())
-			// set number
-			data.id = parseInt(Math.random() * 100)
-			setListData(prev => [...prev, data])
-			// on success
-			$('#formprogramstudi')[0].reset()
-			setSuccessMessage('Program Studi berhasil ditambahkan, Terima kasih.')
-			setTimeout(() => setSuccessMessage(null),5000)
+			let url = type == 'add' ? "<?=base_url()?>index.php/Kota/create_kota" : "<?=base_url()?>index.php/Kota/update_kota"
+			// menyisipkan id program studi jika edit
+			if(type == 'edit'){
+				data.id = editedData.id
+			}
+			// proses simpan atau update kota
+			$.ajax({
+				url,
+				data,
+				method: 'POST',
+				success: data => {
+					// on success
+					if(data == "true" || data > 0){
+						$('#formprogramstudi')[0].reset()
+						setSuccessMessage(`Kota berhasil di${type == 'add' ? 'tambahkan' : 'update'}, Terima kasih.`)
+						refreshData()
+						setTimeout(() => setSuccessMessage(null),5000)
+					}
+				},
+				error: () => {
+					alert('Gagal menyimpan data Program Studi')
+				}
+			})
 		}
+		useEffect(() => {
+			if(type == 'edit'){
+				// update nilai elemen berdasarkan key value
+				for(let obj in editedData){
+					$(`[name="${obj}"]`).val(editedData[obj])
+				}
+			}
+		}, [type, editedData])
 		return (
 			<div className="forms">
-				<h1>Tambah Program Studi</h1>
+				<h1>{type == 'add' ? 'Tambah' : 'Update'} Kota</h1>
 				<p>Silahkan lengkapi form dibawah ini.</p>
 				{
 					successMessage != null ? (
 						<span className="successmessage"><i className="fas fa-check-circle"></i> {successMessage}</span>
 					) : false
 				}
-				<form id="formprogramstudi" onSubmit={handleSubmit}>
+				<form id="formprogramstudi" onSubmit={e => handleSubmit(e, type, editedData)}>
 					<div className="wrap">
 						<div className="formel">
-							<label htmlFor="nama">Nama</label>
-							<input name="nama" type="text" placeholder="e.g. MI" required />
+							<label htmlFor="kode_kota">Kode</label>
+							<input name="kode_kota" type="text" placeholder="e.g. PLG" required />
 						</div>
 						<div className="formel">
-							<label htmlFor="programpendidikan">Program Pendidikan</label>
-							<input name="program_pendidikan" type="text" placeholder="e.g. Managemen Informatika" required />
-						</div>
-						<div className="formel">
-							<label htmlFor="akreditasi">Akreditasi</label>
-							<select required name="akreditasi">
-								<option value="">Pilih Akreditasi</option>
-								<option value="A">A</option>
-								<option value="B">B</option>
-								<option value="C">C</option>
-							</select>
-						</div>
-						<div className="formel fulls">
-							<label htmlFor="sk">SK Akreditasi</label>
-							<input name="sk_akreditasi" type="text" placeholder="e.g. 001/TI/AKRED/UNSIA" required />
+							<label htmlFor="nama">Nama Kota</label>
+							<input name="nama" type="text" placeholder="e.g. Palembang" required />
 						</div>
 					</div>
 					<div className="btnarea">
