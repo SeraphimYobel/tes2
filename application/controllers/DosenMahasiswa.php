@@ -49,8 +49,15 @@ class DosenMahasiswa extends CI_Controller {
 		// Tampilkan halaman form edit data dosen berdasarkan ID
 	}
 
-	public function update_dosen($id) {
+	public function update_dosen() {
 		// Proses update data dosen ke database berdasarkan ID
+		$id = $this->input->post('id');
+        $data['nama'] = $this->input->post('nama');
+        $data['nidn'] = $this->input->post('nidn');
+        $data['golongan'] = $this->input->post('golongan');
+        $data['jabatan'] = $this->input->post('jabatan');
+		$processedit = $this->DosenMahasiswa_model->update_dosen($id, $data);
+		echo json_encode($processedit);
 	}
 
 	public function delete_dosen($id) {

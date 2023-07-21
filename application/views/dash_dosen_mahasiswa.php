@@ -369,6 +369,7 @@
 	const TabDosen = props => {
 		const {data, refresh, setShowMessageSuccess} = props
 		const [showForm, setShowForm] = useState(null)
+		const [editedData, setEditedData] = useState(null)
 		// Fungsi untuk menangani klik tombol edit
 		const handleEditData = (id, listData) => {
 			setEditedData(listData.filter(it => it.id == id)[0])
@@ -447,7 +448,7 @@
 							setShowForm={setShowForm} 
 							// setListData={setListData} 
 							refreshData={refresh}
-							// editedData={editedData}
+							editedData={editedData}
 						/>
 					) : false
 				}
@@ -465,7 +466,7 @@
 		const handleSubmit = (e, type, editedData) => {
 			e.preventDefault()
 			const data = Object.fromEntries(new FormData(document.querySelector('#formprogramstudi')).entries())
-			let url = type == 'add' ? "<?=base_url()?>index.php/DosenMahasiswa/create_dosen" : "<?=base_url()?>index.php/ProgramStudi/update_programstudi"
+			let url = type == 'add' ? "<?=base_url()?>index.php/DosenMahasiswa/create_dosen" : "<?=base_url()?>index.php/DosenMahasiswa/update_dosen"
 			// menyisipkan id program studi jika edit
 			if(type == 'edit'){
 				data.id = editedData.id
