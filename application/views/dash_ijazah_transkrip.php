@@ -104,6 +104,22 @@
 		const { useState, useEffect } = React
 		const [mahasiswaInfo, setMahasiswaInfo] = useState(null)
 		const [mahasiswaNotFound, setMahasiswaNotFound] = useState(false)
+		const [listNilai, setListNilai] = useState([])
+		// get detail list nilai
+		const getDetailTranskrip = id => {
+			$.ajax({
+				url: `<?=base_url()?>index.php/Penilaian/get_all_penilaian`,
+				method: 'GET',
+				success: data => {
+					let allData = JSON.parse(data)
+					let filteredDataByIdMhs = allData.filter(it => it.tarunaid == id)
+					setListNilai(filteredDataByIdMhs)
+				},
+				error : () => {
+					alert('Gagal mendapatkan data penilaian')
+				}
+			})
+		}
 		// search mahasiswa
 		const handleSearchMahasiswa = e => {
 			e.preventDefault()
@@ -116,6 +132,7 @@
 					console.log(filteredData[0])
 					if(filteredData.length){
 						setMahasiswaInfo(filteredData[0])
+						getDetailTranskrip(filteredData[0].id)
 						setMahasiswaNotFound(false)
 					} else {
 						setMahasiswaNotFound(true)
@@ -127,6 +144,7 @@
 				}
 			})
 		}
+		// generate datatable
 		return (
 			<div id="container">
 				<div>
