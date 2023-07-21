@@ -281,12 +281,11 @@
 							<select required name="nilai_huruf">
 								<option value="">--- Pilih Nilai Huruf ---</option>
 								<option value="A">A</option>
-								<option value="B">AB</option>
-								<option value="C">B</option>
-								<option value="D">BC</option>
-								<option value="E">C</option>
-								<option value="F">D</option>
-								<option value="F">E</option>
+								<option value="B">B</option>
+								<option value="C">C</option>
+								<option value="D">D</option>
+								<option value="E">E</option>
+								<option value="F">F</option>
 							</select>
 						</div>
 						<div className="formel fulls">
