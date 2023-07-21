@@ -53,6 +53,20 @@
 		color: #1B9C85;
 		background: #f5fffd;
 	}
+	td>i{
+		display: inline-block;
+		cursor: pointer;
+	}
+	td{
+		white-space: nowrap;
+	}
+	.fa-pen-to-square{
+		color: #1B9C85;
+	}
+	.fa-trash{
+		color: #FF0060;
+		margin-left: 0.5em;
+	}
 </style>
 <div id="appss"></div>
 <script type="text/babel">
@@ -60,6 +74,8 @@
 	const App = () => {
 		const [showForm, setShowForm] = useState(null)
 		const [listData, setListData] = useState([])
+		const [showMessageSuccess, setShowMessageSuccess] = useState(false)
+		const [editedData, setEditedData] = useState(null)
 		// get data from database
 		const getAllDataProgramStudi = () => {
 			$.ajax({
@@ -73,6 +89,29 @@
 				}
 			})
 		}
+		// Fungsi untuk menangani klik tombol edit
+		const handleEditData = (id, listData) => {
+			setEditedData(listData.filter(it => it.id == id)[0])
+		}
+		// Fungsi untuk menangani klik tombol delete
+		const handleDeleteData = id => {
+			if (confirm('Apakah Anda yakin ingin menghapus data program studi ini?')) {
+            // Kirim request AJAX untuk menghapus data program studi berdasarkan ID
+            $.ajax({
+                url: `<?= base_url() ?>index.php/ProgramStudi/delete_programstudi/${id}`,
+                method: 'POST',
+                success: function(data) {
+					setShowMessageSuccess(true)
+					setTimeout(() => setShowMessageSuccess(false),5000)
+                    // Refresh halaman setelah menghapus data
+                    getAllDataProgramStudi()
+                },
+                error: function() {
+                    alert('Gagal menghapus data program studi.');
+                }
+            });
+        }
+		}
 		// menampilkan data ke dalam database ketika ada perubahan state
 		useEffect(() => {
 			$(`#listdata`).DataTable({
@@ -83,16 +122,29 @@
 					{ data: 'program_pendidikan', title: 'Program Pendidikan' },
 					{ data: 'akreditasi', title: 'Akreditasi' },
 					{ data: 'sk_akreditasi', title: 'SK Akreditasi' },
-					{ data: null,
+					{ 
+						data: null,
     					render: function (data, type, row) {
         					return `
-           					<button class="btn-edit" data-id="${data.id}">Edit</button>
-            				<button class="btn-delete" data-id="${data.id}">Delete</button>
+							<i title="Edit Program Studi" class="fa-solid fa-pen-to-square btn-edit" data-id="${data.id}"></i>
+							<i title="Hapus Program Studi" class="fa-solid fa-trash" data-id="${data.id}"></i>
         					`;
     					},
     				title: 'Action' 
 					},
-				]
+				],
+				initComplete: function(){
+					$('#listdata').off().on('click', 'tr td i', function(){
+						const buttonType = $(this).attr('class')
+						// jika tombol edi ditekan
+						if(buttonType.includes('btn-edit')){
+							handleEditData($(this).attr('data-id'), listData)
+							setShowForm('edit')
+						} else {
+							handleDeleteData($(this).attr('data-id'))
+						}
+					})
+				}
 			})
 		}, [listData])
 		// mendapatkan data dari database saat pertama kali page loaded
@@ -109,6 +161,11 @@
 							<p>Klik <strong>Tambah</strong> untuk menambahkan Program Studi. </p>
 						</div>
 					</div>
+					{
+						showMessageSuccess ? (
+							<p className="successmessage"><i className="fa-solid fa-circle-info"></i> Program Studi berhasil dihapus.</p>
+						) : false
+					}
 					<div className="btnarea btnarea-nopad">
 						{ /* hide show button add */
 							showForm == null ? (
@@ -121,8 +178,14 @@
 						}
 					</div>
 					{
-						showForm == 'add' ? (
-							<FormInput setShowForm={setShowForm} setListData={setListData} refreshData={getAllDataProgramStudi}/>
+						showForm != null ? (
+							<FormInput 
+								type={showForm} 
+								setShowForm={setShowForm} 
+								setListData={setListData} 
+								refreshData={getAllDataProgramStudi}
+								editedData={editedData}
+							/>
 						) : false
 					}
 					<div className="tablebox">
@@ -137,21 +200,26 @@
 	el.render(<App />)
 	// form input program studi
 	const FormInput = props => {
-		const { setShowForm, setListData, refreshData } = props
+		const { setShowForm, setListData, refreshData, editedData, type } = props
 		const [successMessage, setSuccessMessage] = useState(null)
 		// on submit form add new program studi
-		const handleSubmit = (e) => {
+		const handleSubmit = (e, type, editedData) => {
 			e.preventDefault()
 			const data = Object.fromEntries(new FormData(document.querySelector('#formprogramstudi')).entries())
+			let url = type == 'add' ? "<?=base_url()?>index.php/ProgramStudi/create_programstudi" : "<?=base_url()?>index.php/ProgramStudi/update_programstudi"
+			// menyisipkan id program studi jika edit
+			if(type == 'edit'){
+				data.id = editedData.id
+			}
 			$.ajax({
-				url: "<?=base_url()?>index.php/ProgramStudi/create_programstudi",
+				url,
 				data,
 				method: 'POST',
 				success: data => {
 					// on success
-					if(data == "true"){
+					if(data == "true" || data > 0){
 						$('#formprogramstudi')[0].reset()
-						setSuccessMessage('Program Studi berhasil ditambahkan, Terima kasih.')
+						setSuccessMessage(`Program Studi berhasil di${type == 'add' ? 'tambahkan' : 'update'}, Terima kasih.`)
 						refreshData()
 						setTimeout(() => setSuccessMessage(null),5000)
 					}
@@ -161,6 +229,14 @@
 				}
 			})
 		}
+		useEffect(() => {
+			if(type == 'edit'){
+				// update nilai elemen berdasarkan key value
+				for(let obj in editedData){
+					$(`[name="${obj}"]`).val(editedData[obj])
+				}
+			}
+		}, [type, editedData])
 		return (
 			<div className="forms">
 				<h1>Tambah Program Studi</h1>
@@ -170,7 +246,7 @@
 						<span className="successmessage"><i className="fas fa-check-circle"></i> {successMessage}</span>
 					) : false
 				}
-				<form id="formprogramstudi" onSubmit={handleSubmit}>
+				<form id="formprogramstudi" onSubmit={e => handleSubmit(e, type, editedData)}>
 					<div className="wrap">
 						<div className="formel">
 							<label htmlFor="nama">Nama</label>
@@ -207,31 +283,4 @@
 			</div>
 		)
 	}
-
-	// Fungsi untuk menangani klik tombol edit
-    $(document).on('click', '.btn-edit', function() {
-        const id = $(this).data('id');
-        // Redirect ke halaman edit berdasarkan ID program studi
-        window.location.href = `<?= base_url() ?>index.php/ProgramStudi/edit_programstudi/${id}`;
-    });
-
-    // Fungsi untuk menangani klik tombol delete
-    $(document).on('click', '.btn-delete', function() {
-        const id = $(this).data('id');
-        // Konfirmasi sebelum menghapus data program studi
-        if (confirm('Apakah Anda yakin ingin menghapus data program studi ini?')) {
-            // Kirim request AJAX untuk menghapus data program studi berdasarkan ID
-            $.ajax({
-                url: `<?= base_url() ?>index.php/ProgramStudi/delete_programstudi/${id}`,
-                method: 'POST',
-                success: function(data) {
-                    // Refresh halaman setelah menghapus data
-                    window.location.reload();
-                },
-                error: function() {
-                    alert('Gagal menghapus data program studi.');
-                }
-            });
-        }
-    });
 </script>
