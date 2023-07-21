@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 21, 2023 at 04:33 PM
+-- Generation Time: Jul 21, 2023 at 05:11 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -67,7 +67,9 @@ INSERT INTO `kota` (`id`, `kode_kota`, `nama`) VALUES
 (5, 'YGY', 'Yogyakarta'),
 (6, 'KDS', 'Kudus'),
 (7, 'PLG', 'Palembang'),
-(8, 'BWI', 'Banyuwangi');
+(8, 'BWI', 'Banyuwangi'),
+(9, 'BKG', 'Bangkinang'),
+(10, 'BKS', 'Bekasi');
 
 -- --------------------------------------------------------
 
@@ -97,7 +99,15 @@ INSERT INTO `matakuliah` (`id`, `kode`, `matakuliah`, `sks`, `semester`) VALUES
 (8, '200302306', 'Komunikasi Data', 3, 'Semester IV'),
 (9, '200001104', 'Bahasa Inggris', 2, 'Semester I'),
 (10, '200001108', 'ICT Literacy', 2, 'Semester I'),
-(11, '200301307', 'Data Mining', 3, 'Semester V');
+(11, '200301307', 'Data Mining', 3, 'Semester V'),
+(12, '200002101', 'Pendidikan Pancasila', 2, 'Semester II'),
+(13, '200002106', 'Estetika Humanisme', 2, 'Semester II'),
+(14, '200001105', 'Pendidikan Kewarganegaraan', 2, 'Semester III'),
+(15, '200001107', 'Pendidikan Agama', 2, 'Semester III'),
+(16, '200301217', 'Pemrograman Berorientasi Objek', 3, 'Semester V'),
+(17, '200301307', 'Data Mining', 3, 'Semester V'),
+(18, '200002102', 'Pendidikan Kewirausahaan', 2, 'Semester VI'),
+(19, '200302218', 'Rekayasa Perangkat Lunak', 3, 'Semester VI');
 
 -- --------------------------------------------------------
 
@@ -150,7 +160,7 @@ INSERT INTO `pejabat` (`id`, `nama`, `nidn`, `golongan`, `jabatan`) VALUES
 CREATE TABLE `program_studi` (
   `id` int(11) NOT NULL,
   `nama` varchar(255) NOT NULL,
-  `program_pendidikan` enum('Diploma III','Diploma IV') NOT NULL,
+  `program_pendidikan` enum('Diploma III','Diploma IV','Sarjana') NOT NULL,
   `akreditasi` enum('Baik','Baik Sekali','Unggul') NOT NULL,
   `sk_akreditasi` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -160,7 +170,7 @@ CREATE TABLE `program_studi` (
 --
 
 INSERT INTO `program_studi` (`id`, `nama`, `program_pendidikan`, `akreditasi`, `sk_akreditasi`) VALUES
-(1, 'Informatika', '', 'Baik Sekali', '001/AKRED/TI/UNSIA');
+(1, 'Informatika', 'Sarjana', 'Baik Sekali', '001/AKRED/TI/UNSIA');
 
 -- --------------------------------------------------------
 
@@ -186,7 +196,10 @@ INSERT INTO `taruna` (`id`, `nama`, `nomor_taruna`, `tempat_lahir`, `tanggal_lah
 (2, 'Joanne Landy Tantreece', '210401010022', 1, '2003-10-18', 1, 'file'),
 (3, 'Iwan Aslich', '210401010043', 6, '1986-01-23', 1, 'file'),
 (4, 'Rizki Ramadhan', '220401020003', 7, '1993-02-24', 1, 'file'),
-(5, 'Krisna Krisdianto Saputra ', '200401072028', 8, '2002-10-26', 1, 'file');
+(5, 'Krisna Krisdianto Saputra ', '200401072028', 8, '2002-10-26', 1, 'file'),
+(6, 'Nuri Hasanah', ' 200401010021', 9, '2001-11-26', 1, 'file'),
+(7, 'Kevin Setiawan', '210401120004', 10, '2003-06-01', 1, 'file'),
+(8, 'Ahmad Sofiyullah', '220401020035', 2, '1989-07-17', 1, 'file');
 
 -- --------------------------------------------------------
 
@@ -278,13 +291,13 @@ ALTER TABLE `ijazah`
 -- AUTO_INCREMENT for table `kota`
 --
 ALTER TABLE `kota`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `matakuliah`
 --
 ALTER TABLE `matakuliah`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `nilai`
@@ -308,7 +321,7 @@ ALTER TABLE `program_studi`
 -- AUTO_INCREMENT for table `taruna`
 --
 ALTER TABLE `taruna`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `transkip_nilai`
