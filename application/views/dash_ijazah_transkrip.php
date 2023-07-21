@@ -123,15 +123,62 @@
 		font-size: 1.2em;
 		transform: translateY(0.06em);
 	}
+	.boxijazah{
+		position: fixed;
+		top: 0;
+		left: 0;
+		padding: 1em;
+		width: 100%;
+		height: 100%;
+		background: rgba(20,20,20,0.5) !important;
+		border-radius: 0 !important;
+		animation: show 0.5s ease;
+	}
+	.formijazah{
+		height: 100%;
+		border-radius: 0.3em;
+		background: white;
+		padding: 2.5em 4em;
+		font-size: 1.3em;
+		line-height: 1.5;
+	}
+	.between{
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+	.text-center{
+		text-align: center;
+	}
+	.between>div{
+		width: 20em;
+	}
+	.text-center>h1{
+		font-size: 1.8em;
+		margin-top: 0.5em;
+	}
+	.wrap-center{
+		padding: 3em 8em;
+		display: flex;
+		gap: 5em;
+	}
+	.bots{
+		margin-top: 4em;
+	}
+	.pads{
+		padding: 0em 6em 2em 6em;
+		text-align: justify;
+	}
 </style>
 <div id="appss"></div>
 <script type="text/babel">
+	const { useState, useEffect } = React
 	const App = () => {
-		const { useState, useEffect } = React
 		const [mahasiswaInfo, setMahasiswaInfo] = useState(null)
 		const [mahasiswaNotFound, setMahasiswaNotFound] = useState(false)
 		const [listNilai, setListNilai] = useState([])
 		const [onStart, setOnStart] = useState(true)
+		const [isPrintIjazah, setIsPrintIjazah] = useState(false)
 		// get detail list nilai
 		const getDetailTranskrip = id => {
 			$.ajax({
@@ -156,7 +203,6 @@
 				success: data => {
 					let allData = JSON.parse(data)
 					let filteredData = allData.filter(it => it.nomor_taruna.includes($('[name="nim"]').val()))
-					console.log(filteredData[0])
 					if(filteredData.length){
 						setMahasiswaInfo(filteredData[0])
 						getDetailTranskrip(filteredData[0].id)
@@ -174,7 +220,6 @@
 		}
 		// generate datatable
 		useEffect(() => {
-			console.log(listNilai)
 			$('#listdata').DataTable({
 				destroy: true,
 				data: listNilai,
@@ -227,7 +272,7 @@
 										<p><i className="fas fa-graduation-cap"></i> {mahasiswaInfo.namaprodi}</p>
 									</div>
 									<div className="headprint">
-										<button><i className="fa-solid fa-print"></i> Print Ijazah</button>
+										<button onClick={() => setIsPrintIjazah(true)}><i className="fa-solid fa-print"></i> Print Ijazah</button>
 										<button><i className="fa-solid fa-file-contract"></i> Print Transkrip</button>
 									</div>
 								</div>
@@ -246,6 +291,9 @@
 						) : false
 					}
 				</div>
+				{
+					isPrintIjazah ? (<FormIjazah data={mahasiswaInfo} hide={setIsPrintIjazah}/>) : false
+				}
 			</div>
 		)
 	}
@@ -253,4 +301,64 @@
 	const el = ReactDOM.createRoot(root)
 	el.render(<App />)
 	// form input program studi
+	const FormIjazah = props => {
+		const {nama, namakota, nomor_taruna, namaprodi, tanggal_lahir, program_pendidikan, akreditasi} = props.data
+		const {hide} = props
+		useEffect(() => {
+			window.print()
+		}, [])
+		return (
+			<div className="boxijazah" onClick={e => e.target.className == "boxijazah" && hide(false)}>
+				<div className="formijazah">
+					<div className="between">
+						<p>No. Seri : 120</p>
+						<p>No. Ijazah : 1320</p>
+					</div>
+					<div className="text-center">
+						<h1>IJAZAH</h1>
+					</div>
+					<div className="wrap-center">
+						<div>
+							<p>Memberikan Ijazah Kepada </p>
+							<p>Tempat dan Tanggal Lahir </p>
+							<p>Nomor Taruna </p>
+							<p>Program Pendidikan </p>
+							<p>Program Studi </p>
+							<p>Status </p>
+						</div>
+						<div>
+							<p><strong>: {nama}</strong></p>
+							<p>: {namakota}, {tanggal_lahir} </p>
+							<p>: {nomor_taruna} </p>
+							<p>: {namaprodi} </p>
+							<p>: {program_pendidikan} </p>
+							<p>: <strong>{akreditasi}</strong> </p>
+						</div>
+					</div>
+					<div className="pads">
+						<p>Ijazah ini diserahkan berdasarkan Surat Keputusan Direktur Politeknik XYZ Nomor: SK.321 Tahun 2022, setelah yang bersangkutan memenuhi semua persyaratan yang telah ditentukan dan kepadanya dilimpahkan segala wewenang dan hak yang berhubungan dengan Ijazah yang dimilikinya serta berhak menggunakan Gelar Akademik <strong>{program_pendidikan != 'Sarjana' ? 'Ahli Madya' : 'Sarjana'} Komputer ({program_pendidikan == 'Sarjana' ? 'S.Kom' : 'A.Md'})</strong></p>
+					</div>
+					<div className="between pads">
+						<div className="text-center">
+							<p>WAKIL DIREKTUR I </p>
+							<p>POLITEKNIK XYZ</p>
+							<div className="bots">
+								<p><strong>NOBITA NOBI</strong></p>
+								<p>NIP. 100900879</p>
+							</div>
+						</div>
+						<div className="text-center">
+							<p>Jakarta, 12 Agustus 2023</p>
+							<p>DIREKTUR</p>
+							<p>POLITEKNIK XYZ</p>
+							<div className="bots">
+								<p><strong>SUNEO</strong></p>
+								<p>NIP. 100232289</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		)
+	}
 </script>
