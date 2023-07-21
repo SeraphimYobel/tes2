@@ -250,23 +250,6 @@
 							<label htmlFor="sks">SKS</label>
 							<input name="sks" type="num" placeholder="e.g. 19" required />
 						</div>
-						<div className="formel">
-							<label htmlFor="nilai_angka">Nilai_Angka</label>
-							<input name="nilai_angka" type="num" placeholder="e.g. 85" required />
-						</div>
-						<div className="formel">
-							<label htmlFor="nilai_huruf">Nilai_Huruf</label>
-							<select required name="nilai_huruf">
-								<option value="">--- Pilih Nilai Huruf ---</option>
-								<option value="A">A</option>
-								<option value="B">AB</option>
-								<option value="C">B</option>
-								<option value="D">BC</option>
-								<option value="E">C</option>
-								<option value="F">D</option>
-								<option value="G">E</option>
-							</select>
-						</div>
 						<div className="formel fulls">
 							<label htmlFor="semester">Semester</label>
 							<select required name="semester">

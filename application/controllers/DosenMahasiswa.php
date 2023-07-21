@@ -33,6 +33,12 @@ class DosenMahasiswa extends CI_Controller {
 	// Dosen
 	public function create_dosen() {
 		// Tampilkan halaman form tambah data dosen
+		$data['nama'] = $this->input->post('nama');
+		$data['nip'] = $this->input->post('nip');
+		$data['golongan'] = $this->input->post('golongan');
+		$data['jabatan'] = $this->input->post('jabatan');
+		$processadd = $this->DosenMahasiswa_model->create_dosen($data);
+		echo json_encode($processadd);
 	}
 
 	public function store_dosen() {
@@ -49,6 +55,8 @@ class DosenMahasiswa extends CI_Controller {
 
 	public function delete_dosen($id) {
 		// Proses hapus data dosen dari database berdasarkan ID
+		$processdata = $this->DosenMahasiswa_model->delete_dosen($id);
+		return $processdata;
 	}
 	public function get_all_mahasiswa(){
 		$data = $this->DosenMahasiswa_model->get_all_mahasiswa();

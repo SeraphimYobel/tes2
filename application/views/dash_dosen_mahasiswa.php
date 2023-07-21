@@ -160,6 +160,7 @@
 							<TabDosen 
 								data={listDosen}
 								refresh={getAllDosen}
+								setShowMessageSuccess={setShowMessageSuccess}
 							/>
 						) : false
 					}
@@ -364,8 +365,32 @@
 	}
 	// tab mahasiswa
 	const TabDosen = props => {
-		const {data} = props
+		const {data, refresh, setShowMessageSuccess} = props
 		const [showForm, setShowForm] = useState(null)
+		// Fungsi untuk menangani klik tombol edit
+		const handleEditData = (id, listData) => {
+			setEditedData(listData.filter(it => it.id == id)[0])
+			setShowForm('edit')
+		}
+		// Fungsi untuk menangani klik tombol delete
+		const handleDeleteData = id => {
+			if (confirm('Apakah Anda yakin ingin menghapus data dosen?')){
+            // Kirim request AJAX untuk menghapus data program studi berdasarkan ID
+				$.ajax({
+					url: `<?= base_url() ?>index.php/DosenMahasiswa/delete_dosen/${id}`,
+					method: 'POST',
+					success: function(data) {
+						setShowMessageSuccess(true)
+						setTimeout(() => setShowMessageSuccess(false),5000)
+						// Refresh halaman setelah menghapus data
+						refresh()
+					},
+					error: function() {
+						alert('Gagal menghapus data dosen.');
+					}
+				});
+			}
+		}
 		// menampilkan data ke dalam database ketika ada perubahan state
 		useEffect(() => {
 			$(`#listdosen`).DataTable({
@@ -419,7 +444,7 @@
 							type={showForm} 
 							setShowForm={setShowForm} 
 							// setListData={setListData} 
-							// refreshData={getAllDataProgramStudi}
+							refreshData={refresh}
 							// editedData={editedData}
 						/>
 					) : false
@@ -438,7 +463,7 @@
 		const handleSubmit = (e, type, editedData) => {
 			e.preventDefault()
 			const data = Object.fromEntries(new FormData(document.querySelector('#formprogramstudi')).entries())
-			let url = type == 'add' ? "<?=base_url()?>index.php/ProgramStudi/create_programstudi" : "<?=base_url()?>index.php/ProgramStudi/update_programstudi"
+			let url = type == 'add' ? "<?=base_url()?>index.php/DosenMahasiswa/create_dosen" : "<?=base_url()?>index.php/ProgramStudi/update_programstudi"
 			// menyisipkan id program studi jika edit
 			if(type == 'edit'){
 				data.id = editedData.id
@@ -451,13 +476,13 @@
 					// on success
 					if(data == "true" || data > 0){
 						$('#formprogramstudi')[0].reset()
-						setSuccessMessage(`Program Studi berhasil di${type == 'add' ? 'tambahkan' : 'update'}, Terima kasih.`)
+						setSuccessMessage(`Dosen berhasil di${type == 'add' ? 'tambahkan' : 'update'}, Terima kasih.`)
 						refreshData()
 						setTimeout(() => setSuccessMessage(null),5000)
 					}
 				},
 				error: () => {
-					alert('Gagal menyimpan data Program Studi')
+					alert('Gagal menyimpan data Dosen')
 				}
 			})
 		}

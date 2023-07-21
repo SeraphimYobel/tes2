@@ -8,7 +8,7 @@ class DosenMahasiswa_model extends CI_Model {
 
     // Operasi pada tabel Dosen
     public function create_dosen($data) {
-        $this->db->insert('Dosen', $data);
+        $this->db->insert('pejabat', $data);
         return $this->db->insert_id();
     }
 
@@ -37,7 +37,7 @@ class DosenMahasiswa_model extends CI_Model {
 
     public function delete_dosen($id) {
         $this->db->where('ID', $id);
-        $this->db->delete('Dosen');
+        $this->db->delete('pejabat');
         return $this->db->affected_rows();
     }
 
