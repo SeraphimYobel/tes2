@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 21, 2023 at 05:11 PM
+-- Generation Time: Jul 21, 2023 at 05:23 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -128,7 +128,10 @@ CREATE TABLE `nilai` (
 --
 
 INSERT INTO `nilai` (`id`, `taruna`, `nilai_angka`, `nilai_huruf`, `matakuliah`) VALUES
-(1, 5, 100, 'A', 2);
+(1, 5, 100, 'A', 2),
+(2, 2, 100, 'A', 2),
+(3, 3, 100, 'A', 2),
+(4, 4, 100, 'A', 2);
 
 -- --------------------------------------------------------
 
@@ -170,7 +173,11 @@ CREATE TABLE `program_studi` (
 --
 
 INSERT INTO `program_studi` (`id`, `nama`, `program_pendidikan`, `akreditasi`, `sk_akreditasi`) VALUES
-(1, 'Informatika', 'Sarjana', 'Baik Sekali', '001/AKRED/TI/UNSIA');
+(1, 'Informatika', 'Sarjana', 'Baik Sekali', '001/AKRED/TI/UNSIA'),
+(2, 'Akuntansi', 'Sarjana', 'Baik Sekali', '001/AKRED/AK/UNSIA'),
+(3, 'Manajemen', 'Sarjana', 'Baik Sekali', '001/AKRED/MJ/UNSIA'),
+(4, 'Komunikasi', 'Sarjana', 'Baik Sekali', '001/AKRED/KM/UNSIA'),
+(5, 'Sistem Informasi', 'Sarjana', 'Baik Sekali', '001/AKRED/SI/UNSIA');
 
 -- --------------------------------------------------------
 
@@ -303,7 +310,7 @@ ALTER TABLE `matakuliah`
 -- AUTO_INCREMENT for table `nilai`
 --
 ALTER TABLE `nilai`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `pejabat`
@@ -315,7 +322,7 @@ ALTER TABLE `pejabat`
 -- AUTO_INCREMENT for table `program_studi`
 --
 ALTER TABLE `program_studi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `taruna`
