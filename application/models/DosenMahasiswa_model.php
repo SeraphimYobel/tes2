@@ -39,7 +39,6 @@ class DosenMahasiswa_model extends CI_Model {
 
     // Operasi pada tabel Mahasiswa
     public function create_mahasiswa($data) {
-        echo json_encode($data);
         $data = array(
             'nama' => $data["nama"],
             'nomor_taruna' => $data["nomor_taruna"],
@@ -67,7 +66,7 @@ class DosenMahasiswa_model extends CI_Model {
 
     public function delete_mahasiswa($id) {
         $this->db->where('ID', $id);
-        $this->db->delete('Mahasiswa');
+        $this->db->delete('taruna');
         return $this->db->affected_rows();
     }
 

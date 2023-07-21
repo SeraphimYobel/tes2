@@ -110,30 +110,6 @@
 				}
 			})
 		}
-		// Fungsi untuk menangani klik tombol edit
-		const handleEditData = (id, listData) => {
-			setEditedData(listData.filter(it => it.id == id)[0])
-			setShowForm('edit')
-		}
-		// Fungsi untuk menangani klik tombol delete
-		const handleDeleteData = id => {
-			if (confirm('Apakah Anda yakin ingin menghapus data program studi ini?')){
-            // Kirim request AJAX untuk menghapus data program studi berdasarkan ID
-				$.ajax({
-					url: `<?= base_url() ?>index.php/ProgramStudi/delete_programstudi/${id}`,
-					method: 'POST',
-					success: function(data) {
-						setShowMessageSuccess(true)
-						setTimeout(() => setShowMessageSuccess(false),5000)
-						// Refresh halaman setelah menghapus data
-						getAllDataProgramStudi()
-					},
-					error: function() {
-						alert('Gagal menghapus data program studi.');
-					}
-				});
-			}
-		}
 		// mendapatkan data dari database saat pertama kali page loaded
 		useEffect(() => {
 			getAllMahasiswa()
@@ -153,7 +129,7 @@
 					</div>
 					{
 						showMessageSuccess ? (
-							<p className="successmessage"><i className="fa-solid fa-circle-info"></i> Program Studi berhasil dihapus.</p>
+							<p className="successmessage"><i className="fa-solid fa-circle-info"></i> Data {activeTab == 1 ? 'Mahasiswa' : 'Dosen'} berhasil dihapus.</p>
 						) : false
 					}
 					<div className="navigations">
@@ -173,6 +149,7 @@
 							<TabMahasiswa 
 								data={listMahasiswa}
 								refresh={getAllMahasiswa}
+								setShowMessageSuccess={setShowMessageSuccess}
 								listKota={listKota}
 								listProdi={listProdi}
 							/>
@@ -195,8 +172,33 @@
 	el.render(<App />)
 	// tab mahasiswa
 	const TabMahasiswa = props => {
-		const {data, listProdi, listKota} = props
+		const {data, listProdi, listKota, refresh, setShowMessageSuccess} = props
 		const [showForm, setShowForm] = useState(null)
+		const [editedData, setEditedData] = useState(null)
+		// Fungsi untuk menangani klik tombol edit
+		const handleEditData = (id, listData) => {
+			setEditedData(listData.filter(it => it.id == id)[0])
+			setShowForm('edit')
+		}
+		// Fungsi untuk menangani klik tombol delete
+		const handleDeleteData = id => {
+			if (confirm('Apakah Anda yakin ingin menghapus data mahasiswa ini?')){
+            // Kirim request AJAX untuk menghapus data program studi berdasarkan ID
+				$.ajax({
+					url: `<?= base_url() ?>index.php/DosenMahasiswa/delete_mahasiswa/${id}`,
+					method: 'POST',
+					success: function(data) {
+						setShowMessageSuccess(true)
+						setTimeout(() => setShowMessageSuccess(false),5000)
+						// Refresh halaman setelah menghapus data
+						refresh()
+					},
+					error: function() {
+						alert('Gagal menghapus data program studi.');
+					}
+				});
+			}
+		}
 		// menampilkan data ke dalam database ketika ada perubahan state
 		useEffect(() => {
 			$(`#listmahasiswa`).DataTable({
@@ -253,7 +255,7 @@
 							listKota={listKota}
 							listProdi={listProdi}
 							// setListData={setListData} 
-							// refreshData={getAllDataProgramStudi}
+							refreshData={refresh}
 							// editedData={editedData}
 						/>
 					) : false
@@ -271,8 +273,8 @@
 		// on submit form add new program studi
 		const handleSubmit = (e, type, editedData) => {
 			e.preventDefault()
-			// const data = Object.fromEntries(new FormData(document.querySelector('#formprogramstudi')).entries())
-			const data = new FormData(document.querySelector('#formprogramstudi'))
+			const data = Object.fromEntries(new FormData(document.querySelector('#formprogramstudi')).entries())
+			data.foto = 'file'
 			let url = type == 'add' ? "<?=base_url()?>index.php/DosenMahasiswa/create_mahasiswa" : "<?=base_url()?>index.php/DosenMahasiswa/update_mahasiswa"
 			// menyisipkan id program studi jika edit
 			if(type == 'edit'){
@@ -280,8 +282,6 @@
 			}
 			$.ajax({
 				url,
-				processData: false,
-				contentType: false,
 				data,
 				method: 'POST',
 				success: data => {
@@ -351,7 +351,7 @@
 						</div>
 						<div className="formel">
 							<label htmlFor="foto">Foto Profil</label>
-							<input name="foto" type="file" placeholder="e.g. Informatika" />
+							<input name="foto" type="file" placeholder="e.g. Foto" />
 						</div>
 					</div>
 					<div className="btnarea">
