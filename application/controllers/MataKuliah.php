@@ -38,10 +38,10 @@ public function __construct(){
     // Tampilkan halaman form tambah data mata kuliah
 	public function create_matakuliah() {
 		$data['kode'] = $this->input->post('kode');
-		$data['matakuiah'] = $this->input->post('matakuliah');
+		$data['matakuliah'] = $this->input->post('matakuliah');
 		$data['sks'] = $this->input->post('sks');
-		$data['nilai_angka'] = $this->input->post('nilaiangka');
-		$data['nilai_huruf'] = $this->input->post('nilaihuruf');
+		$data['nilai_angka'] = $this->input->post('nilai_angka');
+		$data['nilai_huruf'] = $this->input->post('nilai_huruf');
 		$data['semester'] = $this->input->post('semester');
 		$processadd = $this->MataKuliah_model->create($data);
 		echo json_encode($processadd);
@@ -56,12 +56,24 @@ public function edit_matakuliah($id) {
     // Tampilkan halaman form edit data mata kuliah berdasarkan ID
 }
 
-public function update_matakuliah($id) {
+public function update_matakuliah() {
     // Proses update data mata kuliah ke database berdasarkan ID
+	$id = $this->input->post('id');
+	$data['kode'] = $this->input->post('kode');
+	$data['matakuliah'] = $this->input->post('matakuliah');
+	$data['sks'] = $this->input->post('sks');
+	$data['nilai_angka'] = $this->input->post('nilai_angka');
+	$data['nilai_huruf'] = $this->input->post('nilai_huruf');
+	$data['semester'] = $this->input->post('semester');
+	
+	$processedit = $this->MataKuliah_model->update($id, $data);
+	echo json_encode($processedit);
 }
 
 public function delete_matakuliah($id) {
     // Proses hapus data mata kuliah dari database berdasarkan ID
+	$processdata = $this->MataKuliah_model->delete($id);
+	return $processdata;
 }
 
 }

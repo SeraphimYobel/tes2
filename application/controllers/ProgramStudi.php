@@ -68,8 +68,8 @@ class ProgramStudi extends CI_Controller {
 	}
 		
 	public function delete_programstudi($id) {
-		$this->ProgramStudi_model->delete($id);
-		redirect('programstudi'); // Redirect ke halaman daftar program studi setelah delete
+		$processdata = $this->ProgramStudi_model->delete($id);
+		return $processdata;
 	}
 	
 

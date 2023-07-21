@@ -43,30 +43,6 @@
 	.btnarea>button:active {
 		transform: translateY(0.2em);
 	}
-
-	.successmessage {
-		margin: 1em 0;
-		padding: 0.7em;
-		border-radius: 0.3em;
-		display: block;
-		text-align: center;
-		color: #1B9C85;
-		background: #f5fffd;
-	}
-	td>i{
-		display: inline-block;
-		cursor: pointer;
-	}
-	td{
-		white-space: nowrap;
-	}
-	.fa-pen-to-square{
-		color: #1B9C85;
-	}
-	.fa-trash{
-		color: #FF0060;
-		margin-left: 0.5em;
-	}
 </style>
 <div id="appss"></div>
 <script type="text/babel">
@@ -92,25 +68,26 @@
 		// Fungsi untuk menangani klik tombol edit
 		const handleEditData = (id, listData) => {
 			setEditedData(listData.filter(it => it.id == id)[0])
+			setShowForm('edit')
 		}
 		// Fungsi untuk menangani klik tombol delete
 		const handleDeleteData = id => {
-			if (confirm('Apakah Anda yakin ingin menghapus data program studi ini?')) {
+			if (confirm('Apakah Anda yakin ingin menghapus data program studi ini?')){
             // Kirim request AJAX untuk menghapus data program studi berdasarkan ID
-            $.ajax({
-                url: `<?= base_url() ?>index.php/ProgramStudi/delete_programstudi/${id}`,
-                method: 'POST',
-                success: function(data) {
-					setShowMessageSuccess(true)
-					setTimeout(() => setShowMessageSuccess(false),5000)
-                    // Refresh halaman setelah menghapus data
-                    getAllDataProgramStudi()
-                },
-                error: function() {
-                    alert('Gagal menghapus data program studi.');
-                }
-            });
-        }
+				$.ajax({
+					url: `<?= base_url() ?>index.php/ProgramStudi/delete_programstudi/${id}`,
+					method: 'POST',
+					success: function(data) {
+						setShowMessageSuccess(true)
+						setTimeout(() => setShowMessageSuccess(false),5000)
+						// Refresh halaman setelah menghapus data
+						getAllDataProgramStudi()
+					},
+					error: function() {
+						alert('Gagal menghapus data program studi.');
+					}
+				});
+			}
 		}
 		// menampilkan data ke dalam database ketika ada perubahan state
 		useEffect(() => {
@@ -130,7 +107,7 @@
 							<i title="Hapus Program Studi" class="fa-solid fa-trash" data-id="${data.id}"></i>
         					`;
     					},
-    				title: 'Action' 
+    					title: 'Action' 
 					},
 				],
 				initComplete: function(){
@@ -139,7 +116,6 @@
 						// jika tombol edi ditekan
 						if(buttonType.includes('btn-edit')){
 							handleEditData($(this).attr('data-id'), listData)
-							setShowForm('edit')
 						} else {
 							handleDeleteData($(this).attr('data-id'))
 						}
