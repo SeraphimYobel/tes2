@@ -77,8 +77,10 @@
 		padding: 0.75em;
 	}
 	.headers{
+		animation: show 0.5s ease;
 		display: flex;
 		gap: 1.5em;
+		align-items: center;
 		margin: 1.5em 0;
 	}
 	.headers>div{
@@ -100,6 +102,27 @@
 	.tbox{
 		padding: 1.5em 0 !important;
 	}
+	.infos{
+		padding: 1.5em 0;
+		display: flex;
+		width: 100%;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.7em;
+	}
+	.infos>img{
+		filter: grayscale(20%);
+	}
+	.infos>h3{
+		color: crimson;
+		font-weight: 400;
+		margin-top: 0.5em;
+		font-size: 1.4em;
+	}
+	.infos>h3>i{
+		font-size: 1.2em;
+		transform: translateY(0.06em);
+	}
 </style>
 <div id="appss"></div>
 <script type="text/babel">
@@ -108,6 +131,7 @@
 		const [mahasiswaInfo, setMahasiswaInfo] = useState(null)
 		const [mahasiswaNotFound, setMahasiswaNotFound] = useState(false)
 		const [listNilai, setListNilai] = useState([])
+		const [onStart, setOnStart] = useState(true)
 		// get detail list nilai
 		const getDetailTranskrip = id => {
 			$.ajax({
@@ -137,6 +161,7 @@
 						setMahasiswaInfo(filteredData[0])
 						getDetailTranskrip(filteredData[0].id)
 						setMahasiswaNotFound(false)
+						setOnStart(false)
 					} else {
 						setMahasiswaNotFound(true)
 						setMahasiswaInfo(null)
@@ -210,6 +235,14 @@
 									<table id="listdata"></table>
 								</div>
 							</React.Fragment>
+						) : false
+					}
+					{
+						onStart ? (
+							<div className="infos">
+								<img src="<?=base_url()?>assets/wait.jpg" alt="illustration" />
+								<h3><i className="fa-solid fa-circle-info"></i> Anda belum melakukan pencarian. </h3>
+							</div>
 						) : false
 					}
 				</div>
