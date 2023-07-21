@@ -191,7 +191,7 @@
 								<option value="">--- Pilih Akreditasi ---</option>
 								<option value="Baik Sekali">Baik Sekali</option>
 								<option value="Baik">Baik</option>
-								<option value="Cukup">Cukup</option>
+								<option value="Unggul">Unggul</option>
 							</select>
 						</div>
 						<div className="formel fulls">
