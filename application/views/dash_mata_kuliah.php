@@ -108,8 +108,6 @@
 					{ data: 'kode', title: 'Kode' },
 					{ data: 'matakuliah', title: 'Mata Kuliah' },
 					{ data: 'sks', title: 'SKS' },
-					{ data: 'nilai_angka', title: 'Nilai Angka' },
-					{ data: 'nilai_huruf', title: 'Nilai Huruf' },
 					{ data: 'semester', title: 'Semester' },
 					{ 
 						data: null,
