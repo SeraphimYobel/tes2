@@ -2,7 +2,11 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Penilaian extends CI_Controller {
-
+	public function __construct(){
+		parent::__construct();
+	
+		$this->load->model('Nilai_model');
+	}
 	/**
 	 * Index Page for this controller.
 	 *
@@ -25,25 +29,37 @@ class Penilaian extends CI_Controller {
 		$this->load->view('nav');
 		$this->load->view('dash_penilaian');
 	}
-
+	// get all data penilaian
+	public function get_all_penilaian(){
+		$data = $this->Nilai_model->get_all_penilaian();
+		echo json_encode($data);
+	}
 	public function create_penilaian() {
-    // Tampilkan halaman form tambah data penilaian
-}
+		// Tampilkan halaman form tambah data penilaian
+		$data['taruna'] = $this->input->post('taruna');
+		$data['nilai_huruf'] = $this->input->post('nilai_huruf');
+		$data['nilai_angka'] = $this->input->post('nilai_angka');
+		$data['matakuliah'] = $this->input->post('matakuliah');
+		$processadd = $this->Nilai_model->create($data);
+		echo json_encode($processadd);
+	}
 
-public function store_penilaian() {
-    // Proses tambah data penilaian ke database
-}
+	public function store_penilaian() {
+		// Proses tambah data penilaian ke database
+	}
 
-public function edit_penilaian($id) {
-    // Tampilkan halaman form edit data penilaian berdasarkan ID
-}
+	public function edit_penilaian($id) {
+		// Tampilkan halaman form edit data penilaian berdasarkan ID
+	}
 
-public function update_penilaian($id) {
-    // Proses update data penilaian ke database berdasarkan ID
-}
+	public function update_penilaian($id) {
+		// Proses update data penilaian ke database berdasarkan ID
+	}
 
-public function delete_penilaian($id) {
-    // Proses hapus data penilaian dari database berdasarkan ID
-}
+	public function delete_penilaian($id) {
+		// Proses hapus data penilaian dari database berdasarkan ID
+		$processdata = $this->Nilai_model->delete($id);
+		return $processdata;
+	}
 
 }

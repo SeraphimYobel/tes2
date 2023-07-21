@@ -59,32 +59,118 @@
 	const { useState, useEffect } = React
 	const App = () => {
 		const [showForm, setShowForm] = useState(null)
-		const [listData, setListData] = useState([
-			
-		])
+		const [listData, setListData] = useState([])
+		const [showMessageSuccess, setShowMessageSuccess] = useState(false)
+		const [editedData, setEditedData] = useState(null)
+		const [listTaruna, setListTaruna] = useState([])
+		const [listMataKuliah, setListMataKuliah] = useState([])
+		// get all data penilaian
+		const getAllPenilaian = () => {
+			$.ajax({
+				url: `<?=base_url()?>index.php/Penilaian/get_all_penilaian`,
+				method: 'GET',
+				success: data => {
+					setListData(JSON.parse(data))
+				},
+				error : () => {
+					alert('Gagal mendapatkan data penilaian')
+				}
+			})
+			// get list mata kuliah
+			$.ajax({
+				url: "<?=base_url()?>index.php/MataKuliah/get_all_matakuliah",
+				method: 'GET',
+				success: data => {
+					setListMataKuliah(JSON.parse(data))
+				},
+				error: () => {
+					alert('Gagal mendapatkan data dari database')
+				}
+			})
+			// get list mahasiswa
+			$.ajax({
+				url: "<?=base_url()?>index.php/DosenMahasiswa/get_all_mahasiswa",
+				method: 'GET',
+				success: data => {
+					setListTaruna(JSON.parse(data))
+				},
+				error: () => {
+					alert('Gagal mendapatkan data dari database')
+				}
+			})
+		}
+		// Fungsi untuk menangani klik tombol edit
+		const handleEditData = (id, listData) => {
+			setEditedData(listData.filter(it => it.id == id)[0])
+			setShowForm('edit')
+		}
+		// Fungsi untuk menangani klik tombol delete
+		const handleDeleteData = id => {
+			if (confirm('Apakah Anda yakin ingin menghapus Penilaian ini?')){
+            // Kirim request AJAX untuk menghapus data program studi berdasarkan ID
+				$.ajax({
+					url: `<?= base_url() ?>index.php/Penilaian/delete_penilaian/${id}`,
+					method: 'POST',
+					success: function(data) {
+						setShowMessageSuccess(true)
+						setTimeout(() => setShowMessageSuccess(false),5000)
+						// Refresh halaman setelah menghapus data
+						getAllPenilaian()
+					},
+					error: function() {
+						alert('Gagal menghapus data program studi.');
+					}
+				});
+			}
+		}
 		useEffect(() => {
 			$(`#listdata`).DataTable({
 				destroy: true,
 				data: listData,
 				columns: [
-					{ data: 'Taruna', title: 'Taruna' },
-					{ data: 'Nilai_Angka', title: 'Nilai Angka' },
-					{ data: 'Nilai_Huruf', title: 'Nilai Huruf' },
-					{ data: 'Mata_Kuliah', title: 'Mata Kuliah' },
-					{ data: 'id', title: 'Action' },
-				]
+					{ data: 'taruna', title: 'Taruna' },
+					{ data: 'nilai_angka', title: 'Nilai Angka' },
+					{ data: 'nilai_huruf', title: 'Nilai Huruf' },
+					{ data: 'matakuliah', title: 'Mata Kuliah' },
+					{ data: 'id', title: 'Action', render: function(data){
+						return `
+							<i title="Edit Mata Kuliah" class="fa-solid fa-pen-to-square btn-edit" data-id="${data}"></i>
+							<i title="Hapus Mata Kuliah" class="fa-solid fa-trash" data-id="${data}"></i>
+						`
+					}},
+				],
+				initComplete: function(){
+					$('#listdata').off().on('click', 'tr td i', function(){
+						const buttonType = $(this).attr('class')
+						// jika tombol edi ditekan
+						if(buttonType.includes('btn-edit')){
+							handleEditData($(this).attr('data-id'), listData)
+						} else {
+							handleDeleteData($(this).attr('data-id'))
+						}
+					})
+				}
 			})
 		}, [listData])
+		// get all data on first page load
+		useEffect(() => {
+			getAllPenilaian()
+		}, [])
 		return (
 			<div id="container">
 				<div>
 					<div className="title">
-						<i className="fas fa-graduation-cap"></i>
+						<i className="fas fa-award"></i>
 						<div>
 							<h1> Penilaian</h1>
 							<p>Klik <strong>Tambah</strong> untuk menambahkan Penilaian. </p>
 						</div>
 					</div>
+					{
+						showMessageSuccess ? (
+							<p className="successmessage"><i className="fa-solid fa-circle-info"></i> Penilaian berhasil dihapus.</p>
+						) : false
+					}
 					<div className="btnarea btnarea-nopad">
 						{ /* hide show button add */
 							showForm == null ? (
@@ -97,8 +183,16 @@
 						}
 					</div>
 					{
-						showForm == 'add' ? (
-							<FormInput setShowForm={setShowForm} setListData={setListData} />
+						showForm != null ? (
+							<FormInput 
+								setShowForm={setShowForm} 
+								setListData={setListData}
+								editedData={editedData}
+								listMataKuliah={listMataKuliah}
+								listTaruna={listTaruna}
+								type={showForm} 
+								getAllPenilaian={getAllPenilaian}
+							/>
 						) : false
 					}
 					<div className="tablebox">
@@ -113,19 +207,31 @@
 	el.render(<App />)
 	// form input Penilaian
 	const FormInput = props => {
-		const { setShowForm, setListData } = props
+		const { setShowForm, setListData, eidtedData, type, listMataKuliah, listTaruna, getAllPenilaian } = props
 		const [successMessage, setSuccessMessage] = useState(null)
 		// on submit form add new Penilaian
 		const handleSubmit = (e) => {
 			e.preventDefault()
 			const data = Object.fromEntries(new FormData(document.querySelector('#formpenilaian')).entries())
-			// set number
-			data.id = parseInt(Math.random() * 100)
-			setListData(prev => [...prev, data])
-			// on success
-			$('#formpenilaian')[0].reset()
-			setSuccessMessage('Penilaian berhasil ditambahkan, Terima kasih.')
-			setTimeout(() => setSuccessMessage(null),5000)
+			let url = type == 'add' ? "<?=base_url()?>index.php/Penilaian/create_penilaian" : ""
+			$.ajax({
+				url,
+				data,
+				method: 'POST',
+				success: data => {
+					// on success
+					if(data == "true" || data > 0){
+						// on success
+						$('#formpenilaian')[0].reset()
+						setSuccessMessage('Penilaian berhasil ditambahkan, Terima kasih.')
+						getAllPenilaian()
+						setTimeout(() => setSuccessMessage(null),5000)
+					}
+				},
+				error: () => {
+					alert('Gagal menyimpan data Program Studi')
+				}
+			})
 		}
 		return (
 			<div className="forms">
@@ -139,17 +245,22 @@
 				<form id="formpenilaian" onSubmit={handleSubmit}>
 					<div className="wrap">
 						<div className="formel">
-							<label htmlFor="Taruna">Taruna</label>
-							<input name="Taruna" type="text" placeholder="e.g. 210401010055" required />
+							<label htmlFor="taruna">Taruna</label>
+							<select required name="taruna">
+								<option value="">--- Pilih Mahasiswa ---</option>
+								{listTaruna.map((it, index) => (
+									<option key={index} value={it.id}>{it.nama}</option>
+								))}
+							</select>
 						</div>
 						<div className="formel">
 							<label htmlFor="penilaian">Nilai Angka</label>
-							<input name="Nilai_Angka" type="num" placeholder="e.g. 40" required />
+							<input name="nilai_angka" type="num" placeholder="e.g. 40" required />
 						</div>
 						<div className="formel">
 							<label htmlFor="Nilai_Huruf">Nilai Huruf</label>
-							<select required name="Nilai_Huruf">
-								<option value="">Pilih Nilai Huruf</option>
+							<select required name="nilai_huruf">
+								<option value="">--- Pilih Nilai Huruf ---</option>
 								<option value="A">A</option>
 								<option value="B">AB</option>
 								<option value="C">B</option>
@@ -161,7 +272,12 @@
 						</div>
 						<div className="formel fulls">
 							<label htmlFor="sk">Mata Kuliah</label>
-							<input name="Mata_Kuliah" type="text" placeholder="e.g. Pemrograman Web II" required />
+							<select required name="matakuliah">
+								<option value="">--- Pilih Mata Kuliah ---</option>
+								{listMataKuliah.map((it, index) => (
+									<option key={index} value={it.id}>{it.matakuliah}</option>
+								))}
+							</select>
 						</div>
 					</div>
 					<div className="btnarea">

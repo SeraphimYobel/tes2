@@ -61,7 +61,7 @@
 					setListData(JSON.parse(data))
 				},
 				error: () => {
-					alert('Gagal mendapatkan data dari database')
+					alert('Gagal mendapatkan data Program Studi')
 				}
 			})
 		}

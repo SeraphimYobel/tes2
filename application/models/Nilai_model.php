@@ -1,14 +1,19 @@
 <?php
 // ProgramStudi_model.php
-class Program_studi_model extends CI_Model {
+class Nilai_model extends CI_Model {
     public function __construct() {
         parent::__construct();
         $this->load->database();
     }
 
     public function create($data) {
-        $this->db->insert('Nilai', $data);
-        return $this->db->insert_id();
+        $data = array(
+            'taruna' => $data["taruna"],
+            'nilai_angka' => $data["nilai_angka"],
+            'nilai_huruf' => $data["nilai_huruf"],
+            'matakuliah' => $data["matakuliah"]
+        );
+        return $this->db->insert('nilai', $data);
     }
 
     public function read($id = null) {
@@ -18,7 +23,10 @@ class Program_studi_model extends CI_Model {
             return $this->db->get('Nilai')->result_array();
         }
     }
-
+    // get all data penilaian
+    public function get_all_penilaian(){
+        return $this->db->query("SELECT nilai.id, taruna.nama as taruna, taruna.id as tarunaid, nilai.nilai_angka, nilai.nilai_huruf, matakuliah.matakuliah, matakuliah.id FROM nilai LEFT JOIN taruna ON taruna.id = nilai.taruna LEFT JOIN matakuliah ON matakuliah.id = nilai.matakuliah")->result_array();
+    }
     public function update($id, $data) {
         $this->db->where('ID', $id);
         $this->db->update('Nilai', $data);

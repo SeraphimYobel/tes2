@@ -196,7 +196,7 @@
 			const data = Object.fromEntries(new FormData(document.querySelector('#formmatakuliah')).entries())
 			let url = type == 'add' ? "<?=base_url()?>index.php/MataKuliah/create_matakuliah" : "<?=base_url()?>index.php/MataKuliah/update_matakuliah"
 			// menyisipkan nilai id dari mata kuliah yg diedit
-			if(type) {
+			if(type == 'edit') {
 				data.id = editedData.id
 			}
 			$.ajax({
