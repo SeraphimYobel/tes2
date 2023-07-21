@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 21, 2023 at 04:02 PM
+-- Generation Time: Jul 21, 2023 at 04:33 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -88,7 +88,16 @@ CREATE TABLE `matakuliah` (
 --
 
 INSERT INTO `matakuliah` (`id`, `kode`, `matakuliah`, `sks`, `semester`) VALUES
-(2, '200302215', 'Pemrograman Web II', 3, 'Semester IV');
+(2, '200302215', 'Pemrograman Web II', 3, 'Semester IV'),
+(3, '200002103', 'Bahasa Indonesia', 2, 'Semester IV'),
+(4, '200302214', 'Interaksi Manusia Komputer', 2, 'Semester IV'),
+(5, '200302216', 'Analisa Berorientasi Objek', 3, 'Semester IV'),
+(6, '200302304', 'Sistem Jaringan I', 3, 'Semester IV'),
+(7, '200302305', 'Data Science', 3, 'Semester IV'),
+(8, '200302306', 'Komunikasi Data', 3, 'Semester IV'),
+(9, '200001104', 'Bahasa Inggris', 2, 'Semester I'),
+(10, '200001108', 'ICT Literacy', 2, 'Semester I'),
+(11, '200301307', 'Data Mining', 3, 'Semester V');
 
 -- --------------------------------------------------------
 
@@ -103,6 +112,13 @@ CREATE TABLE `nilai` (
   `nilai_huruf` varchar(255) NOT NULL,
   `matakuliah` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `nilai`
+--
+
+INSERT INTO `nilai` (`id`, `taruna`, `nilai_angka`, `nilai_huruf`, `matakuliah`) VALUES
+(1, 5, 100, 'A', 2);
 
 -- --------------------------------------------------------
 
@@ -144,7 +160,7 @@ CREATE TABLE `program_studi` (
 --
 
 INSERT INTO `program_studi` (`id`, `nama`, `program_pendidikan`, `akreditasi`, `sk_akreditasi`) VALUES
-(1, 'Informatika', 'Diploma III', 'Baik Sekali', '001/AKRED/TI/UNSIA');
+(1, 'Informatika', '', 'Baik Sekali', '001/AKRED/TI/UNSIA');
 
 -- --------------------------------------------------------
 
@@ -268,13 +284,13 @@ ALTER TABLE `kota`
 -- AUTO_INCREMENT for table `matakuliah`
 --
 ALTER TABLE `matakuliah`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `nilai`
 --
 ALTER TABLE `nilai`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `pejabat`
