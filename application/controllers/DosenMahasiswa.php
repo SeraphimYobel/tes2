@@ -34,7 +34,7 @@ class DosenMahasiswa extends CI_Controller {
 	public function create_dosen() {
 		// Tampilkan halaman form tambah data dosen
 		$data['nama'] = $this->input->post('nama');
-		$data['nip'] = $this->input->post('nip');
+		$data['nidn'] = $this->input->post('nidn');
 		$data['golongan'] = $this->input->post('golongan');
 		$data['jabatan'] = $this->input->post('jabatan');
 		$processadd = $this->DosenMahasiswa_model->create_dosen($data);

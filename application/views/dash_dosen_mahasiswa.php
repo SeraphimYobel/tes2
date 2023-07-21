@@ -398,7 +398,7 @@
 				data,
 				columns: [
 					{ data: 'nama', title: 'Nama' },
-					{ data: 'nip', title: 'NIP' },
+					{ data: 'nidn', title: 'NIDN' },
 					{ data: 'golongan', title: 'Golongan' },
 					{ data: 'jabatan', title: 'Jabatan'},
 					{ 
@@ -510,8 +510,8 @@
 							<input name="nama" type="text" placeholder="e.g. Muhammad Abdullah" required />
 						</div>
 						<div className="formel">
-							<label htmlFor="nip">NIP</label>
-							<input name="nip" type="text" placeholder="e.g. 220401020003" required />
+							<label htmlFor="nidn">NIDN</label>
+							<input name="nidn" type="text" placeholder="e.g. 220401020003" required />
 						</div>
 						<div className="formel">
 							<label htmlFor="golongan">Golongan</label>
