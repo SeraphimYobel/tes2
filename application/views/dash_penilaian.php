@@ -207,13 +207,16 @@
 	el.render(<App />)
 	// form input Penilaian
 	const FormInput = props => {
-		const { setShowForm, setListData, eidtedData, type, listMataKuliah, listTaruna, getAllPenilaian } = props
+		const { setShowForm, setListData, editedData, type, listMataKuliah, listTaruna, getAllPenilaian } = props
 		const [successMessage, setSuccessMessage] = useState(null)
 		// on submit form add new Penilaian
-		const handleSubmit = (e) => {
+		const handleSubmit = (e, type, editedData) => {
 			e.preventDefault()
 			const data = Object.fromEntries(new FormData(document.querySelector('#formpenilaian')).entries())
-			let url = type == 'add' ? "<?=base_url()?>index.php/Penilaian/create_penilaian" : ""
+			let url = type == 'add' ? "<?=base_url()?>index.php/Penilaian/create_penilaian" : "<?=base_url()?>index.php/Penilaian/update_penilaian"
+			if(type == 'edit'){
+				data.id = editedData.id
+			}
 			$.ajax({
 				url,
 				data,
@@ -233,6 +236,22 @@
 				}
 			})
 		}
+		useEffect(() => {
+			if(type == 'edit'){
+				// update nilai elemen berdasarkan key value
+				for(let obj in editedData){
+					$(`[name="${obj}"]`).val(editedData[obj])
+				}
+				for(let obj in editedData){
+					if(obj == 'tarunaid'){
+						$(`[name="taruna"]`).val(editedData[obj])
+					}
+					if(obj == 'matakuliahid'){
+						$(`[name="matakuliah"]`).val(editedData[obj])
+					}
+				}
+			}
+		}, [type, editedData])
 		return (
 			<div className="forms">
 				<h1>{type == 'add' ? 'Tambah' : 'Update'} Penilaian</h1>
@@ -242,7 +261,7 @@
 						<span className="successmessage"><i className="fas fa-check-circle"></i> {successMessage}</span>
 					) : false
 				}
-				<form id="formpenilaian" onSubmit={handleSubmit}>
+				<form id="formpenilaian" onSubmit={e => handleSubmit(e, type, editedData)}>
 					<div className="wrap">
 						<div className="formel">
 							<label htmlFor="taruna">Taruna</label>

@@ -52,8 +52,15 @@ class Penilaian extends CI_Controller {
 		// Tampilkan halaman form edit data penilaian berdasarkan ID
 	}
 
-	public function update_penilaian($id) {
+	public function update_penilaian() {
 		// Proses update data penilaian ke database berdasarkan ID
+		$id = $this->input->post('id');
+        $data['taruna'] = $this->input->post('taruna');
+        $data['nilai_angka'] = $this->input->post('nilai_angka');
+        $data['nilai_huruf'] = $this->input->post('nilai_huruf');
+        $data['matakuliah'] = $this->input->post('matakuliah');
+		$processedit = $this->Nilai_model->update($id, $data);
+		echo json_encode($processedit);
 	}
 
 	public function delete_penilaian($id) {
