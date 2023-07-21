@@ -207,9 +207,9 @@
 				columns: [
 					{ data: 'nama', title: 'Nama' },
 					{ data: 'nomor_taruna', title: 'NIM' },
-					{ data: 'tempat_lahir', title: 'Tempat Lahir' },
+					{ data: 'namakota', title: 'Tempat Lahir' },
 					{ data: 'tanggal_lahir', title: 'Tanggal Lahir'},
-					{ data: 'program_studi', title: 'Program Studi'},
+					{ data: 'namaprodi', title: 'Program Studi'},
 					{ 
 						data: 'id',
     					render: function (data, type, row) {
@@ -482,29 +482,19 @@
 					<div className="wrap">
 						<div className="formel">
 							<label htmlFor="nama">Nama</label>
-							<input name="nama" type="text" placeholder="e.g. Rizki Ramadhan" required />
+							<input name="nama" type="text" placeholder="e.g. Muhammad Abdullah" required />
 						</div>
 						<div className="formel">
-							<label htmlFor="nomor_taruna">Nomor Taruna</label>
-							<input name="nomor_taruna" type="text" placeholder="e.g. 220401020003" required />
+							<label htmlFor="nip">NIP</label>
+							<input name="nip" type="text" placeholder="e.g. 220401020003" required />
 						</div>
 						<div className="formel">
-							<label htmlFor="tempat_lahir">Tempat Lahir</label>
-							<input name="tempat_lahir" type="text" placeholder="e.g. Palembang" required />
-						</div>
-					</div>
-					<div className="wrap">
-						<div className="formel">
-							<label htmlFor="tanggal_lahir">Tanggal Lahir</label>
-							<input name="tanggal_lahir" type="date" placeholder="e.g. Informatika" required />
+							<label htmlFor="golongan">Golongan</label>
+							<input name="golongan" type="text" placeholder="e.g. 1A" required />
 						</div>
 						<div className="formel">
-							<label htmlFor="program_studi">Program Studi</label>
-							<input name="program_studi" type="text" placeholder="e.g. Informatika" required />
-						</div>
-						<div className="formel">
-							<label htmlFor="foto">Foto Profil</label>
-							<input name="foto" type="file" placeholder="e.g. Informatika" required />
+							<label htmlFor="jabatan">Jabatan</label>
+							<input name="jabatan" type="text" placeholder="e.g. Dosen Tetap" required />
 						</div>
 					</div>
 					<div className="btnarea">
