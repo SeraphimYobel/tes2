@@ -257,7 +257,7 @@
 							listProdi={listProdi}
 							// setListData={setListData} 
 							refreshData={refresh}
-							// editedData={editedData}
+							editedData={editedData}
 						/>
 					) : false
 				}
@@ -303,7 +303,9 @@
 			if(type == 'edit'){
 				// update nilai elemen berdasarkan key value
 				for(let obj in editedData){
-					$(`[name="${obj}"]`).val(editedData[obj])
+					if(obj != 'foto'){
+						$(`[name="${obj}"]`).val(editedData[obj])
+					}
 				}
 			}
 		}, [type, editedData])
