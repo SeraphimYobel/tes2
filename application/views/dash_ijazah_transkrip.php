@@ -53,10 +53,13 @@
 		color: #1B9C85;
 		background: #f5fffd;
 	}
-	form{
+
+	form {
 		margin: 0;
 	}
-	.formel>button, .headprint>button{
+
+	.formel>button,
+	.headprint>button {
 		transition: all 0.3s;
 		padding: 0.75em 1.4em;
 		background: #0079FF;
@@ -65,10 +68,13 @@
 		border: none;
 		border-radius: 0.5em;
 	}
-	.formel>button:hover, .headprint>button:hover{
+
+	.formel>button:hover,
+	.headprint>button:hover {
 		background: #0055b6;
 	}
-	.warnmessage{
+
+	.warnmessage {
 		color: #FF0060;
 		background: #ffeaf2;
 		border-radius: 0.5em;
@@ -76,33 +82,40 @@
 		text-align: center;
 		padding: 0.75em;
 	}
-	.headers{
+
+	.headers {
 		animation: show 0.5s ease;
 		display: flex;
 		gap: 1.5em;
 		align-items: center;
 		margin: 1.5em 0;
 	}
-	.headers>div{
+
+	.headers>div {
 		flex: 1;
 	}
-	.mahasiswainfo>h5{
+
+	.mahasiswainfo>h5 {
 		font-size: 1.5em;
 	}
-	.mahasiswainfo>p{
+
+	.mahasiswainfo>p {
 		margin-top: 0.3em;
 		opacity: 0.6;
 	}
-	.headprint{
+
+	.headprint {
 		display: flex;
 		justify-content: center;
 		align-items: flex-start;
 		gap: 1em;
 	}
-	.tbox{
+
+	.tbox {
 		padding: 1.5em 0 !important;
 	}
-	.infos{
+
+	.infos {
 		padding: 1.5em 0;
 		display: flex;
 		width: 100%;
@@ -110,64 +123,94 @@
 		align-items: center;
 		gap: 0.7em;
 	}
-	.infos>img{
+
+	.infos>img {
 		filter: grayscale(20%);
 	}
-	.infos>h3{
+
+	.infos>h3 {
 		color: crimson;
 		font-weight: 400;
 		margin-top: 0.5em;
 		font-size: 1.4em;
 	}
-	.infos>h3>i{
+
+	.infos>h3>i {
 		font-size: 1.2em;
 		transform: translateY(0.06em);
 	}
-	.boxijazah{
+
+	.boxijazah {
 		position: fixed;
 		top: 0;
 		left: 0;
 		padding: 1em;
 		width: 100%;
 		height: 100%;
-		background: rgba(20,20,20,0.5) !important;
+		background: rgba(20, 20, 20, 0.5) !important;
 		border-radius: 0 !important;
 		animation: show 0.5s ease;
 	}
-	.formijazah{
+
+	.formijazah {
+		font-family: Calibri;
+		font-size: 11px !important;
 		height: 100%;
 		border-radius: 0.3em;
 		background: white;
-		padding: 2.5em 4em;
+		padding: 1.5em 2.5em;
 		font-size: 1.3em;
 		line-height: 1.5;
 	}
-	.between{
+
+	.between {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 	}
-	.text-center{
+
+	.between>p {
+		font-weight: 600;
+	}
+
+	.text-center {
 		text-align: center;
 	}
-	.between>div{
+
+	.between>div {
 		width: 20em;
 	}
-	.text-center>h1{
-		font-size: 1.8em;
+
+	.text-center>h1 {
+		font-size: 26px;
+		font-family: none;
 		margin-top: 0.5em;
 	}
-	.wrap-center{
-		padding: 3em 8em;
+
+	.wrap-center {
+		padding: 3em 4em;
 		display: flex;
 		gap: 5em;
 	}
-	.bots{
-		margin-top: 4em;
+
+	.bots {
+		margin: 1em 0;
 	}
-	.pads{
-		padding: 0em 6em 2em 6em;
+
+	.pads {
+		padding: 0em 1.5em 2em 1.5em;
 		text-align: justify;
+	}
+	.watermark{
+		position: absolute;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		height: 100%;
+	}
+	.watermark>img{
+		opacity: 0.1;
 	}
 </style>
 <div id="appss"></div>
@@ -189,7 +232,7 @@
 					let filteredDataByIdMhs = allData.filter(it => it.tarunaid == id)
 					setListNilai(filteredDataByIdMhs)
 				},
-				error : () => {
+				error: () => {
 					alert('Gagal mendapatkan data penilaian')
 				}
 			})
@@ -203,7 +246,7 @@
 				success: data => {
 					let allData = JSON.parse(data)
 					let filteredData = allData.filter(it => it.nomor_taruna.includes($('[name="nim"]').val()))
-					if(filteredData.length){
+					if (filteredData.length) {
 						setMahasiswaInfo(filteredData[0])
 						getDetailTranskrip(filteredData[0].id)
 						setMahasiswaNotFound(false)
@@ -224,9 +267,9 @@
 				destroy: true,
 				data: listNilai,
 				columns: [
-					{data: 'matakuliah', title: 'Mata Kuliah'},
-					{data: 'nilai_angka', title: 'Nilai Angka'},
-					{data: 'nilai_huruf', title: 'Nilai Huruf'},
+					{ data: 'matakuliah', title: 'Mata Kuliah' },
+					{ data: 'nilai_angka', title: 'Nilai Angka' },
+					{ data: 'nilai_huruf', title: 'Nilai Huruf' },
 				]
 			})
 		}, [listNilai])
@@ -244,7 +287,7 @@
 						<form onSubmit={e => handleSearchMahasiswa(e)}>
 							<div className="wrap">
 								<div className="formel">
-									<label htmlFor="nim">NIM {}</label>
+									<label htmlFor="nim">NIM { }</label>
 									<input type="text" name="nim" placeholder="e.g. 220401020003" />
 								</div>
 								<div className="formel">
@@ -292,7 +335,7 @@
 					}
 				</div>
 				{
-					isPrintIjazah ? (<FormIjazah data={mahasiswaInfo} hide={setIsPrintIjazah}/>) : false
+					isPrintIjazah ? (<FormIjazah data={mahasiswaInfo} hide={setIsPrintIjazah} />) : false
 				}
 			</div>
 		)
@@ -302,13 +345,16 @@
 	el.render(<App />)
 	// form input program studi
 	const FormIjazah = props => {
-		const {nama, namakota, nomor_taruna, namaprodi, tanggal_lahir, program_pendidikan, akreditasi} = props.data
-		const {hide} = props
+		const { nama, namakota, nomor_taruna, namaprodi, tanggal_lahir, program_pendidikan, akreditasi } = props.data
+		const { hide } = props
 		useEffect(() => {
-			window.print()
+			setTimeout(() => window.print(), 2000)
 		}, [])
 		return (
 			<div className="boxijazah" onClick={e => e.target.className == "boxijazah" && hide(false)}>
+				<div className="watermark">
+					<img src="<?=base_url()?>assets/unsia.png" alt="illustration" />
+				</div>
 				<div className="formijazah">
 					<div className="between">
 						<p>No. Seri : 120</p>
@@ -327,22 +373,26 @@
 							<p>Status </p>
 						</div>
 						<div>
-							<p><strong>: {nama}</strong></p>
+							<p><strong>: {nama.toUpperCase()}</strong></p>
 							<p>: {namakota}, {tanggal_lahir} </p>
 							<p>: {nomor_taruna} </p>
 							<p>: {namaprodi} </p>
 							<p>: {program_pendidikan} </p>
-							<p>: <strong>{akreditasi}</strong> </p>
+							<p>: TERAKREDITASI <strong>"{akreditasi.toUpperCase()}"</strong> </p>
+							<p><i style={{ paddingLeft: '0.4em' }}>Berdasarkan Keputusan BAN PT No. 321</i></p>
 						</div>
 					</div>
 					<div className="pads">
-						<p>Ijazah ini diserahkan berdasarkan Surat Keputusan Direktur Politeknik XYZ Nomor: SK.321 Tahun 2022, setelah yang bersangkutan memenuhi semua persyaratan yang telah ditentukan dan kepadanya dilimpahkan segala wewenang dan hak yang berhubungan dengan Ijazah yang dimilikinya serta berhak menggunakan Gelar Akademik <strong>{program_pendidikan != 'Sarjana' ? 'Ahli Madya' : 'Sarjana'} Komputer ({program_pendidikan == 'Sarjana' ? 'S.Kom' : 'A.Md'})</strong></p>
+						<p>Ijazah ini diserahkan berdasarkan Surat Keputusan Direktur Politeknik Siber Asia Nomor: SK. 321 Tahun 2022, setelah yang bersangkutan memenuhi semua persyaratan yang telah ditentukan dan kepadanya dilimpahkan segala wewenang dan hak yang berhubungan dengan Ijazah yang dimilikinya serta berhak menggunakan Gelar Akademik <strong>{program_pendidikan != 'Sarjana' ? 'Ahli Madya' : 'Sarjana'} Komputer ({program_pendidikan == 'Sarjana' ? 'S.Kom' : 'A.Md'})</strong></p>
 					</div>
 					<div className="between pads">
 						<div className="text-center">
 							<p>WAKIL DIREKTUR I </p>
-							<p>POLITEKNIK XYZ</p>
+							<p>POLITEKNIK SIBER ASIA</p>
 							<div className="bots">
+								<img src="<?=base_url() ?>assets/barcode.png" alt="barcode" width="100" />
+							</div>
+							<div>
 								<p><strong>NOBITA NOBI</strong></p>
 								<p>NIP. 100900879</p>
 							</div>
@@ -350,8 +400,11 @@
 						<div className="text-center">
 							<p>Jakarta, 12 Agustus 2023</p>
 							<p>DIREKTUR</p>
-							<p>POLITEKNIK XYZ</p>
+							<p>POLITEKNIK SIBER ASIA</p>
 							<div className="bots">
+								<img src="<?=base_url() ?>assets/barcode.png" alt="barcode" width="100" />
+							</div>
+							<div>
 								<p><strong>SUNEO</strong></p>
 								<p>NIP. 100232289</p>
 							</div>
