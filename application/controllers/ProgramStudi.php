@@ -24,8 +24,7 @@ class ProgramStudi extends CI_Controller {
 	 */
 	public function index()
 	{
-		$data['url'] = '../assets/unsia.png';
-		$this->load->view('resource2', $data);
+		$this->load->view('resource');
 		$this->load->view('nav');
 		$this->load->view('dash_program_studi');
 	}
@@ -50,6 +49,8 @@ class ProgramStudi extends CI_Controller {
 	}
 
 	public function edit_programstudi($id) {
+		$this->load->view('resource');
+		$this->load->view('nav');
 		$data['programstudi'] = $this->ProgramStudi_model->get_programstudi_by_id($id); // Ambil data program studi berdasarkan ID
 		$data['all_programstudi'] = $this->ProgramStudi_model->read(); // Ambil semua data program studi
 		$this->load->view('edit_program_studi', $data);
@@ -61,7 +62,7 @@ class ProgramStudi extends CI_Controller {
         $data['program_pendidikan'] = $this->input->post('program_pendidikan');
         $data['akreditasi'] = $this->input->post('akreditasi');
         $data['sk_akreditasi'] = $this->input->post('sk_akreditasi');
-		
+				
 		$this->ProgramStudi_model->update($id, $data);
 		redirect('programstudi'); // Redirect ke halaman daftar program studi setelah update
 	}
