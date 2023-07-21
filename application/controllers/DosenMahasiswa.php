@@ -54,9 +54,23 @@ public function get_all_mahasiswa(){
 	$data = $this->DosenMahasiswa_model->get_all_mahasiswa();
 	echo json_encode($data);
 }
+public function get_all_dosen(){
+	$data = $this->DosenMahasiswa_model->get_all_dosen();
+	echo json_encode($data);
+}
 // Mahasiswa
 public function create_mahasiswa() {
     // Tampilkan halaman form tambah data mahasiswa
+	$data['nama'] = $this->input->post('nama');
+	$data['nomor_taruna'] = $this->input->post('nomor_taruna');
+	$data['tempat_lahir'] = $this->input->post('tempat_lahir');
+	$data['tanggal_lahir'] = $this->input->post('tanggal_lahir');
+	$data['program_studi'] = $this->input->post('program_studi');
+	$data['foto'] = $this->input->post('foto');
+	echo json_encode($data);
+	echo $this->input->post('nama');
+	$processadd = $this->DosenMahasiswa_model->create_mahasiswa($data);
+	echo json_encode($processadd);
 }
 
 public function store_mahasiswa() {

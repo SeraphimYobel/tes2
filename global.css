@@ -99,7 +99,7 @@ html {
    color: #1B9C85;
 }
 
-#listdata {
+#listdata, #listmahasiswa, #listdosen {
    width: 100% !important;
    padding: 1.5em 0 !important;
 
@@ -227,4 +227,31 @@ td{
 .fa-trash{
    color: #FF0060;
    margin-left: 0.5em;
+}
+.navigations{
+   display: flex;
+   width: 100%;
+   gap: 0.5em;
+   padding: 0.15em;
+   outline: 1px solid rgb(220,220,200);
+   background: rgb(245,245,245);
+   border-radius: 0.4em;
+   margin-top: 1.5em;
+   margin-bottom: 1em;
+}
+.navigations>a{
+   padding: 0.8em 1.4em;
+   color: #777;
+   flex: 1;
+   text-align: center;
+   border-radius: 0.4em;
+   transition: all 0.3s;
+   cursor: pointer;
+}
+.activetab, .activetab:hover{
+   background: #1B9C85 !important;
+   color: white !important;
+}
+.navigations>a:hover{
+   background: rgb(230,230,230);
 }

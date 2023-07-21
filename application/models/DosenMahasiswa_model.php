@@ -22,6 +22,9 @@ class DosenMahasiswa_model extends CI_Model {
     public function get_all_mahasiswa(){
         return $this->db->get('taruna')->result_array();   
     }
+    public function get_all_dosen(){
+        return $this->db->get('pejabat')->result_array();   
+    }
     public function update_dosen($id, $data) {
         $this->db->where('ID', $id);
         $this->db->update('Dosen', $data);
@@ -36,8 +39,16 @@ class DosenMahasiswa_model extends CI_Model {
 
     // Operasi pada tabel Mahasiswa
     public function create_mahasiswa($data) {
-        $this->db->insert('Mahasiswa', $data);
-        return $this->db->insert_id();
+        echo json_encode($data);
+        $data = array(
+            'nama' => $data["nama"],
+            'nomor_taruna' => $data["nomor_taruna"],
+            'tempat_lahir' => $data["tempat_lahir"],
+            'tanggal_lahir' => $data["tanggal_lahir"],
+            'program_studi' => $data["program_studi"],
+            'foto' => $data["foto"]
+        );
+        return $this->db->insert('taruna', $data);
     }
 
     public function read_mahasiswa($id = null) {
