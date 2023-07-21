@@ -6,7 +6,10 @@ class Kota extends CI_Controller {
         $this->load->model('Kota_model');
     }
 
-    
+    public function get_all_kota(){
+        $data = $this->Kota_model->get_all_kota();
+		echo json_encode($data);   
+    }
 
     public function create() {
         $this->load->view('kota/create');
@@ -65,30 +68,41 @@ class Kota extends CI_Controller {
 
 	public function create_kota() {
     // Tampilkan halaman form tambah data kota
-}
+        $data['kode_kota'] = $this->input->post('kode_kota');
+        $data['nama'] = $this->input->post('nama');
+        $processadd = $this->Kota_model->create($data);
+        echo json_encode($processadd);
+    }
 
-public function index() {
-    $data['kota'] = $this->Kota_model->read();
-    $data['url'] = '../assets/unsia.png';
-    $this->load->view('resource2', $data);
-    $this->load->view('nav');
-    $this->load->view('dash_kota');
-}
+    public function index() {
+        $data['kota'] = $this->Kota_model->read();
+        $data['url'] = '../assets/unsia.png';
+        $this->load->view('resource2', $data);
+        $this->load->view('nav');
+        $this->load->view('dash_kota');
+    }
 
-public function store_kota() {
-    // Proses tambah data kota ke database
-}
+    public function store_kota() {
+        // Proses tambah data kota ke database
+    }
 
-public function edit_kota($id) {
-    // Tampilkan halaman form edit data kota berdasarkan ID
-}
+    public function edit_kota($id) {
+        // Tampilkan halaman form edit data kota berdasarkan ID
+    }
 
-public function update_kota($id) {
-    // Proses update data kota ke database berdasarkan ID
-}
+    public function update_kota() {
+        // Proses update data kota ke database berdasarkan ID
+        $id = $this->input->post('id');
+        $data['kode_kota'] = $this->input->post('kode_kota');
+        $data['nama'] = $this->input->post('nama');
+        $processedit = $this->Kota_model->update($id, $data);
+        echo json_encode($processedit);
+    }
 
-public function delete_kota($id) {
-    // Proses hapus data kota dari database berdasarkan ID
-}
+    public function delete_kota($id) {
+        // Proses hapus data kota dari database berdasarkan ID
+        $processdata = $this->Kota_model->delete($id);
+        return $processdata;
+    }
 
 }

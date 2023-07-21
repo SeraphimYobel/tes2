@@ -2,7 +2,11 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class DosenMahasiswa extends CI_Controller {
-
+	public function __construct(){
+		parent::__construct();
+	
+		$this->load->model('DosenMahasiswa_model');
+	}
 	/**
 	 * Index Page for this controller.
 	 *
@@ -46,7 +50,10 @@ public function update_dosen($id) {
 public function delete_dosen($id) {
     // Proses hapus data dosen dari database berdasarkan ID
 }
-
+public function get_all_mahasiswa(){
+	$data = $this->DosenMahasiswa_model->get_all_mahasiswa();
+	echo json_encode($data);
+}
 // Mahasiswa
 public function create_mahasiswa() {
     // Tampilkan halaman form tambah data mahasiswa

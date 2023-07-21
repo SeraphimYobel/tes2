@@ -60,7 +60,9 @@
 	const App = () => {
 		const [showForm, setShowForm] = useState(null)
 		const [listData, setListData] = useState([])
-				// get data from database
+		const [editedData, setEditedData] = useState(null)
+		const [showMessageSuccess, setShowMessageSuccess] = useState(false)
+ 		// get data from database
 		const getAllDataMataKuliah = () => {
 			$.ajax({
 				url: "<?=base_url()?>index.php/MataKuliah/get_all_matakuliah",
@@ -72,6 +74,30 @@
 					alert('Gagal mendapatkan data dari database')
 				}
 			})
+		}
+		// Fungsi untuk menangani klik tombol edit
+		const handleEditData = (id, listData) => {
+			setEditedData(listData.filter(it => it.id == id)[0])
+			setShowForm('edit')
+		}
+		// Fungsi untuk menangani klik tombol delete
+		const handleDeleteData = id => {
+            // handle delete Mata kuliah by ID
+			if (confirm('Apakah Anda yakin ingin menghapus Mata Kuliah?')){
+				$.ajax({
+					url: `<?= base_url() ?>index.php/MataKuliah/delete_matakuliah/${id}`,
+					method: 'POST',
+					success: function(data) {
+						setShowMessageSuccess(true)
+						setTimeout(() => setShowMessageSuccess(false),5000)
+						// Refresh halaman setelah menghapus data
+						getAllDataMataKuliah()
+					},
+					error: function() {
+						alert('Gagal menghapus data mata kuliah.');
+					}
+				});
+			}
 		}
 		// menampilkan data ke dalam database ketika ada perubahan state
 		useEffect(() => {
@@ -85,8 +111,28 @@
 					{ data: 'nilai_angka', title: 'Nilai Angka' },
 					{ data: 'nilai_huruf', title: 'Nilai Huruf' },
 					{ data: 'semester', title: 'Semester' },
-					{ data: 'id', title: 'Action' },
-				]
+					{ 
+						data: null,
+    					render: function (data, type, row) {
+        					return `
+							<i title="Edit Mata Kuliah" class="fa-solid fa-pen-to-square btn-edit" data-id="${data.id}"></i>
+							<i title="Hapus Mata Kuliah" class="fa-solid fa-trash" data-id="${data.id}"></i>
+        					`;
+    					},
+    					title: 'Action' 
+					},
+				],
+				initComplete: function(){
+					$('#listdata').off().on('click', 'tr td i', function(){
+						const buttonType = $(this).attr('class')
+						// jika tombol edi ditekan
+						if(buttonType.includes('btn-edit')){
+							handleEditData($(this).attr('data-id'), listData)
+						} else {
+							handleDeleteData($(this).attr('data-id'))
+						}
+					})
+				}
 			})
 		}, [listData])
 		// mendapatkan data dari database saat pertama kali page loaded
@@ -103,6 +149,11 @@
 							<p>Klik <strong>Tambah</strong> untuk menambahkan Mata Kuliah. </p>
 						</div>
 					</div>
+					{
+						showMessageSuccess ? (
+							<p className="successmessage"><i className="fa-solid fa-circle-info"></i> Mata Kuliah berhasil dihapus.</p>
+						) : false
+					}
 					<div className="btnarea btnarea-nopad">
 						{ /* hide show button add */
 							showForm == null ? (
@@ -115,8 +166,14 @@
 						}
 					</div>
 					{
-						showForm == 'add' ? (
-							<FormInput setShowForm={setShowForm} setListData={setListData} refreshData={getAllDataMataKuliah}/>
+						showForm != null ? (
+							<FormInput 
+								setShowForm={setShowForm} 
+								setListData={setListData} 
+								refreshData={getAllDataMataKuliah}
+								editedData={editedData}
+								type={showForm}
+							/>
 						) : false
 					}
 					<div className="tablebox">
@@ -131,21 +188,26 @@
 	el.render(<App />)
 	// form input mata kuliah
 	const FormInput = props => {
-		const { setShowForm, setListData, refreshData } = props
+		const { setShowForm, setListData, refreshData, editedData, type } = props
 		const [successMessage, setSuccessMessage] = useState(null)
 		// on submit form add new mata kuliah
-		const handleSubmit = (e) => {
+		const handleSubmit = (e, type, editedData) => {
 			e.preventDefault()
 			const data = Object.fromEntries(new FormData(document.querySelector('#formmatakuliah')).entries())
+			let url = type == 'add' ? "<?=base_url()?>index.php/MataKuliah/create_matakuliah" : "<?=base_url()?>index.php/MataKuliah/update_matakuliah"
+			// menyisipkan nilai id dari mata kuliah yg diedit
+			if(type == 'edit') {
+				data.id = editedData.id
+			}
 			$.ajax({
-				url: "<?=base_url()?>index.php/MataKuliah/create_matakuliah",
+				url,
 				data,
 				method: 'POST',
 				success: data => {
 					// on success
-					if(data == "true"){
+					if(data == "true" || data > 0){
 						$('#formmatakuliah')[0].reset()
-						setSuccessMessage('Mata Kuliah berhasil ditambahkan, Terima kasih.')
+						setSuccessMessage(`Mata Kuliah berhasil di${type == 'add' ? 'tambahkan' : 'update'}, Terima kasih.`)
 						refreshData()
 						setTimeout(() => setSuccessMessage(null),5000)
 					}
@@ -155,16 +217,24 @@
 				}
 			})
 		}
+		useEffect(() => {
+			if(type == 'edit'){
+				// update nilai elemen berdasarkan key value
+				for(let obj in editedData){
+					$(`[name="${obj}"]`).val(editedData[obj])
+				}
+			}
+		}, [type, editedData])
 		return (
 			<div className="forms">
-				<h1>Tambah Mata Kuliah</h1>
+				<h1>{type == 'add' ? 'Tambah' : 'Update'} Mata Kuliah</h1>
 				<p>Silahkan lengkapi form dibawah ini.</p>
 				{
 					successMessage != null ? (
 						<span className="successmessage"><i className="fas fa-check-circle"></i> {successMessage}</span>
 					) : false
 				}
-				<form id="formmatakuliah" onSubmit={handleSubmit}>
+				<form id="formmatakuliah" onSubmit={e => handleSubmit(e, type, editedData)}>
 					<div className="wrap">
 						<div className="formel">
 							<label htmlFor="kode">Kode</label>
@@ -187,7 +257,7 @@
 						<div className="formel">
 							<label htmlFor="nilai_huruf">Nilai_Huruf</label>
 							<select required name="nilai_huruf">
-								<option value="">Pilih Nilai_Huruf</option>
+								<option value="">--- Pilih Nilai Huruf ---</option>
 								<option value="A">A</option>
 								<option value="B">AB</option>
 								<option value="C">B</option>
@@ -199,7 +269,17 @@
 						</div>
 						<div className="formel fulls">
 							<label htmlFor="semester">Semester</label>
-							<input name="semester" type="text" placeholder="e.g. 4" required />
+							<select required name="semester">
+								<option value="">--- Pilih Semester ---</option>
+								<option value="Semester I"> Semester I </option>
+								<option value="Semester II">Semester II</option>
+								<option value="Semester III">Semester III</option>
+								<option value="Semester IV">Semester IV</option>
+								<option value="Semester V">Semester V</option>
+								<option value="Semester VI">Semester VI</option>
+								<option value="Semester VII">Semester VII</option>
+								<option value="Semester VIII">Semester VIII</option>
+							</select>
 						</div>
 					</div>
 					<div className="btnarea">

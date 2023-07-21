@@ -57,7 +57,8 @@ class ProgramStudi extends CI_Controller {
 	}
 	
 
-	public function update_programstudi($id) {
+	public function update_programstudi() {
+        $id = $this->input->post('id');
         $data['nama'] = $this->input->post('nama');
         $data['program_pendidikan'] = $this->input->post('program_pendidikan');
         $data['akreditasi'] = $this->input->post('akreditasi');
@@ -68,8 +69,8 @@ class ProgramStudi extends CI_Controller {
 	}
 		
 	public function delete_programstudi($id) {
-		$this->ProgramStudi_model->delete($id);
-		redirect('programstudi'); // Redirect ke halaman daftar program studi setelah delete
+		$processdata = $this->ProgramStudi_model->delete($id);
+		return $processdata;
 	}
 	
 
