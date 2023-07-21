@@ -64,7 +64,7 @@ class DosenMahasiswa_model extends CI_Model {
 
     public function update_mahasiswa($id, $data) {
         $this->db->where('ID', $id);
-        $this->db->update('Mahasiswa', $data);
+        $this->db->update('taruna', $data);
         return $this->db->affected_rows();
     }
 
