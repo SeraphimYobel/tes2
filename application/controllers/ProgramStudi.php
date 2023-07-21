@@ -63,9 +63,8 @@ class ProgramStudi extends CI_Controller {
         $data['program_pendidikan'] = $this->input->post('program_pendidikan');
         $data['akreditasi'] = $this->input->post('akreditasi');
         $data['sk_akreditasi'] = $this->input->post('sk_akreditasi');
-				
-		$this->ProgramStudi_model->update($id, $data);
-		redirect('programstudi'); // Redirect ke halaman daftar program studi setelah update
+		$processedit = $this->ProgramStudi_model->update($id, $data);
+		echo json_encode($processedit);
 	}
 		
 	public function delete_programstudi($id) {
