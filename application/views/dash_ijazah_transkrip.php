@@ -79,7 +79,7 @@
 	.headers{
 		display: flex;
 		gap: 1.5em;
-		margin: 1em 0;
+		margin: 1.5em 0;
 	}
 	.headers>div{
 		flex: 1;
@@ -96,6 +96,9 @@
 		justify-content: center;
 		align-items: flex-start;
 		gap: 1em;
+	}
+	.tbox{
+		padding: 1.5em 0 !important;
 	}
 </style>
 <div id="appss"></div>
@@ -145,6 +148,18 @@
 			})
 		}
 		// generate datatable
+		useEffect(() => {
+			console.log(listNilai)
+			$('#listdata').DataTable({
+				destroy: true,
+				data: listNilai,
+				columns: [
+					{data: 'matakuliah', title: 'Mata Kuliah'},
+					{data: 'nilai_angka', title: 'Nilai Angka'},
+					{data: 'nilai_huruf', title: 'Nilai Huruf'},
+				]
+			})
+		}, [listNilai])
 		return (
 			<div id="container">
 				<div>
@@ -171,25 +186,30 @@
 					</div>
 					{
 						mahasiswaNotFound ? (
-							<p className="warnmessage"><i className="fa-solid fa-circle-info"></i> Data Mahasiswa tidak ditemukan</p>
+							<p className="warnmessage"><i className="fa-solid fa-circle-info"></i>Maaf, Data Mahasiswa tidak ditemukan</p>
 						) : false
 					}
 					{
 						mahasiswaInfo != null ? (
-							<div className="headers">
-								<div className="mahasiswainfo">
-									<h5>{mahasiswaInfo.nama}</h5>
-									<p><i className="fa-solid fa-calendar-week"></i> {mahasiswaInfo.namakota}, {mahasiswaInfo.tanggal_lahir}</p>
+							<React.Fragment>
+								<div className="headers">
+									<div className="mahasiswainfo">
+										<h5>{mahasiswaInfo.nama}</h5>
+										<p><i className="fa-solid fa-calendar-week"></i> {mahasiswaInfo.namakota}, {mahasiswaInfo.tanggal_lahir}</p>
+									</div>
+									<div className="mahasiswainfo">
+										<h5>{mahasiswaInfo.nomor_taruna}</h5>
+										<p><i className="fas fa-graduation-cap"></i> {mahasiswaInfo.namaprodi}</p>
+									</div>
+									<div className="headprint">
+										<button><i className="fa-solid fa-print"></i> Print Ijazah</button>
+										<button><i className="fa-solid fa-file-contract"></i> Print Transkrip</button>
+									</div>
 								</div>
-								<div className="mahasiswainfo">
-									<h5>{mahasiswaInfo.nomor_taruna}</h5>
-									<p><i className="fas fa-graduation-cap"></i> {mahasiswaInfo.namaprodi}</p>
+								<div className="tbox">
+									<table id="listdata"></table>
 								</div>
-								<div className="headprint">
-									<button><i className="fa-solid fa-print"></i> Print Ijazah</button>
-									<button><i className="fa-solid fa-file-contract"></i> Print Transkrip</button>
-								</div>
-							</div>
+							</React.Fragment>
 						) : false
 					}
 				</div>

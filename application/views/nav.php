@@ -39,7 +39,7 @@
          <nav className="navigation">
             <div>
                <div>
-                  <a href="<?= base_url() ?>" className="headmenu">
+                  <a href="<?= base_url() ?>index.php/Dashboard" className="headmenu">
                      <img src="<?=base_url()?>/assets/unsia.png" alt="logo kampus" width="40" height="40"/>
                      <div>
                         <h3>UNSIA Menu</h3>
