@@ -20,7 +20,7 @@
       opacity: 0.6;
    }
    .btnlogout:hover {
-      background: #cb014f
+      background: #333333
    }
    a>i{
       width: 1.3em;
@@ -57,7 +57,7 @@
                </div>
                <button 
                   title="Keluar dari Akun" 
-                  className="bgred btnlogout"
+                  className="bggreen btnlogout"
                   onClick={handleLogOut}
                >Log Out</button>
             </div>
