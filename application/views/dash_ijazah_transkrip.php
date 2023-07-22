@@ -312,11 +312,16 @@
 									</div>
 									<div className="mahasiswainfo">
 										<h5>{mahasiswaInfo.nomor_taruna}</h5>
-										<p><i className="fas fa-graduation-cap"></i> {mahasiswaInfo.namaprodi}</p>
+										<p><i className="fas fa-graduation-cap"></i>Prodi {mahasiswaInfo.namaprodi}</p>
 									</div>
 									<div className="headprint">
-										<button onClick={() => setIsPrintIjazah(true)}><i className="fa-solid fa-print"></i> Print Ijazah</button>
-										<button><i className="fa-solid fa-file-contract"></i> Print Transkrip</button>
+										<button 
+											title="Cetak Ijazah" 
+											onClick={() => setIsPrintIjazah(true)}
+										><i className="fa-solid fa-print"></i> Ijazah</button>
+										<button
+											title="Cetak Transkrip"
+										><i className="fa-solid fa-print"></i> Transkrip</button>
 									</div>
 								</div>
 								<div className="tbox">
@@ -376,8 +381,8 @@
 							<p><strong>: {nama.toUpperCase()}</strong></p>
 							<p>: {namakota}, {tanggal_lahir} </p>
 							<p>: {nomor_taruna} </p>
-							<p>: {namaprodi} </p>
 							<p>: {program_pendidikan} </p>
+							<p>: {namaprodi} </p>
 							<p>: TERAKREDITASI <strong>"{akreditasi.toUpperCase()}"</strong> </p>
 							<p><i style={{ paddingLeft: '0.4em' }}>Berdasarkan Keputusan BAN PT No. 321</i></p>
 						</div>
