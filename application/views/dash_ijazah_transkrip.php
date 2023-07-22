@@ -142,12 +142,15 @@
 
 	.boxijazah {
 		position: fixed;
+		overflow: auto;
 		top: 0;
 		left: 0;
 		padding: 1em;
 		width: 100%;
 		height: 100%;
 		background: rgba(20, 20, 20, 0.5) !important;
+		display: flex;
+		justify-content: center;
 		border-radius: 0 !important;
 		animation: show 0.5s ease;
 	}
@@ -213,24 +216,26 @@
 		opacity: 0.1;
 	}
 	.ijazahcontent{
+		position: relative;
+		height: fit-content;
+		width: 80%;
 		padding: 1em;
 		background: white;
 		border-radius: 0.5em;
 	}
 	.wraptranskrip{
 		display: flex;
+		padding: 1.5em 2em;
 		gap: 1em;
 	}
-	.ijazahcontent{
-		font-size: 11px !important;
+	.ijazahcontent p, td>b{
+		font-size: 10px !important;
+		line-height: 1.5;
 	}
-	@media print {
-		body {
-			font-size: 12pt;
-		}
-		.no-print {
-			display: none;
-		}
+	.ijazahcontent >h1{
+		text-align: center;
+		padding-top: 1.2em;
+		text-decoration: underline;
 	}
 	.tablewraps{
 		display: flex;
@@ -238,6 +243,82 @@
 	}
 	.tablewraps>div{
 		flex: 1;
+	}
+	.tablewraps>div>table{
+		border-collapse: collapse;
+		width: 100%;
+	}
+	.tablewraps>div>table>tbody>tr>td, .tablewraps>div>table>thead>tr>th{
+		padding: 0.2em !important;
+		font-size: 10px !important;
+	}
+	.titlesm{
+		background: rgb(245,245,245);
+		text-align: center;
+		font-weight: 600;
+	}
+	.keterang{
+		margin: 1em 0;
+	}
+	.btop{
+		border=top: 1px solid rgb(220,220,220)
+	}
+	.btop>div{
+		margin: 0.5em 0;
+		display: flex;
+		gap: 2em;
+		padding: 0 1.5em;
+	}
+	table{
+		border: 1px solid rgb(220,220,220);
+	}
+	.btop>div>p:nth-child(1){
+		width: 15em;
+		text-align: left;
+	}
+	.bolds{
+		font-weight: 600;
+	}
+	.tablewraps>div>table>tbody>tr>td.expad{
+		padding: 1em !important;
+	}
+	@media print {
+		.no-print {
+			display: none;
+		}
+		.tablewraps>div{
+			flex: 1;
+		}
+		.boxijazah{
+			justify-content: flex-start;
+			padding: 0;
+		}
+		.ijazahcontent{
+			width: 100%;
+		}
+		.ijazahcontent>h1{
+			text-align: center;
+		}
+		
+		table>thead>tr>th{
+			background: rgb(245,245,245) !important;
+			border-top: 1px solid rgb(220,220,220) !important;
+		}
+		table>tbody>tr>td, table>thead>tr>th{
+			border-bottom: 0;
+			border-left: 1px solid rgb(220,220,220) !important;
+			border-right: 1px solid rgb(220,220,220) !important;
+		}
+		.titlesm{
+			background-color: rgb(245,245,245);
+			border: 1px solid rgb(220,220,220) !important;
+			padding: 1em 0;
+			text-align: center;
+			font-weight: 600;
+		}
+	}
+	@page{
+		margin: 0;
 	}
 </style>
 
@@ -407,7 +488,13 @@ $nomorIjazah = getRandomNumber();
 					) : false
 				}
 				{
-					isPrintTranskrip ? <FormTranskrip hide={setIsPrintTranskrip} /> : false
+					isPrintTranskrip ? 
+						<FormTranskrip 
+							dataMahasiswa={mahasiswaInfo} 
+							hide={setIsPrintTranskrip}
+							dataPejabat={dataPejabat} 
+						/>
+					: false
 				}
 			</div>
 		)
@@ -430,7 +517,7 @@ $nomorIjazah = getRandomNumber();
 				wadir.length && setWadir(wadir[0])
 			}
 			// auto print
-			// setTimeout(() => window.print(), 1500)
+			setTimeout(() => window.print(), 1500)
 		}, [dataPejabat])
 		return (
 			<div className="boxijazah" onClick={() => hide(false)}>
@@ -498,13 +585,59 @@ $nomorIjazah = getRandomNumber();
 	}
 	// form transkrip
 	const FormTranskrip = props => {
-		const {hide} = props
+		const {hide, dataMahasiswa, dataPejabat} = props
+		const [listNilai, setListNilai] = useState([])
+		const [direktur, setDirektur] = useState({nama: "-", nidn: "-"})
+		const [wadir, setWadir] = useState({nama: "-", nidn: "-"})
+		// get data direktur dan wadir
+		useEffect(() => {
+			if(dataPejabat.length){
+				let direktur = dataPejabat.filter(it => it.jabatan.toUpperCase().includes("DIREKTUR"))
+				let wadir = dataPejabat.filter(it => it.jabatan.toUpperCase().includes("WAKIL DIREKTUR"))
+				direktur.length && setDirektur(direktur[0])
+				wadir.length && setWadir(wadir[0])
+			}
+			// auto print
+			// setTimeout(() => window.print(), 1500)
+		}, [dataPejabat])
+		// get detail nilai
+		useEffect(() => {
+			let nim = dataMahasiswa.nomor_taruna
+			$.ajax({
+				url: `http://localhost/pemweb2-kel3/index.php/Penilaian/get_penilaian_by_nim/${nim}`,
+				method: 'GET',
+				success: data => {
+					let listData = JSON.parse(data)
+					listData = listData.map(it => {
+						let semester = 0
+						if(it.semester == 'Semester I'){
+							semester = 1
+						} else if(it.semester == 'Semester II'){
+							semester = 2
+						} else if(it.semester == 'Semester III'){
+							semester = 3
+						} else if(it.semester == 'Semester IV'){
+							semester = 4
+						} else if(it.semester == 'Semester V'){
+							semester = 5
+						} else if(it.semester == 'Semester VI'){
+							semester = 6
+						}
+						return {...it, nosemester: semester}
+					})
+					listData = listData.sort((a,b) => a.nosemester - b.nosemester)
+					listData = listData.map((it, index) => ({...it, sks: parseInt(it.sks), urutan: index+1}))
+					setListNilai(listData)
+					console.log(listData)
+				}
+			})
+		}, [dataMahasiswa])
 		return (
-			<div className="boxijazah" onClick={() => hide(false)}>
+			<div className="boxijazah" onClick={(e) => e.target.className == "boxijazah" && hide(false)}>
 				<div className="ijazahcontent">
 					<p>Lampiran Ijazah Nomor : 123</p>
 					<h1>TRANSKRIP NILAI AKADEMIK</h1>
-					<div className="wraptranskrip">
+					<div className="wraptranskrip mini">
 						<div>
 							<p>NAMA</p>
 							<p>NOMOR TARUNA</p>
@@ -522,415 +655,11 @@ $nomorIjazah = getRandomNumber();
 							<p>: 22 AGUSTUS 2023</p>
 						</div>
 					</div>
+					{/* bagian transkrip */}
 					<div className="tablewraps">
 						<div>
 							<table className="table-bor">
-								<tbody>
-									<tr>
-										<th>NO</th>
-										<th>KODE</th>
-										<th className="Matkul">MATA KULIAH</th>
-										<th>SKS</th>
-										<th>NILAI</th>
-									</tr>
-									<tr>
-										<td ></td>
-										<td ></td>
-										<td><b>SEMESTER I (20 SKS)</b></td>
-										<td></td>
-										<td></td>
-									</tr>
-									<tr>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-									</tr>
-									<tr>
-										<td >1</td>
-										<td >PK103</td>
-										<td className="Matkul">PBB DAN TATA UPACARA</td>
-										<td>2</td>
-										<td>B</td>
-									</tr>
-									<tr>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-									</tr>
-									<tr>
-										<td >2</td>
-										<td >KK104</td>
-										<td className="Matkul">BAHASA INGGRIS</td>
-										<td>3</td>
-										<td>B</td>
-									</tr>
-									<tr>
-										<td >3</td>
-										<td >KK106</td>
-										<td className="Matkul">FISIKA TERAPAN</td>
-										<td>3</td>
-										<td>AB</td>
-									</tr>
-									<tr>
-										<td >4</td>
-										<td >PK102</td>
-										<td className="Matkul">PANCASILA</td>
-										<td>3</td>
-										<td>B</td>
-									</tr>
-									<tr>
-										<td>5</td>
-										<td>PK101</td>
-										<td className="Matkul">AGAMA</td>
-										<td>2</td>
-										<td>B</td>
-									</tr>
-									<tr>
-										<td>6</td>
-										<td>KK109</td>
-										<td className="Matkul">MENGGAMBAR TEKNIK</td>
-										<td>2</td>
-										<td>B</td>
-									</tr>
-									<tr>
-										<td>7</td>
-										<td>KK111</td>
-										<td className="Matkul">KOMPUTER</td>
-										<td>2</td>
-										<td>B</td>
-									</tr>
-									<tr>
-										<td>8</td>
-										<td>KK107</td>
-										<td className="Matkul">MATEMATIKA TERAPAN</td>
-										<td>2</td>
-										<td>B</td>
-									</tr>
-									<tr>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-									</tr>
-									<tr>
-										<td ></td>
-										<td ></td>
-										<td><b>SEMESTER II (21 SKS)</b></td>
-										<td></td>
-										<td></td>
-									</tr>
-									<tr>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-									</tr>
-									<tr>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-									</tr>
-									<tr>
-										<td>9</td>
-										<td>KK220</td>
-										<td className="Matkul">DASAR DASAR TRANSPORTASI</td>
-										<td>2</td>
-										<td>AB</td>
-									</tr>
-									<tr>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-									</tr>
-									<tr>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-									</tr>
-									<tr>
-										<td>10</td>
-										<td>KK218</td>
-										<td className="Matkul">HIDROLOGI</td>
-										<td>2</td>
-										<td>AB</td>
-									</tr>
-									<tr>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-									</tr>
-									<tr>
-										<td>11</td>
-										<td>KB225</td>
-										<td className="Matkul">TEKNIK PENGUKURAN DAN PEMETAAN</td>
-										<td>3</td>
-										<td>B</td>
-									</tr>
-									<tr>
-										<td>12</td>
-										<td>KB228</td>
-										<td className="Matkul">ILMU BANGUNAN KAPAL</td>
-										<td>3</td>
-										<td>B</td>
-									</tr>
-									<tr>
-										<td>13</td>
-										<td>PK205</td>
-										<td className="Matkul">BAHASA INDONESIA</td>
-										<td>2</td>
-										<td>AB</td>
-									</tr>
-									<tr>
-										<td>14</td>
-										<td>KK208</td>
-										<td className="Matkul">STATISTIK TERAPAN</td>
-										<td>3</td>
-										<td>B</td>
-									</tr>
-									<tr>
-										<td>15</td>
-										<td>KK213</td>
-										<td className="Matkul">PENGANTAR ILMU HUKUM</td>
-										<td>2</td>
-										<td>B</td>
-									</tr>
-									<tr>
-										<td>16</td>
-										<td>BB245</td>
-										<td className="Matkul">PENGANTAR ILMU HUKUM</td>
-										<td>2</td>
-										<td>A</td>
-									</tr>
-									<tr>
-										<td>17</td>
-										<td>KK219</td>
-										<td className="Matkul">REKAYASA SUNGAI</td>
-										<td>2</td>
-										<td>B</td>
-									</tr>
-									<tr>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-									</tr>
-									<tr>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-									</tr>
-									<tr>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-									</tr>
-									<tr>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-									</tr>
-									<tr>
-										<td ></td>
-										<td ></td>
-										<td><b>SEMESTER III (22 SKS)</b></td>
-										<td></td>
-										<td></td>
-									</tr>
-									<tr>
-										<td>18</td>
-										<td>KB326</td>
-										<td className="Matkul">TEKNIK SURVEI LLASDP</td>
-										<td>3</td>
-										<td>AB</td>
-									</tr>
-									<tr>
-										<td>19</td>
-										<td>KB324</td>
-										<td className="Matkul">TEKNIK SURVEI HIDROGRAFI</td>
-										<td>3</td>
-										<td>AB</td>
-									</tr>
-									<tr>
-										<td>20</td>
-										<td>KK310</td>
-										<td className="Matkul">DASAR-DASAR EKONOMI</td>
-										<td>2</td>
-										<td>A</td>
-									</tr>     
-									<tr>
-										<td>21</td>
-										<td>KB332</td>
-										<td className="Matkul">TEKNIK ALUR PELAYARAN</td>
-										<td>3</td>
-										<td>B</td>
-									</tr>
-									<tr>
-										<td>22</td>
-										<td>KK327</td>
-										<td className="Matkul">PERMESINAN DAN KELISTRIKAN KAPAL</td>
-										<td>3</td>
-										<td>AB</td>
-									</tr>
-									<tr>
-										<td>23</td>
-										<td>KK131</td>
-										<td className="Matkul">PENGANTAR ILMU MANEJEMEN</td>
-										<td>2</td>
-										<td>B</td>
-									</tr>
-									<tr>
-										<td>24</td>
-										<td>KK316</td>
-										<td className="Matkul">OLAH GERAK KAPAL</td>
-										<td>3</td>
-										<td>AB</td>
-									</tr>
-									<tr>
-										<td>25</td>
-										<td>KB329</td>
-										<td className="Matkul">STABILITAS DAN TEKNIK PEMUATAN</td>
-										<td>3</td>
-										<td>B</td>
-									</tr>
-									<tr>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-									</tr>
-									<tr>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-									</tr>
-									<tr>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-									</tr>
-									<tr>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-									</tr>
-									<tr>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-									</tr>
-									<tr>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-									</tr>
-									<tr>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-									</tr>
-									<tr>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-									</tr>
-									<tr>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-									</tr>
-									<tr>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-									</tr>
-									<tr>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-									</tr>
-									<tr>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-									</tr>
-									<tr>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-									</tr>
-									<tr>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-									</tr>
-									<tr>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-									</tr>
-									<tr >
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-						<div>
-							<table className="table-bor">
-								<thead>	
+								<thead>
 									<tr>
 										<th>NO</th>
 										<th>KODE</th>
@@ -941,199 +670,186 @@ $nomorIjazah = getRandomNumber();
 								</thead>
 								<tbody>
 									<tr>
-										<td></td>
-										<td></td>
-										<td><b>SEMESTER IV (20 SKS)</b></td>
-										<td></td>
-										<td></td>
+										<td colSpan="5" className="titlesm">SEMESTER I</td>
+									</tr>
+									{ // semester I 
+										listNilai.filter(it => it.semester == "Semester I").length ? listNilai.filter(it => it.semester == 'Semester I').map((it, index) => (
+											<tr key={index}>
+												<td>{it.urutan}</td>
+												<td>{it.kode}</td>
+												<td>{it.matakuliah}</td>
+												<td>{it.sks}</td>
+												<td>{it.nilai_huruf}</td>
+											</tr>
+										)) : (
+											<tr>
+												<td colSpan="5">Tidak ada mata kuliah.</td>
+											</tr>
+										)
+									}
+									<tr>
+										<td colSpan="5" className="titlesm">SEMESTER II</td>
+									</tr>
+									{ // Semester II
+										listNilai.filter(it => it.semester == "Semester II").length ? listNilai.filter(it => it.semester == 'Semester II').map((it, index) => (
+											<tr key={index}>
+												<td>{it.urutan}</td>
+												<td>{it.kode}</td>
+												<td>{it.matakuliah}</td>
+												<td>{it.sks}</td>
+												<td>{it.nilai_huruf}</td>
+											</tr>
+										)) : (
+											<tr>
+												<td colSpan="5">Tidak ada mata kuliah.</td>
+											</tr>
+										)
+									}
+									<tr>
+										<td colSpan="5" className="titlesm">SEMESTER III</td>
+									</tr>
+									{ // semester III
+										listNilai.filter(it => it.semester == "Semester III").length ? listNilai.filter(it => it.semester == 'Semester III').map((it, index) => (
+											<tr key={index}>
+												<td>{it.urutan}</td>
+												<td>{it.kode}</td>
+												<td>{it.matakuliah}</td>
+												<td>{it.sks}</td>
+												<td>{it.nilai_huruf}</td>
+											</tr>
+										)) : (
+											<tr>
+												<td colSpan="5">Tidak ada mata kuliah.</td>
+											</tr>
+										)
+									}
+								</tbody>
+							</table>
+						</div>
+						<div>
+							<table className="table-bor">
+								<thead>
+									<tr>
+										<th>NO</th>
+										<th>KODE</th>
+										<th className="Matkul">MATA KULIAH</th>
+										<th>SKS</th>
+										<th>NILAI</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td colSpan="5" className="titlesm">SEMESTER VI</td>
+									</tr>
+									{ // semester IV
+										listNilai.filter(it => it.semester == "Semester IV").length ? listNilai.filter(it => it.semester == 'Semester IV').map((it, index) => (
+											<tr key={index}>
+												<td>{it.urutan}</td>
+												<td>{it.kode}</td>
+												<td>{it.matakuliah}</td>
+												<td>{it.sks}</td>
+												<td>{it.nilai_huruf}</td>
+											</tr>
+										)) : (
+											<tr>
+												<td colSpan="5">Tidak ada mata kuliah.</td>
+											</tr>
+										)
+									}
+									<tr>
+										<td colSpan="5" className="titlesm">SEMESTER V</td>
+									</tr>
+									{ // semester V
+										listNilai.filter(it => it.semester == "Semester V").length ? listNilai.filter(it => it.semester == 'Semester V').map((it, index) => (
+											<tr key={index}>
+												<td>{it.urutan}</td>
+												<td>{it.kode}</td>
+												<td>{it.matakuliah}</td>
+												<td>{it.sks}</td>
+												<td>{it.nilai_huruf}</td>
+											</tr>
+										)) : (
+											<tr>
+												<td colSpan="5">Tidak ada mata kuliah.</td>
+											</tr>
+										)
+									}
+									<tr>
+										<td colSpan="5" className="titlesm">SEMESTER VI</td>
+									</tr>
+									{ // semester VI
+										listNilai.filter(it => it.semester == "Semester VI").length ? listNilai.filter(it => it.semester == 'Semester VI').map((it, index) => (
+											<tr key={index}>
+												<td>{it.urutan}</td>
+												<td>{it.kode}</td>
+												<td>{it.matakuliah}</td>
+												<td>{it.sks}</td>
+												<td>{it.nilai_huruf}</td>
+											</tr>
+										)) : (
+											<tr>
+												<td colSpan="5">Tidak ada mata kuliah.</td>
+											</tr>
+										)
+									}
+									<tr>
+										<td colSpan="5" className="titlesm">UJIAN AKHIR PROGRAM STUDI :</td>
 									</tr>
 									<tr>
-										<td>26</td>
-										<td>KB431</td>
-										<td className="Matkul">PELAKSANAAN DAN PERANCANGAN PELABUHAN SDP</td>
-										<td>3</td>
-										<td>B</td>
+										<td>{}</td>
+										<td colSpan="3">UJIAN LISAN KOMPREHENSIF KKW</td>
+										<td colSpan="3">A</td>
 									</tr>
 									<tr>
-										<td>27</td>
-										<td>KB430</td>
-										<td className="Matkul">TANDA DAN RAMBU PELAYARAN SDP</td>
-										<td>2</td>
-										<td>B</td>
+										<td colSpan="5" className="titlesm">JUDUL KERTAS KERJA WAJIB :</td>
 									</tr>
 									<tr>
-										<td>28</td>
-										<td>KB433</td>
-										<td className="Matkul">MANAJEMEN OPERASI TRANSPOERTASI SDP</td>
-										<td>3</td>
-										<td>AB</td>
+										<td colSpan="5" className="expad">Pengembangan Sistem Informasi Kepegawaian Menggunakan Framework TOGAF</td>
 									</tr>
 									<tr>
-										<td>29</td>
-										<td>KB435</td>
-										<td className="Matkul">KESELAMATAN PELAYARAN</td>
-										<td>2</td>
-										<td>B</td>
-									</tr>
-									<tr>
-										<td>30</td>
-										<td>KB434</td>
-										<td className="Matkul">PERENCANAAN TRANSPORT SDP</td>
-										<td>3</td>
-										<td>B</td>
-									</tr>
-									<tr>
-										<td>31</td>
-										<td>KB436</td>
-										<td className="Matkul">EKONOMI TRANSPORT</td>
-										<td>2</td>
-										<td>A</td>
-									</tr>
-									<tr>
-										<td>32</td>
-										<td>KB439</td>
-										<td className="Matkul">TEKNIK PENGERUKAN </td>
-										<td>3</td>
-										<td>A</td>
-									</tr>
-									<tr>
-										<td>33</td>
-										<td>KK417</td>
-										<td className="Matkul">AMDAL TSDP </td>
-										<td>3</td>
-										<td>A</td>
-									</tr>
-									<tr>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-									</tr>
-									<tr>
-										<td></td>
-										<td></td>
-										<td><b>SEMESTER V (19 SKS)</b></td>
-										<td></td>
-										<td></td>
-									</tr>
-									<tr>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-									</tr>
-									<tr>
-										<td>34</td>
-										<td>KB537</td>
-										<td className="Matkul">TEKNIK ANALISA EKONOMI DAN FINANSIAL TRANSPORTASI </td>
-										<td>2</td>
-										<td>AB</td>
-									</tr>
-									<tr>
-										<td>34</td>
-										<td>KB537</td>
-										<td className="Matkul">TEKNIK ANALISA EKONOMI DAN FINANSIAL TRANSPORTASI </td>
-										<td>2</td>
-										<td>AB</td>
-									</tr>
-									<tr>
-										<td>35</td>
-										<td>BB544</td>
-										<td className="Matkul">PERATURAN KESYABANDARAN</td>
-										<td>2</td>
-										<td>AB</td>
-									</tr>
-									<tr>
-										<td>36</td>
-										<td>KB537</td>
-										<td className="Matkul">TEKNIK ANALISA EKONOMI DAN FINANSIAL TRANSPORTASI </td>
-										<td>2</td>
-										<td>A</td>
-									</tr>
-									<tr>
-										<td>37</td>
-										<td>KB523</td>
-										<td className="Matkul">KAPITA SELECTA</td>
-										<td>2</td>
-										<td>AB</td>
-									</tr>
-									<tr>
-										<td>38</td>
-										<td>KB514</td>
-										<td className="Matkul">ILMU ADMINISTRASI</td>
-										<td>2</td>
-										<td>A</td>
-									</tr>
-									<tr>
-										<td>39</td>
-										<td>KK533</td>
-										<td className="Matkul">MANAJEMEN OPERASI PELABUHAN SDP</td>
-										<td>3</td>
-										<td>A</td>
-									</tr>
-									<tr>
-										<td>40</td>
-										<td>KK521</td>
-										<td  className="Matkul">TRANSPORTASI MULTIMODA</td>
-										<td>2</td>
-										<td>B</td>
-									</tr>
-									<tr>
-										<td>41</td>
-										<td>KB552</td>
-										<td  className="Matkul">METODE PENILITIAN</td>
-										<td>2</td>
-										<td>A</td>
-									</tr>
-									<tr>
-										<td>42</td>
-										<td>KB515</td>
-										<td  className="Matkul">KETERAMPILAN DASAR KESELAMATAN</td>
-										<td>2</td>
-										<td>A</td>
-									</tr>
-									<tr>
-										<td></td>
-										<td></td>
-										<td><b>SEMESTER VI (12 SKS)</b></td>
-										<td></td>
-										<td></td>
-									</tr>
-									<tr>
-										<td>43</td>
-										<td>PBA643</td>
-										<td  className="Matkul">PRAKTEK KERJA LAPANGAN (PKL)</td>
-										<td>4</td>
-										<td>A</td>
-									</tr>
-									<tr>
-										<td>44</td>
-										<td>PBA642</td>
-										<td  className="Matkul">SEMINAR</td>
-										<td>2</td>
-										<td>A</td>
-									</tr>
-									<tr >
-										<td>45</td>
-										<td>PBA641</td>
-										<td  className="Matkul">KERTAS KERJA WAJID</td>
-										<td>6</td>
-										<td>B</td>
-									</tr>
-									<tr>
-										<td></td>
-										<td colSpan="3" className="Matkul"><b>UJIAN AKHIR PROGRAM STUDI :</b></td>
-										<td></td>
-									</tr>
-									<tr>
-										<td></td>
-										<td colSpan="3" className="Matkul"></td>
-										<td></td>
+										<td colSpan="5" className="btop">
+											<div>
+												<p>JUMLAH SKS</p>
+												<p className="bolds">: {listNilai.reduce((a,b) => a + b.sks, 0)} SKS</p>
+											</div>
+											<div>
+												<p>IP KUMULATIF</p>
+												<p className="bolds">: 3.33</p>
+											</div>
+											<div>
+												<p>PREDIKAT KELULUSAN : </p>
+												<p className="bolds">: SANGAT MEMUASKAN</p>
+											</div>
+										</td>
 									</tr>
 								</tbody>
 							</table>
+						</div>
+					</div>
+					<p className="keterang">KETERANGAN: A=4; AB=3.50; B=3; BC=2.50; C=2; D=1; E=0 </p>
+					<div className="between pads">
+						<div className="text-center">
+							<p>WAKIL DIREKTUR I </p>
+							<p>POLITEKNIK SIBER ASIA</p>
+							<div className="bots">
+								<img src="<?=base_url() ?>assets/barcode.png" alt="barcode" width="100" />
+							</div>
+							<div>
+								<p><strong>{wadir.nama.toUpperCase()}</strong></p>
+								<p>NIP. {wadir.nidn}</p>
+							</div>
+						</div>
+						<div className="text-center">
+							<p>Jakarta, 12 Agustus 2023</p>
+							<p>DIREKTUR</p>
+							<p>POLITEKNIK SIBER ASIA</p>
+							<div className="bots">
+								<img src="<?=base_url() ?>assets/barcode.png" alt="barcode" width="100" />
+							</div>
+							<div>
+								<p><strong>{direktur.nama.toUpperCase()}</strong></p>
+								<p>NIP. {direktur.nidn}</p>
+							</div>
 						</div>
 					</div>
 				</div>

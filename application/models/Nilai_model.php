@@ -23,6 +23,15 @@ class Nilai_model extends CI_Model {
             return $this->db->get('Nilai')->result_array();
         }
     }
+    // get penilaian by nim
+    public function get_penilaian_by_nim($nim){
+        return $this->db->query("SELECT nilai.nilai_angka, nilai.nilai_huruf, matakuliah.kode, matakuliah.matakuliah, matakuliah.sks, matakuliah.semester, mahasiswa.nama, mahasiswa.nomor_taruna FROM `nilai` as nilai
+        LEFT JOIN matakuliah as matakuliah
+        on nilai.matakuliah = matakuliah.id
+        LEFT JOIN taruna as mahasiswa
+        on nilai.taruna = mahasiswa.id
+        WHERE mahasiswa.nomor_taruna = '$nim'")->result_array();
+    }
     // get all data penilaian
     public function get_all_penilaian(){
         return $this->db->query("SELECT nilai.id, taruna.nama as taruna, taruna.id as tarunaid, nilai.nilai_angka, nilai.nilai_huruf, matakuliah.matakuliah, matakuliah.id as matakuliahid FROM nilai LEFT JOIN taruna ON taruna.id = nilai.taruna LEFT JOIN matakuliah ON matakuliah.id = nilai.matakuliah")->result_array();

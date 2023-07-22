@@ -43,7 +43,10 @@ class Penilaian extends CI_Controller {
 		$processadd = $this->Nilai_model->create($data);
 		echo json_encode($processadd);
 	}
-
+	public function get_penilaian_by_nim($nim){
+		$data = $this->Nilai_model->get_penilaian_by_nim($nim);
+		echo json_encode($data);
+	}
 	public function store_penilaian() {
 		// Proses tambah data penilaian ke database
 	}
