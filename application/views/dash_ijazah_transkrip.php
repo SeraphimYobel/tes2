@@ -215,6 +215,9 @@
 	.watermark>img{
 		opacity: 0.1;
 	}
+	.boxijazah::-webkit-scrollbar, .boxijazah::-webkit-scrollbar-thumb{
+		width: 0;
+	}
 	.ijazahcontent{
 		position: relative;
 		height: fit-content;
@@ -281,6 +284,9 @@
 	}
 	.tablewraps>div>table>tbody>tr>td.expad{
 		padding: 1em !important;
+	}
+	tr>td:nth-child(3){
+		text-align: left !important;
 	}
 	@media print {
 		.no-print {
@@ -589,6 +595,19 @@ $nomorIjazah = getRandomNumber();
 		const [listNilai, setListNilai] = useState([])
 		const [direktur, setDirektur] = useState({nama: "-", nidn: "-"})
 		const [wadir, setWadir] = useState({nama: "-", nidn: "-"})
+		const [ipk, setIpk] = useState(0.0)
+		// generate predikat ipk
+		const generatePredikat = ipk => {
+			let predikat = ''
+			if(ipk >= 2.0 && ipk <= 2.75){
+				predikat = "MEMUASKAN"
+			} else if(ipk >= 2.76 && ipk <= 3.5){
+				predikat = "SANGAT MEMUASKAN"
+			} else if(ipk > 3.5){
+				predikat = "DENGAN PUJIAN"
+			}
+			return predikat
+		}
 		// get data direktur dan wadir
 		useEffect(() => {
 			if(dataPejabat.length){
@@ -598,11 +617,14 @@ $nomorIjazah = getRandomNumber();
 				wadir.length && setWadir(wadir[0])
 			}
 			// auto print
-			// setTimeout(() => window.print(), 1500)
+			setTimeout(() => window.print(), 1500)
 		}, [dataPejabat])
 		// get detail nilai
 		useEffect(() => {
 			let nim = dataMahasiswa.nomor_taruna
+			let listNilai = {
+				A: 4, AB: 3.5, B: 3, BC: 2.5, C:2, D:1, E:0
+			}
 			$.ajax({
 				url: `http://localhost/pemweb2-kel3/index.php/Penilaian/get_penilaian_by_nim/${nim}`,
 				method: 'GET',
@@ -627,8 +649,13 @@ $nomorIjazah = getRandomNumber();
 					})
 					listData = listData.sort((a,b) => a.nosemester - b.nosemester)
 					listData = listData.map((it, index) => ({...it, sks: parseInt(it.sks), urutan: index+1}))
+					// get total nilai sks * grade nilai
+					listData = listData.map((it => ({...it, totalScore: it.sks * listNilai[it.nilai_huruf]})))
 					setListNilai(listData)
-					console.log(listData)
+					// set nilai ipk
+					let totalScore = listData.reduce((a,b) => a + b.totalScore, 0)
+					let totalSKS = listData.reduce((a,b) => a + b.sks, 0)
+					setIpk(totalScore/totalSKS)
 				}
 			})
 		}, [dataMahasiswa])
@@ -814,11 +841,11 @@ $nomorIjazah = getRandomNumber();
 											</div>
 											<div>
 												<p>IP KUMULATIF</p>
-												<p className="bolds">: 3.33</p>
+												<p className="bolds">: {ipk.toFixed(2)}</p>
 											</div>
 											<div>
-												<p>PREDIKAT KELULUSAN : </p>
-												<p className="bolds">: SANGAT MEMUASKAN</p>
+												<p>PREDIKAT KELULUSAN </p>
+												<p className="bolds">: {generatePredikat(ipk)}</p>
 											</div>
 										</td>
 									</tr>
