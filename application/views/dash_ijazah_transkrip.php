@@ -165,7 +165,7 @@
 
 	.between {
 		display: flex;
-		align-items: center;
+		align-items: flex-end;
 		justify-content: space-between;
 	}
 
@@ -356,7 +356,7 @@
 			setTimeout(() => window.print(), 2000)
 		}, [])
 		return (
-			<div className="boxijazah" onClick={e => e.target.className == "boxijazah" && hide(false)}>
+			<div className="boxijazah" onClick={() => hide(false)}>
 				<div className="watermark">
 					<img src="<?=base_url()?>assets/unsia.png" alt="illustration" />
 				</div>
