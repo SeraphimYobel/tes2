@@ -262,6 +262,19 @@ $nomorIjazah = getRandomNumber();
 		const [onStart, setOnStart] = useState(true)
 		const [isPrintIjazah, setIsPrintIjazah] = useState(false)
 		const [isPrintTranskrip, setIsPrintTranskrip] = useState(false)
+		const [dataPejabat, setDataPejabat] = useState([])
+		// get data direktur dan wadir
+		const getDataPejabat = () => {
+			$.ajax({
+				url: '<?=base_url()?>index.php/DosenMahasiswa/get_all_dosen',
+				method: 'GET',
+				success: data => {
+					let filteredData = JSON.parse(data)
+					filteredData = filteredData.filter(it => it.jabatan.toLowerCase().includes("wakil direktur") || it.jabatan.toLowerCase().includes("direktur"))
+					setDataPejabat(filteredData)
+				}
+			})
+		}
 		// get detail list nilai
 		const getDetailTranskrip = id => {
 			$.ajax({
@@ -313,6 +326,10 @@ $nomorIjazah = getRandomNumber();
 				]
 			})
 		}, [listNilai])
+		// get data pejabat
+		useEffect(() => {
+			getDataPejabat()
+		}, [])
 		return (
 			<div id="container">
 				<div>
@@ -381,7 +398,13 @@ $nomorIjazah = getRandomNumber();
 					}
 				</div>
 				{
-					isPrintIjazah ? (<FormIjazah data={mahasiswaInfo} hide={setIsPrintIjazah} />) : false
+					isPrintIjazah ? (
+						<FormIjazah 
+							data={mahasiswaInfo} 
+							hide={setIsPrintIjazah} 
+							dataPejabat={dataPejabat}
+						/>
+					) : false
 				}
 				{
 					isPrintTranskrip ? <FormTranskrip hide={setIsPrintTranskrip} /> : false
@@ -395,10 +418,20 @@ $nomorIjazah = getRandomNumber();
 	// form ijazah
 	const FormIjazah = props => {
 		const { nama, namakota, nomor_taruna, namaprodi, tanggal_lahir, program_pendidikan, akreditasi } = props.data
-		const { hide } = props
+		const { hide, dataPejabat } = props
+		const [direktur, setDirektur] = useState({nama: "-", nidn: "-"})
+		const [wadir, setWadir] = useState({nama: "-", nidn: "-"})
+		// get data direktur dan wadir
 		useEffect(() => {
-			setTimeout(() => window.print(), 2000)
-		}, [])
+			if(dataPejabat.length){
+				let direktur = dataPejabat.filter(it => it.jabatan.toUpperCase().includes("DIREKTUR"))
+				let wadir = dataPejabat.filter(it => it.jabatan.toUpperCase().includes("WAKIL DIREKTUR"))
+				direktur.length && setDirektur(direktur[0])
+				wadir.length && setWadir(wadir[0])
+			}
+			// auto print
+			// setTimeout(() => window.print(), 1500)
+		}, [dataPejabat])
 		return (
 			<div className="boxijazah" onClick={() => hide(false)}>
 				<div className="watermark">
@@ -442,8 +475,8 @@ $nomorIjazah = getRandomNumber();
 								<img src="<?=base_url() ?>assets/barcode.png" alt="barcode" width="100" />
 							</div>
 							<div>
-								<p><strong>NOBITA NOBI</strong></p>
-								<p>NIP. 100900879</p>
+								<p><strong>{wadir.nama.toUpperCase()}</strong></p>
+								<p>NIP. {wadir.nidn}</p>
 							</div>
 						</div>
 						<div className="text-center">
@@ -454,8 +487,8 @@ $nomorIjazah = getRandomNumber();
 								<img src="<?=base_url() ?>assets/barcode.png" alt="barcode" width="100" />
 							</div>
 							<div>
-								<p><strong>SUNEO</strong></p>
-								<p>NIP. 100232289</p>
+								<p><strong>{direktur.nama.toUpperCase()}</strong></p>
+								<p>NIP. {direktur.nidn}</p>
 							</div>
 						</div>
 					</div>
@@ -896,12 +929,12 @@ $nomorIjazah = getRandomNumber();
 							</table>
 						</div>
 						<div>
-							<table class="table-bor">
+							<table className="table-bor">
 								<thead>	
 									<tr>
 										<th>NO</th>
 										<th>KODE</th>
-										<th class="Matkul">MATA KULIAH</th>
+										<th className="Matkul">MATA KULIAH</th>
 										<th>SKS</th>
 										<th>NILAI</th>
 									</tr>
@@ -917,56 +950,56 @@ $nomorIjazah = getRandomNumber();
 									<tr>
 										<td>26</td>
 										<td>KB431</td>
-										<td class="Matkul">PELAKSANAAN DAN PERANCANGAN PELABUHAN SDP</td>
+										<td className="Matkul">PELAKSANAAN DAN PERANCANGAN PELABUHAN SDP</td>
 										<td>3</td>
 										<td>B</td>
 									</tr>
 									<tr>
 										<td>27</td>
 										<td>KB430</td>
-										<td class="Matkul">TANDA DAN RAMBU PELAYARAN SDP</td>
+										<td className="Matkul">TANDA DAN RAMBU PELAYARAN SDP</td>
 										<td>2</td>
 										<td>B</td>
 									</tr>
 									<tr>
 										<td>28</td>
 										<td>KB433</td>
-										<td class="Matkul">MANAJEMEN OPERASI TRANSPOERTASI SDP</td>
+										<td className="Matkul">MANAJEMEN OPERASI TRANSPOERTASI SDP</td>
 										<td>3</td>
 										<td>AB</td>
 									</tr>
 									<tr>
 										<td>29</td>
 										<td>KB435</td>
-										<td class="Matkul">KESELAMATAN PELAYARAN</td>
+										<td className="Matkul">KESELAMATAN PELAYARAN</td>
 										<td>2</td>
 										<td>B</td>
 									</tr>
 									<tr>
 										<td>30</td>
 										<td>KB434</td>
-										<td class="Matkul">PERENCANAAN TRANSPORT SDP</td>
+										<td className="Matkul">PERENCANAAN TRANSPORT SDP</td>
 										<td>3</td>
 										<td>B</td>
 									</tr>
 									<tr>
 										<td>31</td>
 										<td>KB436</td>
-										<td class="Matkul">EKONOMI TRANSPORT</td>
+										<td className="Matkul">EKONOMI TRANSPORT</td>
 										<td>2</td>
 										<td>A</td>
 									</tr>
 									<tr>
 										<td>32</td>
 										<td>KB439</td>
-										<td class="Matkul">TEKNIK PENGERUKAN </td>
+										<td className="Matkul">TEKNIK PENGERUKAN </td>
 										<td>3</td>
 										<td>A</td>
 									</tr>
 									<tr>
 										<td>33</td>
 										<td>KK417</td>
-										<td class="Matkul">AMDAL TSDP </td>
+										<td className="Matkul">AMDAL TSDP </td>
 										<td>3</td>
 										<td>A</td>
 									</tr>
@@ -994,70 +1027,70 @@ $nomorIjazah = getRandomNumber();
 									<tr>
 										<td>34</td>
 										<td>KB537</td>
-										<td class="Matkul">TEKNIK ANALISA EKONOMI DAN FINANSIAL TRANSPORTASI </td>
+										<td className="Matkul">TEKNIK ANALISA EKONOMI DAN FINANSIAL TRANSPORTASI </td>
 										<td>2</td>
 										<td>AB</td>
 									</tr>
 									<tr>
 										<td>34</td>
 										<td>KB537</td>
-										<td class="Matkul">TEKNIK ANALISA EKONOMI DAN FINANSIAL TRANSPORTASI </td>
+										<td className="Matkul">TEKNIK ANALISA EKONOMI DAN FINANSIAL TRANSPORTASI </td>
 										<td>2</td>
 										<td>AB</td>
 									</tr>
 									<tr>
 										<td>35</td>
 										<td>BB544</td>
-										<td class="Matkul">PERATURAN KESYABANDARAN</td>
+										<td className="Matkul">PERATURAN KESYABANDARAN</td>
 										<td>2</td>
 										<td>AB</td>
 									</tr>
 									<tr>
 										<td>36</td>
 										<td>KB537</td>
-										<td class="Matkul">TEKNIK ANALISA EKONOMI DAN FINANSIAL TRANSPORTASI </td>
+										<td className="Matkul">TEKNIK ANALISA EKONOMI DAN FINANSIAL TRANSPORTASI </td>
 										<td>2</td>
 										<td>A</td>
 									</tr>
 									<tr>
 										<td>37</td>
 										<td>KB523</td>
-										<td class="Matkul">KAPITA SELECTA</td>
+										<td className="Matkul">KAPITA SELECTA</td>
 										<td>2</td>
 										<td>AB</td>
 									</tr>
 									<tr>
 										<td>38</td>
 										<td>KB514</td>
-										<td class="Matkul">ILMU ADMINISTRASI</td>
+										<td className="Matkul">ILMU ADMINISTRASI</td>
 										<td>2</td>
 										<td>A</td>
 									</tr>
 									<tr>
 										<td>39</td>
 										<td>KK533</td>
-										<td class="Matkul">MANAJEMEN OPERASI PELABUHAN SDP</td>
+										<td className="Matkul">MANAJEMEN OPERASI PELABUHAN SDP</td>
 										<td>3</td>
 										<td>A</td>
 									</tr>
 									<tr>
 										<td>40</td>
 										<td>KK521</td>
-										<td  class="Matkul">TRANSPORTASI MULTIMODA</td>
+										<td  className="Matkul">TRANSPORTASI MULTIMODA</td>
 										<td>2</td>
 										<td>B</td>
 									</tr>
 									<tr>
 										<td>41</td>
 										<td>KB552</td>
-										<td  class="Matkul">METODE PENILITIAN</td>
+										<td  className="Matkul">METODE PENILITIAN</td>
 										<td>2</td>
 										<td>A</td>
 									</tr>
 									<tr>
 										<td>42</td>
 										<td>KB515</td>
-										<td  class="Matkul">KETERAMPILAN DASAR KESELAMATAN</td>
+										<td  className="Matkul">KETERAMPILAN DASAR KESELAMATAN</td>
 										<td>2</td>
 										<td>A</td>
 									</tr>
@@ -1071,32 +1104,32 @@ $nomorIjazah = getRandomNumber();
 									<tr>
 										<td>43</td>
 										<td>PBA643</td>
-										<td  class="Matkul">PRAKTEK KERJA LAPANGAN (PKL)</td>
+										<td  className="Matkul">PRAKTEK KERJA LAPANGAN (PKL)</td>
 										<td>4</td>
 										<td>A</td>
 									</tr>
 									<tr>
 										<td>44</td>
 										<td>PBA642</td>
-										<td  class="Matkul">SEMINAR</td>
+										<td  className="Matkul">SEMINAR</td>
 										<td>2</td>
 										<td>A</td>
 									</tr>
 									<tr >
 										<td>45</td>
 										<td>PBA641</td>
-										<td  class="Matkul">KERTAS KERJA WAJID</td>
+										<td  className="Matkul">KERTAS KERJA WAJID</td>
 										<td>6</td>
 										<td>B</td>
 									</tr>
 									<tr>
 										<td></td>
-										<td colSpan="3" class="Matkul"><b>UJIAN AKHIR PROGRAM STUDI :</b></td>
+										<td colSpan="3" className="Matkul"><b>UJIAN AKHIR PROGRAM STUDI :</b></td>
 										<td></td>
 									</tr>
 									<tr>
 										<td></td>
-										<td colSpan="3" class="Matkul"></td>
+										<td colSpan="3" className="Matkul"></td>
 										<td></td>
 									</tr>
 								</tbody>
