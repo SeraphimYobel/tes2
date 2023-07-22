@@ -55,8 +55,7 @@
 	}
 	.boxcards>div>p{
 		opacity: 0.6;
-		margin-top: 0.3em;
-		font-size: 0.8em;
+		margin-top: 0.4em;
 	}
 </style>
 <div id="appss"></div>
@@ -105,7 +104,7 @@
 			<div id="container">
 				<div>
 					<h1>Selamat Datang, <strong>Administrator</strong></h1>
-					<p>Silahkan pilih pada <strong>Sidebar</strong> untuk mengakses berbagai menu.</p>
+					<p>Silahkan pilih <strong>Menu di bawah</strong> atau <strong>Sidebar</strong> sesuai kebutuhan.</p>
 					<div class="boximage">
 						{/*<img src="../assets/dashboard.png" alt="illustration" />*/}
 						<div className="menuall">
