@@ -213,6 +213,18 @@
 		opacity: 0.1;
 	}
 </style>
+
+<?php
+// Fungsi untuk mendapatkan nomor acak antara 100 hingga 1000
+function getRandomNumber() {
+    return rand(100, 1000);
+}
+
+// Mendapatkan nomor seri dan nomor ijazah secara acak
+$nomorSeri = getRandomNumber();
+$nomorIjazah = getRandomNumber();
+?>
+
 <div id="appss"></div>
 <script type="text/babel">
 	const { useState, useEffect } = React
@@ -362,8 +374,8 @@
 				</div>
 				<div className="formijazah">
 					<div className="between">
-						<p>No. Seri : 120</p>
-						<p>No. Ijazah : 1320</p>
+						<p>No. Seri : <?php echo $nomorSeri; ?></p>
+						<p>No. Ijazah : <?php echo $nomorIjazah; ?></p>
 					</div>
 					<div className="text-center">
 						<h1>IJAZAH</h1>
