@@ -1091,12 +1091,12 @@ $nomorIjazah = getRandomNumber();
 									</tr>
 									<tr>
 										<td></td>
-										<td colspan="3" class="Matkul"><b>UJIAN AKHIR PROGRAM STUDI :</b></td>
+										<td colSpan="3" class="Matkul"><b>UJIAN AKHIR PROGRAM STUDI :</b></td>
 										<td></td>
 									</tr>
 									<tr>
 										<td></td>
-										<td colspan="3" class="Matkul"></td>
+										<td colSpan="3" class="Matkul"></td>
 										<td></td>
 									</tr>
 								</tbody>
