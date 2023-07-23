@@ -46,25 +46,4 @@ class MataKuliah_model extends CI_Model {
         return $this->db->affected_rows();
     }
 
-
-	public function create_matakuliah() {
-    // Tampilkan halaman form tambah data matakuliah
-}
-
-public function store_matakuliah() {
-    // Proses tambah data matakuliah ke database
-}
-
-public function edit_matakuliah($id) {
-    // Tampilkan halaman form edit data matakuliah berdasarkan ID
-}
-
-public function update_matakuliah($id) {
-    // Proses update data matakuliah ke database berdasarkan ID
-}
-
-public function delete_matakuliah($id) {
-    // Proses hapus data matakuliah dari database berdasarkan ID
-}
-
 }

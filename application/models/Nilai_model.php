@@ -37,36 +37,14 @@ class Nilai_model extends CI_Model {
         return $this->db->query("SELECT nilai.id, taruna.nama as taruna, taruna.id as tarunaid, nilai.nilai_angka, nilai.nilai_huruf, matakuliah.matakuliah, matakuliah.id as matakuliahid FROM nilai LEFT JOIN taruna ON taruna.id = nilai.taruna LEFT JOIN matakuliah ON matakuliah.id = nilai.matakuliah")->result_array();
     }
     public function update($id, $data) {
-        $this->db->where('ID', $id);
+        $this->db->where('id', $id);
         $this->db->update('nilai', $data);
         return $this->db->affected_rows();
     }
 
     public function delete($id) {
-        $this->db->where('ID', $id);
-        $this->db->delete('Nilai');
+        $this->db->where('id', $id);
+        $this->db->delete('nilai');
         return $this->db->affected_rows();
     }
-
-
-	public function create_penilaian() {
-    // Tampilkan halaman form tambah data penilaian
-}
-
-public function store_penilaian() {
-    // Proses tambah data penilaian ke database
-}
-
-public function edit_penilaian($id) {
-    // Tampilkan halaman form edit data penilaian berdasarkan ID
-}
-
-public function update_penilaian($id) {
-    // Proses update data penilaian ke database berdasarkan ID
-}
-
-public function delete_penilaian($id) {
-    // Proses hapus data penilaian dari database berdasarkan ID
-}
-
 }

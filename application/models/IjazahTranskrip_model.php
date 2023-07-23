@@ -60,13 +60,13 @@ class IjazahTranskrip_model extends CI_Model {
     }
 
     public function update_ijazah($id, $data) {
-        $this->db->where('ID', $id);
+        $this->db->where('id', $id);
         $this->db->update('ijazah', $data);
         return $this->db->affected_rows();
     }
 
     public function delete_ijazah($id) {
-        $this->db->where('ID', $id);
+        $this->db->where('id', $id);
         $this->db->delete('Ijazah');
         return $this->db->affected_rows();
     }
@@ -91,13 +91,13 @@ class IjazahTranskrip_model extends CI_Model {
     }
 
     public function update_transkrip($id, $data) {
-        $this->db->where('ID', $id);
+        $this->db->where('id', $id);
         $this->db->update('transkip_nilai', $data);
         return $this->db->affected_rows();
     }
 
     public function delete_transkrip($id) {
-        $this->db->where('ID', $id);
+        $this->db->where('id', $id);
         $this->db->delete('transkip_nilai');
         return $this->db->affected_rows();
     }
