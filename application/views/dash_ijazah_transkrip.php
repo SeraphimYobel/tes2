@@ -350,7 +350,7 @@ $nomorIjazah = getRandomNumber();
 		const [isPrintIjazah, setIsPrintIjazah] = useState(false)
 		const [isPrintTranskrip, setIsPrintTranskrip] = useState(false)
 		const [dataPejabat, setDataPejabat] = useState([])
-		const [activeTab, setActiveTab] = useState(1)
+		const [activeTab, setActiveTab] = useState(2)
 		// get data direktur dan wadir
 		const getDataPejabat = () => {
 			$.ajax({
@@ -408,6 +408,10 @@ $nomorIjazah = getRandomNumber();
 				const root = document.querySelector("#crudijazah")
 				const el = ReactDOM.createRoot(root)
 				el.render(<IjazahComponent />)
+			} else if(activeTab == 2){
+				const root = document.querySelector("#crudtranskrip")
+				const el = ReactDOM.createRoot(root)
+				el.render(<TranskripComponent />)
 			} else if(activeTab == 3){
 				$('#listdata').DataTable({
 					destroy: true,
@@ -458,12 +462,17 @@ $nomorIjazah = getRandomNumber();
 							<div id="crudijazah"></div>
 						) : false
 					}
+					{ /* crud transkrip */
+						activeTab == 2 ? (
+							<div id="crudtranskrip"></div>
+						) : false
+					}
 					{ /* print dokumen */
 						activeTab == 3 ? (
 							<React.Fragment>
 								<div>
 									<form onSubmit={e => handleSearchMahasiswa(e)}>
-										<div className="wrap">
+										<div className="wrap" style={{padding: '1em 0'}}>
 											<div className="formel">
 												<label htmlFor="nim">NIM { }</label>
 												<input type="text" name="nim" placeholder="e.g. 220401020003" />

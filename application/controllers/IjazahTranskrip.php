@@ -29,9 +29,14 @@ class IjazahTranskrip extends CI_Controller {
 		$this->load->view('nav');
 		$this->load->view('dash_ijazah_transkrip');
 		$this->load->view('dash_crud_ijazah');
+		$this->load->view('dash_crud_transkrip');
 	}
 	public function get_all_ijazah(){
 		$data = $this->IjazahTranskrip_model->get_all_ijazah();
+		echo json_encode($data);
+	}
+	public function get_all_transkrip(){
+		$data = $this->IjazahTranskrip_model->get_all_transkrip();
 		echo json_encode($data);
 	}
 	// Ijazah
@@ -93,6 +98,11 @@ public function print_ijazah($id) {
 // Transkrip Nilai
 public function create_transkrip() {
     // Tampilkan halaman form tambah data transkrip nilai
+	 $data['taruna'] = $this->input->post('taruna');
+	 $data['program_studi'] = $this->input->post('program_studi');
+	 $data['ijazah'] = $this->input->post('ijazah');
+	 $processadd = $this->IjazahTranskrip_model->create_transkrip($data);
+	 echo json_encode($processadd);
 }
 
 public function store_transkrip() {
@@ -103,12 +113,20 @@ public function edit_transkrip($id) {
     // Tampilkan halaman form edit data transkrip nilai berdasarkan ID
 }
 
-public function update_transkrip($id) {
+public function update_transkrip() {
     // Proses update data transkrip nilai ke database berdasarkan ID
+	 // Tampilkan halaman form tambah data transkrip nilai
+	 $data['taruna'] = $this->input->post('taruna');
+	 $data['program_studi'] = $this->input->post('program_studi');
+	 $data['ijazah'] = $this->input->post('ijazah');
+	 $processadd = $this->IjazahTranskrip_model->update_transkrip($data);
+	 echo json_encode($processadd);
 }
 
 public function delete_transkrip($id) {
     // Proses hapus data transkrip nilai dari database berdasarkan ID
+	 $processdata = $this->IjazahTranskrip_model->delete_transkrip($id);
+	return $processdata;
 }
 
 public function print_transkrip($id) {

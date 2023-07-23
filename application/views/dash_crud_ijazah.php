@@ -102,8 +102,8 @@
                   data: 'id',
                   render: function (data, type, row) {
                      return `
-                     <i title="Edit Mata Kuliah" class="fa-solid fa-pen-to-square btn-edit" data-id="${data}"></i>
-                     <i title="Hapus Mata Kuliah" class="fa-solid fa-trash" data-id="${data}"></i>
+                     <i title="Edit Ijazah" class="fa-solid fa-pen-to-square btn-edit" data-id="${data}"></i>
+                     <i title="Hapus Ijazah" class="fa-solid fa-trash" data-id="${data}"></i>
                      `;
                   },
                   title: 'Action'

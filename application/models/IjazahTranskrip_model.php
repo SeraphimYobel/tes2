@@ -29,6 +29,9 @@ class IjazahTranskrip_model extends CI_Model {
     public function get_all_ijazah(){
         return $this->db->get('ijazah')->result_array();
     }
+    public function get_all_transkrip(){
+        return $this->db->get('transkip_nilai')->result_array();
+    }
     public function read_ijazah($id = null) {
         if ($id) {
             return $this->db->get_where('Ijazah', ['ID' => $id])->row_array();
@@ -51,8 +54,13 @@ class IjazahTranskrip_model extends CI_Model {
 
     // Operasi pada tabel Transkrip Nilai
     public function create_transkrip($data) {
-        $this->db->insert('Transkrip_Nilai', $data);
-        return $this->db->insert_id();
+        $data = array(
+            'taruna' => $data["taruna"],
+            'program_studi' => $data["program_studi"],
+            'ijazah' => $data["ijazah"],
+        );
+        // return $this->db->insert('mata_kuliah', $data);
+        return $this->db->insert('transkip_nilai', $data);
     }
 
     public function read_transkrip($id = null) {
@@ -65,13 +73,13 @@ class IjazahTranskrip_model extends CI_Model {
 
     public function update_transkrip($id, $data) {
         $this->db->where('ID', $id);
-        $this->db->update('Transkrip_Nilai', $data);
+        $this->db->update('transkip_nilai', $data);
         return $this->db->affected_rows();
     }
 
     public function delete_transkrip($id) {
         $this->db->where('ID', $id);
-        $this->db->delete('Transkrip_Nilai');
+        $this->db->delete('transkip_nilai');
         return $this->db->affected_rows();
     }
 }

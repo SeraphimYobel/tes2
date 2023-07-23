@@ -12,10 +12,11 @@
 </style>
 <script type="text/babel">
    const {useState, useEffect} = React
-   const IjazahComponent = props => {
+   const TranskripComponent = props => {
       const [showForm, setShowForm] = useState(null)
       const [listData, setListData] = useState([])
       const [listMahasiswa, setListMahasiswa] = useState([])
+      const [listIjazah, setListIjazah] = useState([])
       const [listProdi, setListProdi] = useState([])
       const [listPejabat, setListPejabat] = useState([])
       const [editedData, setEditedData] = useState(null)
@@ -23,17 +24,17 @@
       // get data mahasiwa, prodi dan pejabat
       const getAllOptionalData = () => {
          $.ajax({
+            url: '<?=base_url()?>index.php/IjazahTranskrip/get_all_ijazah',
+            method: 'GET',
+            success: data => {
+               setListIjazah(JSON.parse(data))
+            }
+         })
+         $.ajax({
             url: '<?=base_url()?>index.php/ProgramStudi/get_all_programstudi',
             method: 'GET',
             success: data => {
                setListProdi(JSON.parse(data))
-            }
-         })
-         $.ajax({
-            url: '<?=base_url()?>index.php/DosenMahasiswa/get_all_dosen',
-            method: 'GET',
-            success: data => {
-               setListPejabat(JSON.parse(data))
             }
          })
          $.ajax({
@@ -47,7 +48,7 @@
       // get data from database
       const getAllDataIjazah = () => {
          $.ajax({
-            url: "<?=base_url()?>index.php/IjazahTranskrip/get_all_ijazah",
+            url: "<?=base_url()?>index.php/IjazahTranskrip/get_all_transkrip",
             method: 'GET',
             success: data => {
                setListData(JSON.parse(data))
@@ -67,7 +68,7 @@
          // handle delete Mata kuliah by ID
          if (confirm('Apakah Anda yakin ingin menghapus Ijazah?')) {
             $.ajax({
-               url: `<?= base_url() ?>index.php/IjazahTranskrip/delete_ijazah/${id}`,
+               url: `<?= base_url() ?>index.php/IjazahTranskrip/delete_transkrip/${id}`,
                method: 'POST',
                success: function (data) {
                   setShowMessageSuccess(true)
@@ -89,21 +90,13 @@
             // scrollX: true,
             columns: [
                { data: 'taruna', title: 'Mahasiswa' },
+               { data: 'ijazah', title: 'Ijazah' },
                { data: 'program_studi', title: 'Program Studi' },
-               { data: 'tanggal_ijazah', title: 'Tanggal Ijazah' },
-               { data: 'tanggal_pengesahan', title: 'Pengesahan' },
-               { data: 'gelar_akademik', title: 'Gelar' },
-               { data: 'nomor_sk', title: 'SK No.' },
-               { data: 'nomor_ijazah', title: 'Ijazah No.' },
-               { data: 'nomor_seri', title: 'Seri No.' },
-               { data: 'tanggal_yudisium', title: 'Yudisium' },
-               { data: 'judul_kkw', title: 'Judul Skripsi' },
                {
                   data: 'id',
                   render: function (data, type, row) {
                      return `
-                     <i title="Edit Mata Kuliah" class="fa-solid fa-pen-to-square btn-edit" data-id="${data}"></i>
-                     <i title="Hapus Mata Kuliah" class="fa-solid fa-trash" data-id="${data}"></i>
+                     <i title="Hapus Transkrip" class="fa-solid fa-trash" data-id="${data}"></i>
                      `;
                   },
                   title: 'Action'
@@ -151,8 +144,8 @@
                      <FormInput
                         setShowForm={setShowForm}
                         setListData={setListData}
+                        listIjazah={listIjazah}
                         listProdi={listProdi}
-                        listPejabat={listPejabat}
                         listMahasiswa={listMahasiswa}
                         refreshData={getAllDataIjazah}
                         editedData={editedData}
@@ -169,13 +162,13 @@
    }
    // form input
    const FormInput = props => {
-      const { setShowForm, setListData, refreshData, editedData, type, listProdi, listMahasiswa, listPejabat } = props
+      const { setShowForm, setListData, refreshData, editedData, type, listIjazah, listMahasiswa, listProdi } = props
       const [successMessage, setSuccessMessage] = useState(null)
       // on submit form add new mata kuliah
       const handleSubmit = (e, type, editedData) => {
          e.preventDefault()
          const data = Object.fromEntries(new FormData(document.querySelector('#formmatakuliah')).entries())
-         let url = type == 'add' ? "<?=base_url()?>index.php/IjazahTranskrip/create_ijazah" : "<?=base_url()?>index.php/IjazahTranskrip/update_ijazah"
+         let url = type == 'add' ? "<?=base_url()?>index.php/IjazahTranskrip/create_transkrip" : "<?=base_url()?>index.php/IjazahTranskrip/update_transkrip"
          // menyisipkan nilai id dari mata kuliah yg diedit
          if (type == 'edit') {
             data.id = editedData.id
@@ -198,6 +191,20 @@
             }
          })
       }
+      const searchIjazah = (val, list) => {
+         let filtered = list.filter(it => it.taruna == val)
+         if(!filtered.length){
+            alert('Data Ijazah mahasiwa tidak ditemukan, silahkan tambahkan terlebih dahulu')
+         } else {
+            console.log(filtered[0], listProdi)
+            for (let obj in filtered[0]) {
+               $(`[name="${obj}"]`).val(filtered[0][obj])
+               if(obj == "nomor_ijazah"){
+                  $(`[name="ijazah"]`).val(filtered[0].id)
+               }
+            }
+         }
+      }
       useEffect(() => {
          if (type == 'edit') {
             // update nilai elemen berdasarkan key value
@@ -219,7 +226,7 @@
                <div className="wrap">
                   <div className="formel">
                      <label htmlFor="taruna">Mahasiswa</label>
-                     <select name="taruna" required>
+                     <select name="taruna" required onChange={e => searchIjazah(e.target.value, listIjazah)}>
 								<option value="">--- Pilih Mahasiswa ---</option>
 								{listMahasiswa.map((it, index) => (
 									<option key={index} value={it.id}>{it.nama}</option>
@@ -227,68 +234,19 @@
 							</select>
                   </div>
                   <div className="formel">
+                     <label htmlFor="ijazah">Ijazah</label>
+                     <input name="ijazah" type="text" required readOnly placeholder="Auto complete"/>
+                  </div>
+                  <div className="formel">
                      <label htmlFor="program_studi">Program Studi</label>
-                     <select name="program_studi" required>
-								<option value="">--- Pilih Program Studi ---</option>
+                     <select name="program_studi" required disabled>
+                        <option value="">--- Pilih Program Studi ---</option>
 								{listProdi.map((it, index) => (
 									<option key={index} value={it.id}>{it.nama}</option>
 								))}
 							</select>
                   </div>
-                  <div className="formel">
-                     <label htmlFor="tanggal_ijazah">Tanggal Ijazah</label>
-                     <input name="tanggal_ijazah" type="date" required />
-                  </div>
-                  <div className="formel">
-                     <label htmlFor="tanggal_pengesahan">Tanggal Pengesahan</label>
-                     <input name="tanggal_pengesahan" type="date" required />
-                  </div>
-               </div>
-               <div className="wrap nopad">
-                  <div className="formel">
-                     <label htmlFor="gelar_akademik">Gelar Akademik</label>
-                     <input name="gelar_akademik" type="text" required placeholder="e.g. Sarjana Komputer" />
-                  </div>
-                  <div className="formel">
-                     <label htmlFor="nomor_sk">Nomor SK</label>
-                     <input name="nomor_sk" type="text" required placeholder="e.g. INF-001-UNSIA" />
-                  </div>
-                  <div className="formel">
-                     <label htmlFor="wakil_direktur">Wakil Direktur</label>
-                     <select name="wakil_direktur" required>
-								<option value="">--- Pilih Wadir ---</option>
-								{listPejabat.filter(it => it.jabatan.toLowerCase().includes("wakil direktur")).map((it, index) => (
-									<option key={index} value={it.id}>{it.nama}</option>
-								))}
-							</select>
-                  </div>
-                  <div className="formel">
-                     <label htmlFor="direktur">Direktur</label>
-                     <select name="direktur" required>
-								<option value="">--- Pilih Direktur ---</option>
-								{listPejabat.filter(it => it.jabatan.toLowerCase() == "direktur").map((it, index) => (
-									<option key={index} value={it.id}>{it.nama}</option>
-								))}
-							</select>
-                  </div>
-               </div>
-               <div className="wrap nopad">
-                  <div className="formel">
-                     <label htmlFor="nomor_ijazah">Nomor Ijazah</label>
-                     <input name="nomor_ijazah" type="text" required placeholder="e.g. 1201" />
-                  </div>
-                  <div className="formel">
-                     <label htmlFor="nomor_seri">Nomor Seri</label>
-                     <input name="nomor_seri" type="text" required placeholder="e.g. UNSIA-INF-012" />
-                  </div>
-                  <div className="formel">
-                     <label htmlFor="tanggal_yudisium">Tanggal Yudisium</label>
-                     <input name="tanggal_yudisium" type="date" required />
-                  </div>
-                  <div className="formel">
-                     <label htmlFor="judul_kkw">Judul Skripsi</label>
-                     <input name="judul_kkw" type="text" required placeholder="e.g. Sistem Informasi Manajemen Data" />
-                  </div>
+                  <input name="program_studi" type="text" hidden />
                </div>
                <div className="btnarea ">
                   <a href="#" onClick={() => setShowForm(null)}>Batal</a>
