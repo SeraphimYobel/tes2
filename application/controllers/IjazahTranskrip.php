@@ -2,7 +2,11 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class IjazahTranskrip extends CI_Controller {
+	public function __construct(){
+		parent::__construct();
 
+		$this->load->model('IjazahTranskrip_model');
+	}
 	/**
 	 * Index Page for this controller.
 	 *
@@ -24,11 +28,29 @@ class IjazahTranskrip extends CI_Controller {
 		$this->load->view('resource2', $data);
 		$this->load->view('nav');
 		$this->load->view('dash_ijazah_transkrip');
+		$this->load->view('dash_crud_ijazah');
 	}
-
+	public function get_all_ijazah(){
+		$data = $this->IjazahTranskrip_model->get_all_ijazah();
+		echo json_encode($data);
+	}
 	// Ijazah
 public function create_ijazah() {
-    // Tampilkan halaman form tambah data ijazah
+		// Tampilkan halaman form tambah data ijazah
+		$data['taruna'] = $this->input->post('taruna');
+		$data['program_studi'] = $this->input->post('program_studi');
+		$data['tanggal_ijazah'] = $this->input->post('tanggal_ijazah');
+		$data['tanggal_pengesahan'] = $this->input->post('tanggal_pengesahan');
+		$data['gelar_akademik'] = $this->input->post('gelar_akademik');
+		$data['nomor_sk'] = $this->input->post('nomor_sk');
+		$data['direktur'] = $this->input->post('direktur');
+		$data['wakil_direktur'] = $this->input->post('wakil_direktur');
+		$data['nomor_ijazah'] = $this->input->post('nomor_ijazah');
+		$data['nomor_seri'] = $this->input->post('nomor_seri');
+		$data['tanggal_yudisium'] = $this->input->post('tanggal_yudisium');
+		$data['judul_kkw'] = $this->input->post('judul_kkw');
+		$processadd = $this->IjazahTranskrip_model->create_ijazah($data);
+		echo json_encode($processadd);
 }
 
 public function store_ijazah() {
@@ -39,12 +61,29 @@ public function edit_ijazah($id) {
     // Tampilkan halaman form edit data ijazah berdasarkan ID
 }
 
-public function update_ijazah($id) {
-    // Proses update data ijazah ke database berdasarkan ID
+public function update_ijazah() {
+		// Proses update data ijazah ke database berdasarkan ID
+		$id = $this->input->post('id');
+		$data['taruna'] = $this->input->post('taruna');
+		$data['program_studi'] = $this->input->post('program_studi');
+		$data['tanggal_ijazah'] = $this->input->post('tanggal_ijazah');
+		$data['tanggal_pengesahan'] = $this->input->post('tanggal_pengesahan');
+		$data['gelar_akademik'] = $this->input->post('gelar_akademik');
+		$data['nomor_sk'] = $this->input->post('nomor_sk');
+		$data['direktur'] = $this->input->post('direktur');
+		$data['wakil_direktur'] = $this->input->post('wakil_direktur');
+		$data['nomor_ijazah'] = $this->input->post('nomor_ijazah');
+		$data['nomor_seri'] = $this->input->post('nomor_seri');
+		$data['tanggal_yudisium'] = $this->input->post('tanggal_yudisium');
+		$data['judul_kkw'] = $this->input->post('judul_kkw');
+		$processedit = $this->IjazahTranskrip_model->update_ijazah($id, $data);
+		echo json_encode($processedit);
 }
 
 public function delete_ijazah($id) {
     // Proses hapus data ijazah dari database berdasarkan ID
+		$processdata = $this->IjazahTranskrip_model->delete_ijazah($id);
+		return $processdata;
 }
 
 public function print_ijazah($id) {

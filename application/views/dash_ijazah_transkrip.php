@@ -350,6 +350,7 @@ $nomorIjazah = getRandomNumber();
 		const [isPrintIjazah, setIsPrintIjazah] = useState(false)
 		const [isPrintTranskrip, setIsPrintTranskrip] = useState(false)
 		const [dataPejabat, setDataPejabat] = useState([])
+		const [activeTab, setActiveTab] = useState(1)
 		// get data direktur dan wadir
 		const getDataPejabat = () => {
 			$.ajax({
@@ -403,16 +404,22 @@ $nomorIjazah = getRandomNumber();
 		}
 		// generate datatable
 		useEffect(() => {
-			$('#listdata').DataTable({
-				destroy: true,
-				data: listNilai,
-				columns: [
-					{ data: 'matakuliah', title: 'Mata Kuliah' },
-					{ data: 'nilai_angka', title: 'Nilai Angka' },
-					{ data: 'nilai_huruf', title: 'Nilai Huruf' },
-				]
-			})
-		}, [listNilai])
+			if(activeTab == 1){
+				const root = document.querySelector("#crudijazah")
+				const el = ReactDOM.createRoot(root)
+				el.render(<IjazahComponent />)
+			} else if(activeTab == 3){
+				$('#listdata').DataTable({
+					destroy: true,
+					data: listNilai,
+					columns: [
+						{ data: 'matakuliah', title: 'Mata Kuliah' },
+						{ data: 'nilai_angka', title: 'Nilai Angka' },
+						{ data: 'nilai_huruf', title: 'Nilai Huruf' },
+					]
+				})
+			}
+		}, [listNilai, activeTab])
 		// get data pejabat
 		useEffect(() => {
 			getDataPejabat()
@@ -427,64 +434,94 @@ $nomorIjazah = getRandomNumber();
 							<p>Silahkan masukkan <strong>NIM</strong> mahasiswa untuk pencetakan Ijazah dan Traksrip. </p>
 						</div>
 					</div>
-					<div>
-						<form onSubmit={e => handleSearchMahasiswa(e)}>
-							<div className="wrap">
-								<div className="formel">
-									<label htmlFor="nim">NIM { }</label>
-									<input type="text" name="nim" placeholder="e.g. 220401020003" />
-								</div>
-								<div className="formel">
-									<label htmlFor="nim"></label>
-									<button type="submit">Cari</button>
-								</div>
-							</div>
-						</form>
-					</div>
-					{
-						mahasiswaNotFound ? (
-							<p className="warnmessage"><i className="fa-solid fa-circle-info"></i>Maaf, Data Mahasiswa tidak ditemukan</p>
+					{ /* navigation */
+						<div className="navigations">
+							<a 
+								href="#"
+								className={activeTab == 1 ? 'activetab' : ''}
+								onClick={() => setActiveTab(1)}
+							>Ijazah</a>
+							<a 
+								href="#"
+								className={activeTab == 2 ? 'activetab' : ''}
+								onClick={() => setActiveTab(2)}
+							>Transkrip</a>
+							<a 
+								href="#"
+								className={activeTab == 3 ? 'activetab' : ''}
+								onClick={() => setActiveTab(3)}
+							>Print Dokumen</a>
+						</div>
+					}
+					{ /* crud ijazah */
+						activeTab == 1 ? (
+							<div id="crudijazah"></div>
 						) : false
 					}
-					{
-						mahasiswaInfo != null ? (
+					{ /* print dokumen */
+						activeTab == 3 ? (
 							<React.Fragment>
-								<div className="headers">
-									<div className="mahasiswainfo">
-										<h5>{mahasiswaInfo.nama}</h5>
-										<p><i className="fa-solid fa-calendar-week"></i> {mahasiswaInfo.namakota}, {mahasiswaInfo.tanggal_lahir}</p>
-									</div>
-									<div className="mahasiswainfo">
-										<h5>{mahasiswaInfo.nomor_taruna}</h5>
-										<p><i className="fas fa-graduation-cap"></i>Prodi {mahasiswaInfo.namaprodi}</p>
-									</div>
-									<div className="headprint">
-										<button 
-											title="Cetak Ijazah" 
-											onClick={() => setIsPrintIjazah(true)}
-										><i className="fa-solid fa-print"></i> Ijazah</button>
-										<button
-											title="Cetak Transkrip"
-											onClick={() => setIsPrintTranskrip(true)}
-										><i className="fa-solid fa-print"></i> Transkrip</button>
-									</div>
+								<div>
+									<form onSubmit={e => handleSearchMahasiswa(e)}>
+										<div className="wrap">
+											<div className="formel">
+												<label htmlFor="nim">NIM { }</label>
+												<input type="text" name="nim" placeholder="e.g. 220401020003" />
+											</div>
+											<div className="formel">
+												<label htmlFor="nim"></label>
+												<button type="submit">Cari</button>
+											</div>
+										</div>
+									</form>
 								</div>
-								<div className="tbox">
-									<table id="listdata"></table>
-								</div>
+								{ /* eror not found mahasiswa */
+									mahasiswaNotFound ? (
+										<p className="warnmessage"><i className="fa-solid fa-circle-info"></i>Maaf, Data Mahasiswa tidak ditemukan</p>
+									) : false
+								}
+								{ /* tampilkan data mahasiswa */
+									mahasiswaInfo != null ? (
+										<React.Fragment>
+											<div className="headers">
+												<div className="mahasiswainfo">
+													<h5>{mahasiswaInfo.nama}</h5>
+													<p><i className="fa-solid fa-calendar-week"></i> {mahasiswaInfo.namakota}, {mahasiswaInfo.tanggal_lahir}</p>
+												</div>
+												<div className="mahasiswainfo">
+													<h5>{mahasiswaInfo.nomor_taruna}</h5>
+													<p><i className="fas fa-graduation-cap"></i>Prodi {mahasiswaInfo.namaprodi}</p>
+												</div>
+												<div className="headprint">
+													<button 
+														title="Cetak Ijazah" 
+														onClick={() => setIsPrintIjazah(true)}
+													><i className="fa-solid fa-print"></i> Ijazah</button>
+													<button
+														title="Cetak Transkrip"
+														onClick={() => setIsPrintTranskrip(true)}
+													><i className="fa-solid fa-print"></i> Transkrip</button>
+												</div>
+											</div>
+											<div className="tbox">
+												<table id="listdata"></table>
+											</div>
+										</React.Fragment>
+									) : false
+								}
+								{ /* tampilkan pesan belum mencari */
+									onStart ? (
+										<div className="infos">
+											<img src="<?=base_url()?>assets/wait.jpg" alt="illustration" />
+											<h3><i className="fa-solid fa-circle-info"></i> Anda belum melakukan pencarian. </h3>
+										</div>
+									) : false
+								}
 							</React.Fragment>
 						) : false
 					}
-					{
-						onStart ? (
-							<div className="infos">
-								<img src="<?=base_url()?>assets/wait.jpg" alt="illustration" />
-								<h3><i className="fa-solid fa-circle-info"></i> Anda belum melakukan pencarian. </h3>
-							</div>
-						) : false
-					}
 				</div>
-				{
+				{ /* cetak ijazah */
 					isPrintIjazah ? (
 						<FormIjazah 
 							data={mahasiswaInfo} 
@@ -493,7 +530,7 @@ $nomorIjazah = getRandomNumber();
 						/>
 					) : false
 				}
-				{
+				{ /* cetak transkrip */
 					isPrintTranskrip ? 
 						<FormTranskrip 
 							dataMahasiswa={mahasiswaInfo} 
