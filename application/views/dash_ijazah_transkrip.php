@@ -158,7 +158,7 @@
 	.formijazah {
 		font-family: Calibri;
 		font-size: 11px !important;
-		height: 100%;
+		height: max-content;
 		border-radius: 0.3em;
 		background: white;
 		padding: 1.5em 2.5em;
@@ -286,6 +286,9 @@
 		padding: 1em !important;
 	}
 	tr>td:nth-child(3){
+		text-align: left;
+	}
+	.lefts{
 		text-align: left !important;
 	}
 	@media print {
@@ -309,9 +312,9 @@
 		table>thead>tr>th{
 			background: rgb(245,245,245) !important;
 			border-top: 1px solid rgb(220,220,220) !important;
+			border-bottom: 1px solid rgb(220,220,220) !important;
 		}
 		table>tbody>tr>td, table>thead>tr>th{
-			border-bottom: 0;
 			border-left: 1px solid rgb(220,220,220) !important;
 			border-right: 1px solid rgb(220,220,220) !important;
 		}
@@ -321,6 +324,9 @@
 			padding: 1em 0;
 			text-align: center;
 			font-weight: 600;
+		}
+		.centers{
+			text-align: center !important;
 		}
 	}
 	@page{
@@ -382,19 +388,19 @@ $nomorIjazah = getRandomNumber();
 		const handleSearchMahasiswa = e => {
 			e.preventDefault()
 			$.ajax({
-				url: "<?=base_url()?>index.php/DosenMahasiswa/get_all_mahasiswa",
+				url: "<?=base_url()?>index.php/IjazahTranskrip/get_all_ijazah",
 				method: 'GET',
 				success: data => {
 					let allData = JSON.parse(data)
-					let filteredData = allData.filter(it => it.nomor_taruna.includes($('[name="nim"]').val()))
-					if (filteredData.length) {
-						setMahasiswaInfo(filteredData[0])
-						getDetailTranskrip(filteredData[0].id)
-						setMahasiswaNotFound(false)
-						setOnStart(false)
-					} else {
+					let filtered = allData.filter(it => it.nim.includes($('[name="nim"]').val()))
+					if(!filtered.length){
 						setMahasiswaNotFound(true)
 						setMahasiswaInfo(null)
+					} else {
+						setMahasiswaInfo(filtered[0])
+						getDetailTranskrip(filtered[0].taruna)
+						setMahasiswaNotFound(false)
+						setOnStart(false)
 					}
 				},
 				error: () => {
@@ -474,7 +480,7 @@ $nomorIjazah = getRandomNumber();
 									<form onSubmit={e => handleSearchMahasiswa(e)}>
 										<div className="wrap" style={{padding: '1em 0'}}>
 											<div className="formel">
-												<label htmlFor="nim">NIM { }</label>
+												<label htmlFor="nim">NIM</label>
 												<input type="text" name="nim" placeholder="e.g. 220401020003" />
 											</div>
 											<div className="formel">
@@ -494,12 +500,12 @@ $nomorIjazah = getRandomNumber();
 										<React.Fragment>
 											<div className="headers">
 												<div className="mahasiswainfo">
-													<h5>{mahasiswaInfo.nama}</h5>
+													<h5>{mahasiswaInfo.tarunanama}</h5>
 													<p><i className="fa-solid fa-calendar-week"></i> {mahasiswaInfo.namakota}, {mahasiswaInfo.tanggal_lahir}</p>
 												</div>
 												<div className="mahasiswainfo">
-													<h5>{mahasiswaInfo.nomor_taruna}</h5>
-													<p><i className="fas fa-graduation-cap"></i>Prodi {mahasiswaInfo.namaprodi}</p>
+													<h5>{mahasiswaInfo.nim}</h5>
+													<p><i className="fas fa-graduation-cap"></i>Prodi {mahasiswaInfo.prodiname}</p>
 												</div>
 												<div className="headprint">
 													<button 
@@ -542,8 +548,9 @@ $nomorIjazah = getRandomNumber();
 				{ /* cetak transkrip */
 					isPrintTranskrip ? 
 						<FormTranskrip 
-							dataMahasiswa={mahasiswaInfo} 
+							data={mahasiswaInfo} 
 							hide={setIsPrintTranskrip}
+							allNilai={listNilai}
 							dataPejabat={dataPejabat} 
 						/>
 					: false
@@ -556,18 +563,10 @@ $nomorIjazah = getRandomNumber();
 	el.render(<App />)
 	// form ijazah
 	const FormIjazah = props => {
-		const { nama, namakota, nomor_taruna, namaprodi, tanggal_lahir, program_pendidikan, akreditasi } = props.data
+		const { tarunanama, namakota, nim, prodiname, tanggal_lahir, tanggal_ijazah, wadir, dir, noakred, wadirnip, dirnip, gelar_akademik, prodipendidikan, akreditasi, nomor_seri, nomor_ijazah } = props.data
 		const { hide, dataPejabat } = props
-		const [direktur, setDirektur] = useState({nama: "-", nidn: "-"})
-		const [wadir, setWadir] = useState({nama: "-", nidn: "-"})
 		// get data direktur dan wadir
 		useEffect(() => {
-			if(dataPejabat.length){
-				let direktur = dataPejabat.filter(it => it.jabatan.toUpperCase().includes("DIREKTUR"))
-				let wadir = dataPejabat.filter(it => it.jabatan.toUpperCase().includes("WAKIL DIREKTUR"))
-				direktur.length && setDirektur(direktur[0])
-				wadir.length && setWadir(wadir[0])
-			}
 			// auto print
 			setTimeout(() => window.print(), 1500)
 		}, [dataPejabat])
@@ -578,8 +577,8 @@ $nomorIjazah = getRandomNumber();
 				</div>
 				<div className="formijazah">
 					<div className="between">
-						<p>No. Seri : <?php echo $nomorSeri; ?></p>
-						<p>No. Ijazah : <?php echo $nomorIjazah; ?></p>
+						<p>No. Seri : {nomor_seri}</p>
+						<p>No. Ijazah : {nomor_ijazah}</p>
 					</div>
 					<div className="text-center">
 						<h1>IJAZAH</h1>
@@ -594,17 +593,17 @@ $nomorIjazah = getRandomNumber();
 							<p>Status </p>
 						</div>
 						<div>
-							<p><strong>: {nama.toUpperCase()}</strong></p>
+							<p><strong>: {tarunanama.toUpperCase()}</strong></p>
 							<p>: {namakota}, {tanggal_lahir} </p>
-							<p>: {nomor_taruna} </p>
-							<p>: {program_pendidikan} </p>
-							<p>: {namaprodi} </p>
+							<p>: {nim} </p>
+							<p>: {prodipendidikan} </p>
+							<p>: {prodiname} </p>
 							<p>: TERAKREDITASI <strong>"{akreditasi.toUpperCase()}"</strong> </p>
-							<p><i style={{ paddingLeft: '0.4em' }}>Berdasarkan Keputusan BAN PT No. 321</i></p>
+							<p><i style={{ paddingLeft: '0.4em' }}>Berdasarkan Keputusan BAN PT No. {noakred}</i></p>
 						</div>
 					</div>
 					<div className="pads">
-						<p>Ijazah ini diserahkan berdasarkan Surat Keputusan Direktur Politeknik Siber Asia Nomor: SK. 321 Tahun 2022, setelah yang bersangkutan memenuhi semua persyaratan yang telah ditentukan dan kepadanya dilimpahkan segala wewenang dan hak yang berhubungan dengan Ijazah yang dimilikinya serta berhak menggunakan Gelar Akademik <strong>{program_pendidikan != 'Sarjana' ? 'Ahli Madya' : 'Sarjana'} Komputer ({program_pendidikan == 'Sarjana' ? 'S.Kom' : 'A.Md'})</strong></p>
+						<p>Ijazah ini diserahkan berdasarkan Surat Keputusan Direktur Politeknik Siber Asia Nomor: SK. 321 Tahun 2022, setelah yang bersangkutan memenuhi semua persyaratan yang telah ditentukan dan kepadanya dilimpahkan segala wewenang dan hak yang berhubungan dengan Ijazah yang dimilikinya serta berhak menggunakan Gelar Akademik <strong>{gelar_akademik}</strong></p>
 					</div>
 					<div className="between pads">
 						<div className="text-center">
@@ -614,20 +613,20 @@ $nomorIjazah = getRandomNumber();
 								<img src="<?=base_url() ?>assets/barcode.png" alt="barcode" width="100" />
 							</div>
 							<div>
-								<p><strong>{wadir.nama.toUpperCase()}</strong></p>
-								<p>NIP. {wadir.nidn}</p>
+								<p><strong>{wadir.toUpperCase()}</strong></p>
+								<p>NIP. {wadirnip}</p>
 							</div>
 						</div>
 						<div className="text-center">
-							<p>Jakarta, 12 Agustus 2023</p>
+							<p>Jakarta, {tanggal_ijazah}</p>
 							<p>DIREKTUR</p>
 							<p>POLITEKNIK SIBER ASIA</p>
 							<div className="bots">
 								<img src="<?=base_url() ?>assets/barcode.png" alt="barcode" width="100" />
 							</div>
 							<div>
-								<p><strong>{direktur.nama.toUpperCase()}</strong></p>
-								<p>NIP. {direktur.nidn}</p>
+								<p><strong>{dir.toUpperCase()}</strong></p>
+								<p>NIP. {dirnip}</p>
 							</div>
 						</div>
 					</div>
@@ -637,10 +636,10 @@ $nomorIjazah = getRandomNumber();
 	}
 	// form transkrip
 	const FormTranskrip = props => {
-		const {hide, dataMahasiswa, dataPejabat} = props
+		const { tarunanama, namakota, nim, prodiname, tanggal_lahir, tanggal_ijazah, wadir, dir, noakred, wadirnip, dirnip, gelar_akademik, prodipendidikan, akreditasi, nomor_seri, judul_kkw, nomor_ijazah, tanggal_yudisium } = props.data
+		const {hide, data, dataPejabat, allNilai} = props
+		// const [listNilai, setListNilai] = useState([])
 		const [listNilai, setListNilai] = useState([])
-		const [direktur, setDirektur] = useState({nama: "-", nidn: "-"})
-		const [wadir, setWadir] = useState({nama: "-", nidn: "-"})
 		const [ipk, setIpk] = useState(0.0)
 		// generate predikat ipk
 		const generatePredikat = ipk => {
@@ -656,25 +655,19 @@ $nomorIjazah = getRandomNumber();
 		}
 		// get data direktur dan wadir
 		useEffect(() => {
-			if(dataPejabat.length){
-				let direktur = dataPejabat.filter(it => it.jabatan.toUpperCase().includes("DIREKTUR"))
-				let wadir = dataPejabat.filter(it => it.jabatan.toUpperCase().includes("WAKIL DIREKTUR"))
-				direktur.length && setDirektur(direktur[0])
-				wadir.length && setWadir(wadir[0])
-			}
 			// auto print
 			setTimeout(() => window.print(), 1500)
 		}, [dataPejabat])
 		// get detail nilai
 		useEffect(() => {
-			let nim = dataMahasiswa.nomor_taruna
-			let listNilai = {
-				A: 4, AB: 3.5, B: 3, BC: 2.5, C:2, D:1, E:0
-			}
 			$.ajax({
-				url: `http://localhost/pemweb2-kel3/index.php/Penilaian/get_penilaian_by_nim/${nim}`,
+				url: `<?=base_url()?>index.php/Penilaian/get_penilaian_by_nim/${nim}`,
 				method: 'GET',
 				success: data => {
+					let nim = data.nomor_taruna
+					let listNilai = {
+						A: 4, AB: 3.5, B: 3, BC: 2.5, C:2, D:1, E:0
+					}
 					let listData = JSON.parse(data)
 					listData = listData.map(it => {
 						let semester = 0
@@ -704,11 +697,11 @@ $nomorIjazah = getRandomNumber();
 					setIpk(totalScore/totalSKS)
 				}
 			})
-		}, [dataMahasiswa])
+		}, [data, allNilai])
 		return (
 			<div className="boxijazah" onClick={(e) => e.target.className == "boxijazah" && hide(false)}>
 				<div className="ijazahcontent">
-					<p>Lampiran Ijazah Nomor : 123</p>
+					<p>Lampiran Ijazah Nomor : {nomor_ijazah}</p>
 					<h1>TRANSKRIP NILAI AKADEMIK</h1>
 					<div className="wraptranskrip mini">
 						<div>
@@ -720,12 +713,12 @@ $nomorIjazah = getRandomNumber();
 							<p>TANGGAL YUDISIUM</p>
 						</div>
 						<div>
-							<p>: Rizki Ramadhan</p>
-							<p>: 220401020003</p>
-							<p>: Palembang, 24 Februari 1993</p>
-							<p>: DIPLOMA III MANAJMEEN INFORMATIKA</p>
-							<p>: TERAKREDITASI BAIK</p>
-							<p>: 22 AGUSTUS 2023</p>
+							<p>: {tarunanama}</p>
+							<p>: {nim}</p>
+							<p>: {namakota}, {tanggal_lahir}</p>
+							<p>: {prodipendidikan.toUpperCase()} {prodiname.toUpperCase()}</p>
+							<p>: TERAKREDITASI {akreditasi.toUpperCase()}</p>
+							<p>: {tanggal_yudisium}</p>
 						</div>
 					</div>
 					{/* bagian transkrip */}
@@ -750,7 +743,7 @@ $nomorIjazah = getRandomNumber();
 											<tr key={index}>
 												<td>{it.urutan}</td>
 												<td>{it.kode}</td>
-												<td>{it.matakuliah}</td>
+												<td className="lefts">{it.matakuliah}</td>
 												<td>{it.sks}</td>
 												<td>{it.nilai_huruf}</td>
 											</tr>
@@ -768,7 +761,7 @@ $nomorIjazah = getRandomNumber();
 											<tr key={index}>
 												<td>{it.urutan}</td>
 												<td>{it.kode}</td>
-												<td>{it.matakuliah}</td>
+												<td className="lefts">{it.matakuliah}</td>
 												<td>{it.sks}</td>
 												<td>{it.nilai_huruf}</td>
 											</tr>
@@ -786,7 +779,7 @@ $nomorIjazah = getRandomNumber();
 											<tr key={index}>
 												<td>{it.urutan}</td>
 												<td>{it.kode}</td>
-												<td>{it.matakuliah}</td>
+												<td className="lefts">{it.matakuliah}</td>
 												<td>{it.sks}</td>
 												<td>{it.nilai_huruf}</td>
 											</tr>
@@ -819,7 +812,7 @@ $nomorIjazah = getRandomNumber();
 											<tr key={index}>
 												<td>{it.urutan}</td>
 												<td>{it.kode}</td>
-												<td>{it.matakuliah}</td>
+												<td className="lefts">{it.matakuliah}</td>
 												<td>{it.sks}</td>
 												<td>{it.nilai_huruf}</td>
 											</tr>
@@ -837,7 +830,7 @@ $nomorIjazah = getRandomNumber();
 											<tr key={index}>
 												<td>{it.urutan}</td>
 												<td>{it.kode}</td>
-												<td>{it.matakuliah}</td>
+												<td className="lefts">{it.matakuliah}</td>
 												<td>{it.sks}</td>
 												<td>{it.nilai_huruf}</td>
 											</tr>
@@ -855,7 +848,7 @@ $nomorIjazah = getRandomNumber();
 											<tr key={index}>
 												<td>{it.urutan}</td>
 												<td>{it.kode}</td>
-												<td>{it.matakuliah}</td>
+												<td className="lefts">{it.matakuliah}</td>
 												<td>{it.sks}</td>
 												<td>{it.nilai_huruf}</td>
 											</tr>
@@ -871,13 +864,13 @@ $nomorIjazah = getRandomNumber();
 									<tr>
 										<td>{}</td>
 										<td colSpan="3">UJIAN LISAN KOMPREHENSIF KKW</td>
-										<td colSpan="3">A</td>
+										<td colSpan="3" className="centers">A</td>
 									</tr>
 									<tr>
 										<td colSpan="5" className="titlesm">JUDUL KERTAS KERJA WAJIB :</td>
 									</tr>
 									<tr>
-										<td colSpan="5" className="expad">Pengembangan Sistem Informasi Kepegawaian Menggunakan Framework TOGAF</td>
+										<td colSpan="5" className="expad">{judul_kkw}</td>
 									</tr>
 									<tr>
 										<td colSpan="5" className="btop">
@@ -908,20 +901,20 @@ $nomorIjazah = getRandomNumber();
 								<img src="<?=base_url() ?>assets/barcode.png" alt="barcode" width="100" />
 							</div>
 							<div>
-								<p><strong>{wadir.nama.toUpperCase()}</strong></p>
-								<p>NIP. {wadir.nidn}</p>
+								<p><strong>{wadir.toUpperCase()}</strong></p>
+								<p>NIP. {wadirnip}</p>
 							</div>
 						</div>
 						<div className="text-center">
-							<p>Jakarta, 12 Agustus 2023</p>
+							<p>Jakarta, {tanggal_ijazah}</p>
 							<p>DIREKTUR</p>
 							<p>POLITEKNIK SIBER ASIA</p>
 							<div className="bots">
 								<img src="<?=base_url() ?>assets/barcode.png" alt="barcode" width="100" />
 							</div>
 							<div>
-								<p><strong>{direktur.nama.toUpperCase()}</strong></p>
-								<p>NIP. {direktur.nidn}</p>
+								<p><strong>{dir.toUpperCase()}</strong></p>
+								<p>NIP. {dirnip}</p>
 							</div>
 						</div>
 					</div>

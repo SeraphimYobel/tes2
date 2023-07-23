@@ -27,7 +27,7 @@ class IjazahTranskrip_model extends CI_Model {
         return $this->db->insert('ijazah', $data);
     }
     public function get_all_ijazah(){
-        return $this->db->query("SELECT ijazah.*, pejabat.nama as wadir, dir.nama as dir, taruna.nama as tarunanama, prodi.nama as prodiname  FROM `ijazah` 
+        return $this->db->query("SELECT ijazah.*, pejabat.nama as wadir, dir.nama as dir, dir.nidn as dirnip, pejabat.nidn as wadirnip,  taruna.nama as tarunanama, prodi.nama as prodiname, taruna.nomor_taruna as nim, taruna.tanggal_lahir, prodi.program_pendidikan as prodipendidikan, prodi.akreditasi as akreditasi, prodi.sk_akreditasi as noakred, kota.nama as namakota, tr.id as transkripid FROM `ijazah` 
         LEFT JOIN taruna 
         ON ijazah.taruna = taruna.id
         LEFT JOIN pejabat
@@ -35,7 +35,12 @@ class IjazahTranskrip_model extends CI_Model {
         LEFT JOIN pejabat as dir
         ON ijazah.direktur = dir.id
         LEFT JOIN program_studi as prodi
-        ON ijazah.program_studi = prodi.id")->result_array();
+        ON ijazah.program_studi = prodi.id
+        LEFT JOIN kota 
+        ON taruna.tempat_lahir = kota.id
+        LEFT JOIN transkip_nilai as tr
+        ON ijazah.id = tr.ijazah
+        ")->result_array();
     }
     public function get_all_transkrip(){
         return $this->db->query("SELECT ijazah.nomor_ijazah, taruna.nama as tarunanama, prodi.nama as prodinama, tr.* FROM `transkip_nilai` as tr
