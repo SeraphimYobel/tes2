@@ -270,22 +270,27 @@
 	// form input program studi
 	const FormInputMahasiswa = props => {
 		const { setShowForm, setListData, refreshData, editedData, type, listKota, listProdi } = props
+		const [foto, setFoto] = useState(null)
 		const [successMessage, setSuccessMessage] = useState(null)
-		// on submit form add new program studi
+		const handleFotoChange = (e) => setFoto(e.target.files[0])  // Menyimpan file foto yang dipilih dalam state};
+		// on submit form add new program studi 
 		const handleSubmit = (e, type, editedData) => {
 			e.preventDefault()
-			const data = Object.fromEntries(new FormData(document.querySelector('#formprogramstudi')).entries())
-			data.foto = 'file'
+			const data = new FormData(document.querySelector('#formprogramstudi'));
+    				data.append('foto', foto); // Menambahkan file foto ke FormData
+
 			let url = type == 'add' ? "<?=base_url()?>index.php/DosenMahasiswa/create_mahasiswa" : "<?=base_url()?>index.php/DosenMahasiswa/update_mahasiswa"
 			// menyisipkan id program studi jika edit
 			if(type == 'edit'){
 				data.id = editedData.id
 			}
 			$.ajax({
-				url,
-				data,
-				method: 'POST',
-				success: data => {
+      url,
+      data,
+      method: 'POST',
+      processData: false, // Tidak memproses data secara otomatis karena kita menggunakan FormData
+      contentType: false, // Tidak mengatur tipe konten secara otomatis karena kita menggunakan FormData
+      success: (data) => {
 					// on success
 					if(data == "true" || data > 0){
 						$('#formprogramstudi')[0].reset()
@@ -353,9 +358,9 @@
 							</select>
 						</div>
 						<div className="formel">
-							<label htmlFor="foto">Foto Profil</label>
-							<input name="foto" type="file" placeholder="e.g. Foto" />
-						</div>
+          <label htmlFor="foto">Foto Profil</label>
+          <input name="foto" type="file" onChange={handleFotoChange} placeholder="e.g. Foto" />
+        </div>
 					</div>
 					<div className="btnarea">
 						<a href="#" onClick={() => setShowForm(null)}>Batal</a>
