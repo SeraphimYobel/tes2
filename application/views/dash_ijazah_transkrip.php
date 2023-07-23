@@ -350,7 +350,7 @@ $nomorIjazah = getRandomNumber();
 		const [isPrintIjazah, setIsPrintIjazah] = useState(false)
 		const [isPrintTranskrip, setIsPrintTranskrip] = useState(false)
 		const [dataPejabat, setDataPejabat] = useState([])
-		const [activeTab, setActiveTab] = useState(2)
+		const [activeTab, setActiveTab] = useState(1)
 		// get data direktur dan wadir
 		const getDataPejabat = () => {
 			$.ajax({

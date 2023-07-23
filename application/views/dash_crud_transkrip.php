@@ -74,7 +74,7 @@
                   setShowMessageSuccess(true)
                   setTimeout(() => setShowMessageSuccess(false), 5000)
                   // Refresh halaman setelah menghapus data
-                  getAllOptionalData()
+                  getAllDataIjazah()
                },
                error: function () {
                   alert('Gagal menghapus data mata kuliah.');
@@ -89,9 +89,9 @@
             data: listData,
             // scrollX: true,
             columns: [
-               { data: 'taruna', title: 'Mahasiswa' },
-               { data: 'ijazah', title: 'Ijazah' },
-               { data: 'program_studi', title: 'Program Studi' },
+               { data: 'tarunanama', title: 'Mahasiswa' },
+               { data: 'nomor_ijazah', title: 'Ijazah' },
+               { data: 'prodinama', title: 'Program Studi' },
                {
                   data: 'id',
                   render: function (data, type, row) {
@@ -141,7 +141,7 @@
                </div>
                {
                   showForm != null ? (
-                     <FormInput
+                     <FormInputTranskrip
                         setShowForm={setShowForm}
                         setListData={setListData}
                         listIjazah={listIjazah}
@@ -161,7 +161,7 @@
       )
    }
    // form input
-   const FormInput = props => {
+   const FormInputTranskrip = props => {
       const { setShowForm, setListData, refreshData, editedData, type, listIjazah, listMahasiswa, listProdi } = props
       const [successMessage, setSuccessMessage] = useState(null)
       // on submit form add new mata kuliah
@@ -196,7 +196,6 @@
          if(!filtered.length){
             alert('Data Ijazah mahasiwa tidak ditemukan, silahkan tambahkan terlebih dahulu')
          } else {
-            console.log(filtered[0], listProdi)
             for (let obj in filtered[0]) {
                $(`[name="${obj}"]`).val(filtered[0][obj])
                if(obj == "nomor_ijazah"){

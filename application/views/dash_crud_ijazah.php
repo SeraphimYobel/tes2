@@ -73,7 +73,7 @@
                   setShowMessageSuccess(true)
                   setTimeout(() => setShowMessageSuccess(false), 5000)
                   // Refresh halaman setelah menghapus data
-                  getAllOptionalData()
+                  getAllDataIjazah()
                },
                error: function () {
                   alert('Gagal menghapus data ijazah.');
@@ -88,8 +88,8 @@
             data: listData,
             // scrollX: true,
             columns: [
-               { data: 'taruna', title: 'Mahasiswa' },
-               { data: 'program_studi', title: 'Program Studi' },
+               { data: 'tarunanama', title: 'Mahasiswa' },
+               { data: 'prodiname', title: 'Program Studi' },
                { data: 'tanggal_ijazah', title: 'Tanggal Ijazah' },
                { data: 'tanggal_pengesahan', title: 'Pengesahan' },
                { data: 'gelar_akademik', title: 'Gelar' },
@@ -148,7 +148,7 @@
                </div>
                {
                   showForm != null ? (
-                     <FormInput
+                     <FormInputIjazah
                         setShowForm={setShowForm}
                         setListData={setListData}
                         listProdi={listProdi}
@@ -168,7 +168,7 @@
       )
    }
    // form input
-   const FormInput = props => {
+   const FormInputIjazah = props => {
       const { setShowForm, setListData, refreshData, editedData, type, listProdi, listMahasiswa, listPejabat } = props
       const [successMessage, setSuccessMessage] = useState(null)
       // on submit form add new mata kuliah

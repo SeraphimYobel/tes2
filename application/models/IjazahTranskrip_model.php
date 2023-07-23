@@ -27,10 +27,24 @@ class IjazahTranskrip_model extends CI_Model {
         return $this->db->insert('ijazah', $data);
     }
     public function get_all_ijazah(){
-        return $this->db->get('ijazah')->result_array();
+        return $this->db->query("SELECT ijazah.*, pejabat.nama as wadir, dir.nama as dir, taruna.nama as tarunanama, prodi.nama as prodiname  FROM `ijazah` 
+        LEFT JOIN taruna 
+        ON ijazah.taruna = taruna.id
+        LEFT JOIN pejabat
+        ON ijazah.wakil_direktur = pejabat.id
+        LEFT JOIN pejabat as dir
+        ON ijazah.direktur = dir.id
+        LEFT JOIN program_studi as prodi
+        ON ijazah.program_studi = prodi.id")->result_array();
     }
     public function get_all_transkrip(){
-        return $this->db->get('transkip_nilai')->result_array();
+        return $this->db->query("SELECT ijazah.nomor_ijazah, taruna.nama as tarunanama, prodi.nama as prodinama, tr.* FROM `transkip_nilai` as tr
+        LEFT JOIN taruna
+        on tr.taruna = taruna.id
+        LEFT JOIN program_studi as prodi
+        on tr.program_studi = prodi.id
+        LEFT JOIN ijazah 
+        on tr.ijazah = ijazah.id")->result_array();
     }
     public function read_ijazah($id = null) {
         if ($id) {
