@@ -140,7 +140,7 @@ INSERT INTO `matakuliah` (`id`, `kode`, `matakuliah`, `sks`, `semester`) VALUES
 (42, '200302310', 'Teori Informasi', 3, 'Semester VI'),
 (43, '200302311', 'Grafika Komputer', 3, 'Semester VI'),
 (44, '200301403', 'Natural Language Processing', 3, 'Semester VII'),
-(45, '200301408', 'Sisttem Operasi Jaringan ddan Konfigurasi Server', 3, 'Semester VII'),
+(45, '200301408', 'Sistem Operasi Jaringan dan Konfigurasi Server', 3, 'Semester VII'),
 (46, '200301404', 'Kecerdasan Komputasional ', 3, 'Semester VII'),
 (47, '200301409', 'Network Programming and Administration', 3, 'Semester VII'),
 (48, '200301312', 'Cloud Computing', 3, 'Semester VII'),
