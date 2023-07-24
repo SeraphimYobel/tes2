@@ -214,6 +214,7 @@
 	}
 	.watermark>img{
 		opacity: 0.1;
+		z-index: 1;
 	}
 	.boxijazah::-webkit-scrollbar, .boxijazah::-webkit-scrollbar-thumb{
 		width: 0;
@@ -291,6 +292,19 @@
 	.lefts{
 		text-align: left !important;
 	}
+	.fotobox{
+		position: relative;
+	}
+	.fotobox>.prof{
+		width: 7.5em;
+		height: 10em;
+		top: 0;
+		left: 0;
+		position: absolute;
+		object-fit: cover;
+		border: 1px solid rgb(50,50,50);
+		transform: translate(-5em, -1.2em);
+	}
 	@media print {
 		.no-print {
 			display: none;
@@ -308,7 +322,6 @@
 		.ijazahcontent>h1{
 			text-align: center;
 		}
-		
 		table>thead>tr>th{
 			background: rgb(245,245,245) !important;
 			border-top: 1px solid rgb(220,220,220) !important;
@@ -636,7 +649,7 @@ $nomorIjazah = getRandomNumber();
 	}
 	// form transkrip
 	const FormTranskrip = props => {
-		const { tarunanama, namakota, nim, prodiname, tanggal_lahir, tanggal_ijazah, wadir, dir, noakred, wadirnip, dirnip, gelar_akademik, prodipendidikan, akreditasi, nomor_seri, judul_kkw, nomor_ijazah, tanggal_yudisium } = props.data
+		const { tarunanama, namakota, nim, prodiname, tanggal_lahir, tanggal_ijazah, wadir, dir, noakred, wadirnip, dirnip, gelar_akademik, prodipendidikan, akreditasi, nomor_seri, judul_kkw, nomor_ijazah, tanggal_yudisium, foto } = props.data
 		const {hide, data, dataPejabat, allNilai} = props
 		// const [listNilai, setListNilai] = useState([])
 		const [listNilai, setListNilai] = useState([])
@@ -657,7 +670,7 @@ $nomorIjazah = getRandomNumber();
 		useEffect(() => {
 			// auto print
 			setTimeout(() => window.print(), 1500)
-		}, [dataPejabat])
+		}, [data])
 		// get detail nilai
 		useEffect(() => {
 			$.ajax({
@@ -699,7 +712,10 @@ $nomorIjazah = getRandomNumber();
 			})
 		}, [data, allNilai])
 		return (
-			<div className="boxijazah" onClick={(e) => e.target.className == "boxijazah" && hide(false)}>
+			<div className="boxijazah" onClick={() => hide(false)}>
+				<div className="watermark">
+					<img src="<?=base_url()?>assets/unsia.png" alt="illustration" />
+				</div>
 				<div className="ijazahcontent">
 					<p>Lampiran Ijazah Nomor : {nomor_ijazah}</p>
 					<h1>TRANSKRIP NILAI AKADEMIK</h1>
@@ -909,8 +925,9 @@ $nomorIjazah = getRandomNumber();
 							<p>Jakarta, {tanggal_ijazah}</p>
 							<p>DIREKTUR</p>
 							<p>POLITEKNIK SIBER ASIA</p>
-							<div className="bots">
+							<div className="bots fotobox">
 								<img src="<?=base_url() ?>assets/barcode.png" alt="barcode" width="100" />
+								<img className="prof" src={`<?=base_url()?>upload/${foto}`} alt="fotoprofil" />
 							</div>
 							<div>
 								<p><strong>{dir.toUpperCase()}</strong></p>
