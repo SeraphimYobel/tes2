@@ -94,7 +94,42 @@ class DosenMahasiswa_model extends CI_Model {
     }
 
     public function update_mahasiswa($id, $data) {
-        $this->db->where('ID', $id);
+        // Ambil data dari parameter
+        $nama = $data["nama"];
+        $nomor_taruna = $data["nomor_taruna"];
+        $tempat_lahir = $data["tempat_lahir"];
+        $tanggal_lahir = $data["tanggal_lahir"];
+        $program_studi = $data["program_studi"];
+        // Proses unggah foto
+        $foto = '';
+        if (!empty($_FILES['foto']['name'])) {
+            $config['upload_path'] = './upload/'; // Tentukan direktori penyimpanan file
+            $config['allowed_types'] = 'jpg|jpeg|png|gif'; // Jenis file yang diizinkan
+            $config['max_size'] = 2048; // Batas ukuran file (dalam kilobyte)
+            $this->load->library('upload', $config);
+
+            if ($this->upload->do_upload('foto')) {
+                // Jika unggahan berhasil, simpan nama file foto ke variabel $foto
+                $upload_data = $this->upload->data();
+                $foto = $upload_data['file_name'];
+            } else {
+                // Jika unggahan gagal, tangani kesalahan jika diperlukan
+                // Anda dapat menyesuaikan penanganan kesalahan sesuai kebutuhan Anda
+                // Misalnya, memberikan pesan error atau mencatat pesan kesalahan
+                echo 'Gagal mengunggah foto: ' . $this->upload->display_errors();
+                return false; // Mengembalikan false untuk menandakan kegagalan
+            }
+        }
+        // Data mahasiswa yang akan disimpan ke database
+        $data = array(
+            'nama' => $nama,
+            'nomor_taruna' => $nomor_taruna,
+            'tempat_lahir' => $tempat_lahir,
+            'tanggal_lahir' => $tanggal_lahir,
+            'program_studi' => $program_studi,
+            'foto' => $foto
+        );
+        $this->db->where('id', $id);
         $this->db->update('taruna', $data);
         return $this->db->affected_rows();
     }

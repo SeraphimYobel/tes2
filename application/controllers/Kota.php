@@ -75,7 +75,6 @@ class Kota extends CI_Controller {
     }
 
     public function index() {
-        $data['kota'] = $this->Kota_model->read();
         $data['url'] = '../assets/unsia.png';
         $this->load->view('resource2', $data);
         $this->load->view('nav');

@@ -17,13 +17,6 @@ class Kota_model extends CI_Model {
     public function get_all_kota(){
         return $this->db->get('kota')->result_array();
     }
-    public function read($id = null) {
-        if ($id) {
-            return $this->db->get_where('Kota', ['ID' => $id])->row_array();
-        } else {
-            return $this->db->get('Kota')->result_array();
-        }
-    }
 
     public function update($id, $data) {
         $this->db->where('id', $id);

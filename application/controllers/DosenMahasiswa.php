@@ -97,12 +97,12 @@ class DosenMahasiswa extends CI_Controller {
 	public function update_mahasiswa() {
 		// Proses update data mahasiswa ke database berdasarkan ID
 		$id = $this->input->post('id');
-        $data['nama'] = $this->input->post('nama');
-        $data['nomor_taruna'] = $this->input->post('nomor_taruna');
-        $data['tempat_lahir'] = $this->input->post('tempat_lahir');
-        $data['tanggal_lahir'] = $this->input->post('tanggal_lahir');
-        $data['program_studi'] = $this->input->post('program_studi');
-        $data['foto'] = $this->input->post('foto');
+		$data['nama'] = $this->input->post('nama');
+		$data['nomor_taruna'] = $this->input->post('nomor_taruna');
+		$data['tempat_lahir'] = $this->input->post('tempat_lahir');
+		$data['tanggal_lahir'] = $this->input->post('tanggal_lahir');
+		$data['program_studi'] = $this->input->post('program_studi');
+		$data['foto'] = $this->input->post('foto');
 		$processedit = $this->DosenMahasiswa_model->update_mahasiswa($id, $data);
 		echo json_encode($processedit);
 	}
