@@ -260,6 +260,7 @@
 								<option value="Semester VI">Semester VI</option>
 								<option value="Semester VII">Semester VII</option>
 								<option value="Semester VIII">Semester VIII</option>
+								<option value="Ujian Akhir Program Studi">Ujian Akhir Program Studi</option>
 							</select>
 						</div>
 					</div>

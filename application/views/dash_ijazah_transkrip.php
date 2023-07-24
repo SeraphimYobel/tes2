@@ -696,6 +696,8 @@ $nomorIjazah = getRandomNumber();
 							semester = 5
 						} else if(it.semester == 'Semester VI'){
 							semester = 6
+						} else if(it.semester == 'Ujian Akhir Program Studi'){
+							semester = 7
 						}
 						return {...it, nosemester: semester}
 					})
@@ -875,15 +877,25 @@ $nomorIjazah = getRandomNumber();
 										)
 									}
 									<tr>
-										<td colSpan="5" className="titlesm">UJIAN AKHIR PROGRAM STUDI :</td>
+										<td colSpan="5" className="titlesm">UJIAN AKHIR PROGRAM STUDI</td>
 									</tr>
+									{ // semester VI
+										listNilai.filter(it => it.semester == "Ujian Akhir Program Studi").length ? listNilai.filter(it => it.semester == 'Ujian Akhir Program Studi').map((it, index) => (
+											<tr key={index}>
+												<td>{it.urutan}</td>
+												<td>{it.kode}</td>
+												<td className="lefts" colSpan="2">{it.matakuliah}</td>
+												<td></td>
+												<td>{it.nilai_huruf}</td>
+											</tr>
+										)) : (
+											<tr>
+												<td colSpan="5">Tidak ada mata kuliah.</td>
+											</tr>
+										)
+									}
 									<tr>
-										<td>{}</td>
-										<td colSpan="3">UJIAN LISAN KOMPREHENSIF KKW</td>
-										<td colSpan="3" className="centers">A</td>
-									</tr>
-									<tr>
-										<td colSpan="5" className="titlesm">JUDUL KERTAS KERJA WAJIB :</td>
+										<td colSpan="5" className="titlesm">JUDUL KERTAS KERJA WAJIB</td>
 									</tr>
 									<tr>
 										<td colSpan="5" className="expad">{judul_kkw}</td>
