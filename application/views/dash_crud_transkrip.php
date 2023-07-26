@@ -90,6 +90,7 @@
             // scrollX: true,
             columns: [
                { data: 'tarunanama', title: 'Mahasiswa' },
+               { data: 'nim', title: 'NIM' },
                { data: 'nomor_ijazah', title: 'Ijazah' },
                { data: 'prodinama', title: 'Program Studi' },
                {
@@ -231,6 +232,10 @@
 									<option key={index} value={it.id}>{it.nama}</option>
 								))}
 							</select>
+                  </div>
+                  <div className="formel">
+                     <label htmlFor="nim">NIM</label>
+                     <input name="nim" type="text" required placeholder="Auto complete" />
                   </div>
                   <div className="formel">
                      <label htmlFor="ijazah">Ijazah</label>

@@ -89,6 +89,7 @@
             // scrollX: true,
             columns: [
                { data: 'tarunanama', title: 'Mahasiswa' },
+               { data: 'nim', title: 'NIM'},
                { data: 'prodiname', title: 'Program Studi' },
                { data: 'tanggal_ijazah', title: 'Tanggal Ijazah' },
                { data: 'tanggal_pengesahan', title: 'Pengesahan' },
