@@ -142,20 +142,30 @@
 </style>
 <div id="apps"></div>
 <script type="text/babel">
-  const {useState} = React
+  const { useState } = React;
   const App = () => {
-    const [errorMessage, setErrorMessage] = useState(false)
+    const [errorMessage, setErrorMessage] = useState(false);
+    const [correctCredentials, setCorrectCredentials] = useState({ username: '', password: '' });
+
     const handleLogin = e => {
-      e.preventDefault()
-      let formData = new FormData($('#formlogin')[0])
-      formData = Object.fromEntries(formData.entries())
-      if(formData.username !== 'admin' || formData.password !== 'admin'){
-        setErrorMessage(true)
-        setTimeout( () => setErrorMessage(false) , 5000)
+      e.preventDefault();
+      let formData = new FormData(document.getElementById('formlogin'));
+      formData = Object.fromEntries(formData.entries());
+      if (formData.username !== 'admin' || formData.password !== 'admin') {
+        setErrorMessage(true);
+        setCorrectCredentials({
+          username: formData.username === 'admin' ? '' : formData.username,
+          password: formData.password === 'admin' ? '' : formData.password,
+        });
+        setTimeout(() => {
+          setErrorMessage(false);
+          setCorrectCredentials({ username: '', password: '' });
+        }, 5000);
       } else {
-        window.location.href="index.php/Dashboard"
+        window.location.href = "index.php/Dashboard";
       }
-    }
+    };
+
     return (
       <div className="outerbox">
         <div className="leftside">
@@ -197,8 +207,17 @@
               </div>
               {
                 errorMessage ? (
-                  <div className="error-message"><i className="fas fa-times-circle"></i> Username atau password salah !</div>
-                ) : false
+                  <div className="error-message">
+                    <i className="fas fa-times-circle"></i> Username or password is incorrect!
+                  </div>
+                ) : null
+              }
+              {
+                errorMessage && correctCredentials.username && correctCredentials.password ? (
+                  <div className="error-message">
+                    <i className="fas fa-info-circle"></i> Are you sure you are an admin? <br/>*authorized personnel only
+                  </div>
+                ) : null
               }
               <div className="form-group">
                 <button type="submit">Login</button>
@@ -207,10 +226,11 @@
           </div>
         </div>
       </div>
-    )
-  }
-  const root = document.querySelector('#apps')
-  const el = ReactDOM.createRoot(root)
-  el.render(<App />)
+    );
+  };
+  
+  const root = document.querySelector('#apps');
+  const el = ReactDOM.createRoot(root);
+  el.render(<App />);
 </script>
 </html>
