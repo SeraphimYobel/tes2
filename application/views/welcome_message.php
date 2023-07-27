@@ -53,6 +53,11 @@
 	.boxcards>div>h3{
 		font-size: 1.3em
 	}
+	.boxcards>img{
+		width:8em;
+		height: 7em;
+		object-fit: cover;
+	}
 	.boxcards>div>p{
 		opacity: 0.6;
 		margin-top: 0.4em;

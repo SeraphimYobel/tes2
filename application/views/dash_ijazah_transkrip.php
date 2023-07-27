@@ -181,9 +181,14 @@
 	}
 
 	.between>div {
-		width: 20em;
+		width: 22em;
 	}
-
+	.ijpad>div{
+		width: 17em !important;
+	}
+	.between>div>div>p>strong{
+		font-size: 1.3em;
+	}
 	.text-center>h1 {
 		font-size: 26px;
 		font-family: none;
@@ -203,6 +208,10 @@
 	.pads {
 		padding: 0em 1.5em 2em 1.5em;
 		text-align: justify;
+	}
+	.ijpad{
+		justify-content: space-between;
+		padding: 1em 0;
 	}
 	.watermark{
 		position: absolute;
@@ -303,7 +312,7 @@
 		position: absolute;
 		object-fit: cover;
 		border: 1px solid rgb(50,50,50);
-		transform: translate(-5em, -1.2em);
+		transform: translate(-8em, -1.2em);
 	}
 	@media print {
 		.no-print {
@@ -885,7 +894,6 @@ $nomorIjazah = getRandomNumber();
 												<td>{it.urutan}</td>
 												<td>{it.kode}</td>
 												<td className="lefts" colSpan="2">{it.matakuliah}</td>
-												<td></td>
 												<td>{it.nilai_huruf}</td>
 											</tr>
 										)) : (
@@ -921,7 +929,7 @@ $nomorIjazah = getRandomNumber();
 						</div>
 					</div>
 					<p className="keterang">KETERANGAN: A=4; AB=3.50; B=3; BC=2.50; C=2; D=1; E=0 </p>
-					<div className="between pads">
+					<div className="between pads ijpad">
 						<div className="text-center">
 							<p>WAKIL DIREKTUR I </p>
 							<p>POLITEKNIK SIBER ASIA</p>
