@@ -43,7 +43,7 @@ class IjazahTranskrip_model extends CI_Model {
         ")->result_array();
     }
     public function get_all_transkrip(){
-        return $this->db->query("SELECT ijazah.nomor_ijazah, taruna.nama as tarunanama, prodi.nama as prodinama, tr.* FROM `transkip_nilai` as tr
+        return $this->db->query("SELECT ijazah.nomor_ijazah, taruna.nama as tarunanama, taruna.nomor_taruna as nim, prodi.nama as prodinama, tr.* FROM `transkip_nilai` as tr
         LEFT JOIN taruna
         on tr.taruna = taruna.id
         LEFT JOIN program_studi as prodi
