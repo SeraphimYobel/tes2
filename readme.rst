@@ -1,8 +1,6 @@
-####################
-Sistem Manajemen Dokumen dan Data Mahasiswa dan Dosen
-###################
+# Sistem Manajemen Dokumen dan Data Mahasiswa dan Dosen
 
-Selamat datang di proyek Sistem Manajemen Dokumen dan Data Mahasiswa dan Dosen Kelompok 3!
+**Selamat datang di proyek Sistem Manajemen Dokumen dan Data Mahasiswa dan Dosen Kelompok 3!**
 
 ## Deskripsi
 
