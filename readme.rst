@@ -1,3 +1,52 @@
+# Sistem Manajemen Dokumen dan Data Mahasiswa dan Dosen
+
+Selamat datang di proyek Sistem Manajemen Dokumen dan Data Mahasiswa dan Dosen Kelompok 3!
+
+## Deskripsi
+
+Proyek ini merupakan implementasi sistem berbasis web yang dibangun menggunakan bahasa pemrograman PHP dan framework CodeIgniter 3 (CI3). Tujuan dari proyek ini adalah untuk mempermudah manajemen dokumen dan data mahasiswa serta dosen di Universitas Siber Asia, serta untuk menyelesaikan project mata kuliah Pemrograman Web II kelas IT402.
+
+## Anggota Kelompok
+
+1. AHMAD SOFIYULLAH - NIM: 220401020035
+2. ASRUL ABDUL HOLIQ - NIM: 210401010201
+3. Arlis Isnainindira - NIM: 200401072179
+4. CEREN YOSEPHINA - NIM: 210401010055
+5. DEDE KUSYANA - NIM: 210401010162
+6. Ester Faomasinia Waruwu - NIM: 200401072204
+7. FERRY PRADANA - NIM: 210401010012
+8. IWAN ASLICH - NIM: 210401010043
+9. JOANNE LANDY TANTREECE - NIM: 210401010022 (KETUA)
+10. KEVIN SETIAWAN - NIM: 210401120004
+11. Krisna Krisdianto Saputra - NIM: 200401072028
+12. MUH. YUNUS - NIM: 210401010009
+13. MUZAKKIR - NIM: 210401010102
+14. NURI HASANAH - NIM: 200401010021
+15. RIZKI RAMADHAN - NIM: 220401020003
+16. Rudi Saputra - NIM: 200401070055
+
+## Dosen Pembimbing
+
+- Nama Dosen Pembimbing: Dosen: Raden Muhamad Firzatullah, M.Kom
+- Program Studi: Teknik Informatika
+- Universitas: Universitas Siber Asia
+
+## Fitur Utama
+
+- **Autentikasi Pengguna**: Sistem ini menyediakan login dengan hak akses untuk admin.
+- **Data Mahasiswa dan Dosen**: Admin dapat mengelola data mahasiswa dan dosen.
+- **Penilaian**: Admin dapat memasukkan nilai mahasiswa untuk setiap mata kuliah.
+- **Program Studi**: Admin dapat melakukan manajemen program studi yang ada di universitas.
+- **Mata Kuliah**: Admin dapat mengelola daftar mata kuliah dan informasi terkait.
+- **Kota**: Admin dapat melakukan manajemen data kota untuk keperluan administrasi.
+- **Cetak Ijazah dan Transkrip**: Admin dapat mencetak ijazah dan transkrip akademik mahasiswa melalui sistem.
+
+## Cara Mengakses
+
+Proyek ini dapat diakses melalui alamat berikut: [https://kelompok3.poltransdp-palembang.ac.id/](https://kelompok3.poltransdp-palembang.ac.id/).
+
+Terima kasih telah menggunakan aplikasi kami!
+
 ###################
 What is CodeIgniter
 ###################
